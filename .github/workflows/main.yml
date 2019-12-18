@@ -10,3 +10,8 @@ jobs:
         uses: xu-cheng/latex-action@master
         with:
           root_file: semendiak_thesis.tex
+      - name: upload compiled pdf
+        uses: actions/upload-artifact@v1
+        with:
+          name: semendiak_thesis.pdf
+          path: semendiak_thesis.pdf
