@@ -125,7 +125,7 @@
       \large{Institut f\"{u}r Software- und Multimediatechnik}\\%
       \large{Lehrstuhl Softwaretechnologie}\\%
       \vspace{20pt}
-      \includegraphics[height=1.8cm]{tu_logo}\hspace{20pt}\includegraphics[height=2cm]{STgroupLogo}
+      \includegraphics[height=1.8cm]{graphics/base_tu_logo}\hspace{20pt}\includegraphics[height=2cm]{graphics/base_STgroupLogo}
       \vspace{10pt}
     \end{center}%
     %\vspace{3cm}%

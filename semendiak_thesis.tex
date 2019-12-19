@@ -14,46 +14,47 @@
 
 % only used for exemplary lorem ipsum text
 \usepackage{lipsum}
+\usepackage{todonotes}
 
 % Define the title of the thesis
-\title{The Title of the Thesis}
+\title{From Parameter Tuning to Dynamic Heuristic Selection}
 % Specify the author of the thesis
-\author{Max Mustermann}
+\author{Yevhenii Semendiak}
 % Specify the date on which the thesis is handed in
 \date{\today}
 % Specify the birthday of the thesis submitter
-\birthday{04.08.1985}
+\birthday{07.02.1995}
 % Specify the place of birth
-\birthplace{Dresden}
+\birthplace{Izyaslav}
 % Specify the name of the supervisor
 % Use '\newline' to separate multiple supervisors from each other
-\supervisor{Dr.-Ing. Birgit Demuth}
+\supervisor{MSc. Dmytro Pukhkaiev}
 % Optionally, you can also use \hsl to define the name of the supervising professor if this is necessary. 
 % This defaults to Prof. Aßmann
+
+\newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
+\newcommand{\todoy}[1]{\todo[color=yellow,inline,size=\small]{Yevhenii: #1}}
 
 \begin{document}
   \maketitle % This sets the title page
   
   \tableofcontents
   
-  \chapter{Introduction}
-    Das ist äöün Test.
-  	\section{Motivation}
-  	\lipsum
-  	
-  	\section{Objectives}
-  	\lipsum[1-3]
-  	
-  	\section{Overview}
-	\lipsum[1]
-    
-  \chapter{First meaningful chapter}
+  \input{content/01_intro.tex}
   
-     \section{Introduction}
-       This is the first meaningful chapter, but all it contains is an introduction.
-
-  \chapter{Conclusion}
-  	\lipsum[1]
+  \input{content/02_background.tex}
+  
+  \input{content/03_related_work.tex}
+  
+  \input{content/04_concept.tex}
+  
+  \input{content/05_implementation.tex}
+  
+  \input{content/06_evalutation.tex}
+  
+  \input{content/07_conclution.tex}
+  
+  \input{content/08_future_work.tex}
 
   % must be invoked for correct page numbering in the appendix and all lists
   \backmatter
@@ -61,9 +62,7 @@
   \appendix
   \chapter{Appendix}
   \section{Additional Information}
-  \lipsum[1]
   
   \section{More Important Information}
-  \lipsum[1]
   
 \end{document}
