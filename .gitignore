@@ -21,3 +21,8 @@
 *.pdf
 *.fdb_latexmk
 *.synctex.gz
+
+# BibTeX
+*.bbl
+*.blg
+

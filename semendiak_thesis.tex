@@ -28,7 +28,7 @@
 \birthplace{Izyaslav}
 % Specify the name of the supervisor
 % Use '\newline' to separate multiple supervisors from each other
-\supervisor{MSc. Dmytro Pukhkaiev}
+\supervisor{MSc. Dmytro Pukhkaiev \newline Dr.-Ing. Sebastian Götz}
 % Optionally, you can also use \hsl to define the name of the supervising professor if this is necessary. 
 % This defaults to Prof. Aßmann
 
@@ -39,6 +39,8 @@
   \maketitle % This sets the title page
   
   \tableofcontents
+  
+  \todoy{Abstract?}
   
   \input{content/01_intro.tex}
   
@@ -55,6 +57,10 @@
   \input{content/07_conclution.tex}
   
   \input{content/08_future_work.tex}
+  
+  \bibliographystyle{IEEEtran}
+  \todoy{is it correct style?}
+  \bibliography{content/bibliography.bib}
 
   % must be invoked for correct page numbering in the appendix and all lists
   \backmatter
