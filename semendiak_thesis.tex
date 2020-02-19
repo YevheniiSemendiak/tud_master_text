@@ -15,6 +15,10 @@
 % only used for exemplary lorem ipsum text
 \usepackage{lipsum}
 \usepackage{todonotes}
+\usepackage{pdfpages} % to insert a task description.
+%\usepackage[notes,backend=biber]{biblatex-chicago}
+%\bibliography{content/bibliography.bib}
+
 
 % Define the title of the thesis
 \title{From Parameter Tuning to Dynamic Heuristic Selection}
@@ -38,11 +42,14 @@
 \begin{document}
   \maketitle % This sets the title page
   
+  \includepdf{taskDescription.pdf}
+
+  \input{content/disclaimer.tex}\todoy{should I add a disclaimer like this?}
+  
   \tableofcontents
   
-  \todoy{Abstract?}
-  \todor{yes, but first the scan of the task description in order not to forget to add an original}
-  
+  \input{content/00_abstract.tex}
+
   \input{content/01_intro.tex}
   
   \input{content/02_background.tex}
@@ -63,9 +70,8 @@
   \todoy{is it correct style?}
   \todor{better the one with first letters of family names and year}
   \bibliography{content/bibliography.bib}
-
-  % must be invoked for correct page numbering in the appendix and all lists
-  \backmatter
+  %\printbibliography
+  
   
   \appendix
   \chapter{Appendix}

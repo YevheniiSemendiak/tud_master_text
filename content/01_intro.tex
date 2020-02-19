@@ -1,17 +1,60 @@
 \chapter{Introduction}\label{intro}
 \todor{do it in goal-problem-solution style}
 \todor{research questions are missing}
+\todoy{I have left your todos to check the solution. Please remove old TODOs if all is +- OK.}
+
 
 \section{Motivation}
-- one MH could be better than other for particular problem and user could not predict it \cite{surv:kerschke2019automated}
-- no-free-lunch (NFL) theorem should be discussed
+% goal-problem-solution style: definition and motivation of the goal as following paragraphs
+\begin{itemize}
+	\item we have a problem we want to solve - a TSP definition
+	
+	\item we could use a simple algorithm (heuristic) to solve it
+	
+	\item we could go further and solve it more effectively with MH
+	
+	\item but what if we want to solve a class of problems? 
+	% goal-problem-solution style: transition from goal to the problem
+
+	\subitem one MH could be better than other for particular problem, user could not predict it \cite{surv:kerschke2019automated}
+	
+	\subitem the performance of each MH depends on it's tuning
+	
+	\subitem no-free-lunch (NFL) theorem should be explained and discussed here
+\end{itemize}
 
 
 \section{Objectives}
-- define a search space of MHs - dynamic meta-heuristics selection
-- support parameter tuning on the fly
-- create / find portfolio of MHs
+% goal-problem-solution style: problem clarification, research questions
 
-  	
-\section{Overview}
-The description of this thesis is organized as follows: In Chapter 2, we extend not advanced in field of problem solving and optimizations reader by background knowledge and defines scope of thesis. Chapter 3 describes related work in defined scope. In Chapter 4 one will find the concept description of dynamic heuristics selection. Chapter 5 contains more detailed information about approach implementation and  embedding it to BRISE. The evaluation results and analysis could be found in Chapter 6. Finally, Chapter 7 concludes the thesis and Chapter 8 describe the future work.
+to reach the goal following problems should be solved:
+
+- algorithm selection \textit{(find a problem definition, maybe this will do \cite{surv:kerschke2019automated})}
+
+- algorithm configuration (DAC) \textit{(find a problem definition)}
+
+
+\subsection{Research Questions}
+On this point we define the Research Questions (RQs) of the Master thesis.
+
+\begin{itemize}
+	\item \textbf{RQ 1} How to solve the problem of algorithm selection and configuration simultaneously?
+
+	\item \textbf{RQ 2} Is it possible to select an algorithm and it hyper-parameters while solving a problems \textit{on-line}?
+
+	\item \textbf{RQ 3} What is the gain of selecting and tuning algorithm while solving a TSP problem?
+\end{itemize}
+
+
+\section{Solution overview}
+% goal-problem-solution style: here goes a solution description
+
+\begin{itemize}
+	\item create / find portfolio of MHs (Low level Heuristics)
+	\item define a search space as combination of LLH and their hyper-parameters (highlight as a contribution)
+	\item solve a problem on-line selecting LLH and tuning hyper-parameters on the fly. (highlight as a contribution? need to analyze it.)
+\end{itemize}
+
+% i guess, it will be changed, no need to re-write it all the time :D
+%The description of this thesis is organized as follows. First, in chapter \ref{bg} we refresh readers background knowledge in the field of problem solving and heuristics. In this chapter we also define the scope of thesis. Afterwards, in chapter \ref{relwork} we describe the related work and existing systems in defined scope. In Chapter 4 one will find the concept description of dynamic heuristics selection. Chapter 5 contains more detailed information about approach implementation and  embedding it to BRISE. The evaluation results and analysis could be found in Chapter 6. Finally, Chapter 7 concludes the thesis and Chapter 8 describe the future work.
+
