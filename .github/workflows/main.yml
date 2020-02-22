@@ -29,8 +29,11 @@ jobs:
           cat > publish/index.html <<EOL
           <!doctype html> <html> <head> <title>Diploma was compiled!</title> </head> 
           <body>
-              <p>Compiled PDF from branch <strong>${{ github.ref }}</strong> is avaliable at <a href="https://github.com/YevheniiSemendiak/tud_master_text/blob/gh-pages/semendiak_thesis.pdf">**gh-pages** branch</a>.</p>
-          </body></html>EOL
+              <p>Branch <strong>${{ github.ref }}</strong></p>
+              <p>Commit <strong>${{ github.sha }}</strong></p>
+              <p>Compiled PDF is avaliable <a href="https://github.com/YevheniiSemendiak/tud_master_text/blob/gh-pages/semendiak_thesis.pdf">here</a>.</p>
+          </body></html>
+          EOL
       
       - name: publish pdf
         uses: peaceiris/actions-gh-pages@v3
