@@ -1,17 +1,41 @@
 name: Build pdf document
-on: [push]
+on: 
+  push:
+    branches-ignore:
+      - 'gh-pages'
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
+
       - name: Set up Git repository
         uses: actions/checkout@v1
+
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@master
         with:
           root_file: semendiak_thesis.tex
+
       - name: upload compiled pdf
         uses: actions/upload-artifact@v1
         with:
           name: semendiak_thesis.pdf
           path: semendiak_thesis.pdf
+
+      - name: prepare gh-pages publish
+        run: |
+          mkdir ./publish
+          mv semendiak_thesis.pdf ./publish/semendiak_thesis.pdf
+          cat > public/index.html <<EOL
+          <!doctype html> <html> <head> <title>Diploma was compiled!</title> </head> 
+          <body>
+              <p>Compiled PDF from branch <strong>${{ github.ref }}</strong> is avaliable at <a href="https://github.com/YevheniiSemendiak/tud_master_text/blob/gh-pages/semendiak_thesis.pdf">**gh-pages** branch</a>.</p>
+          </body></html>EOL
+      
+      - name: publish pdf
+        uses: peaceiris/actions-gh-pages@v3
+        with: 
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./publish
+          commit_message: ${{ github.event.head_commit.message }}
+          publish_branch: gh-pages
