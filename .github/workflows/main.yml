@@ -29,8 +29,9 @@ jobs:
           cat > publish/index.html <<EOL
           <!doctype html> <html> <head> <title>Diploma was compiled!</title> </head> 
           <body>
-              <p>Branch <strong>${{ github.ref }}</strong></p>
-              <p>Commit <strong>${{ github.sha }}</strong></p>
+              <p><strong>Git reference:</strong> ${{ github.ref }}</p>
+              <p><strong>Commit ID:</strong> ${{ github.sha }}</p>
+              <p><strong>Commit message:</strong> ${{ github.event.commits[0].message }}</p>
               <p>Compiled PDF is avaliable <a href="https://github.com/YevheniiSemendiak/tud_master_text/blob/gh-pages/semendiak_thesis.pdf">here</a>.</p>
           </body></html>
           EOL
