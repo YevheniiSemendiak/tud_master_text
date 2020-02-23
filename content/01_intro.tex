@@ -1,48 +1,47 @@
 \chapter{Introduction}\label{intro}
-\todor{do it in goal-problem-solution style}
-\todor{research questions are missing}
-\todoy{I have left your todos to check the solution. Please remove old TODOs if all is +- OK.}
+\paragraph{Intent and content of chapter.} This chapter is an self-descriptive, shorten version of thesis.
+
 
 
 \section{Motivation}
 % goal-problem-solution style: definition and motivation of the goal as following paragraphs
+Structure:
 \begin{itemize}
-	\item we have a problem we want to solve - a TSP definition
-	
-	\item we could use a simple algorithm (heuristic) to solve it
-	
-	\item we could go further and solve it more effectively with MH
-	
-	\item but what if we want to solve a class of problems? 
-	% goal-problem-solution style: transition from goal to the problem
-
-	\subitem one MH could be better than other for particular problem, user could not predict it \cite{surv:kerschke2019automated}
-	
-	\subitem the performance of each MH depends on it's tuning
-	
-	\subitem no-free-lunch (NFL) theorem should be explained and discussed here
+	\item optimization problem(OP) $\rightarrow$ exact or approximate (+description to both) $\rightarrow$ motivation to use \textbf{approximate solvers} $\rightarrow$
+	\item impact of parameters, their tuning on solvers $\rightarrow$ motivation of \textbf{parameter control} (for on-line solver) $\rightarrow$
+	\item but what if we want to solve a class of problems (CoP) $\rightarrow$ algorithms performance is different $\rightarrow$ 
+	\item user could not determine it \cite{surv:kerschke2019automated} $\rightarrow$ exploration-exploitation balance
+	\item no-free-lunch (NFL) theorem \cite{wolpert1997no} $\rightarrow$ motivation of the thesis
 \end{itemize}
 
+\paragraph{thesis motivation} The most related research field is Hyper-heuristics optimizations \cite{burke2003hyper}, that are designed to intelligently choose the right low lewel heuristics (LLH) while solving the problem.
+But the weak side of hyper-heuristics is the luck of parameter tuning of those LLHs [links].
+In the other hand, meta-heuristics often utilize parameter control approaches [links], but they do not select among underlying LLHs.
+The goal of this thesis is to get the best of both worlds - algorithm selection from the hyper-heuristics and parameter control from the meta-heuristics.
 
-\section{Objectives}
+
+\section{Research objective}
 % goal-problem-solution style: problem clarification, research questions
+The following steps should be completed in order to reach the desired goal:
 
-to reach the goal following problems should be solved:
+\paragraph{Analysis of existing studies of algorithm selection.} \textit{(find a problem definition, maybe this will do \cite{surv:kerschke2019automated})}
 
-- algorithm selection \textit{(find a problem definition, maybe this will do \cite{surv:kerschke2019automated})}
+\paragraph{Analysis of existing studies in field of parameter control and algorithm configuration problems} \textit{(find a problem definition)} \cite{lavesson2006quantifying}
 
-- algorithm configuration (DAC) \textit{(find a problem definition)}
+\paragraph{Formulation and development of combined approach for LLH selection and parameter control.}
 
+\paragraph{Evaluation of the developed approach with \todoy{family of problems??? since it is a HH, maybe we should think about it...}.}
 
-\subsection{Research Questions}
-On this point we define the Research Questions (RQs) of the Master thesis.
+\paragraph{Research Questions} At this point we define a Research Questions (RQ) of the Master thesis.
+% https://writingcenter.fas.harvard.edu/pages/beginning-academic-essay - "Focus the Essay" part.
 
 \begin{itemize}
-	\item \textbf{RQ 1} How to solve the problem of algorithm selection and configuration simultaneously?
+	\item \textbf{RQ 1} Is it possible to select an algorithm and it hyper-parameters while solving an optimization problem \textit{on-line}?
 
-	\item \textbf{RQ 2} Is it possible to select an algorithm and it hyper-parameters while solving a problems \textit{on-line}?
+	\item \textbf{RQ 2} What is the gain of selecting and tuning algorithm while solving an optimization problem?
 
-	\item \textbf{RQ 3} What is the gain of selecting and tuning algorithm while solving a TSP problem?
+	\item \textbf{RQ 3?} How to solve the problem of algorithm selection and configuration simultaneously?
+	
 \end{itemize}
 
 
@@ -50,11 +49,13 @@ On this point we define the Research Questions (RQs) of the Master thesis.
 % goal-problem-solution style: here goes a solution description
 
 \begin{itemize}
+	\item described problems solved by HH, highlight problems of existing HHs(off-line, solving a set of homogeneous problems in parallel)
 	\item create / find portfolio of MHs (Low level Heuristics)
 	\item define a search space as combination of LLH and their hyper-parameters (highlight as a contribution)
 	\item solve a problem on-line selecting LLH and tuning hyper-parameters on the fly. (highlight as a contribution? need to analyze it.)
 \end{itemize}
 
 % i guess, it will be changed, no need to re-write it all the time :D
-%The description of this thesis is organized as follows. First, in chapter \ref{bg} we refresh readers background knowledge in the field of problem solving and heuristics. In this chapter we also define the scope of thesis. Afterwards, in chapter \ref{relwork} we describe the related work and existing systems in defined scope. In Chapter 4 one will find the concept description of dynamic heuristics selection. Chapter 5 contains more detailed information about approach implementation and  embedding it to BRISE. The evaluation results and analysis could be found in Chapter 6. Finally, Chapter 7 concludes the thesis and Chapter 8 describe the future work.
+\paragraph{Thesis structure}
+The description of this thesis is organized as follows. First, in chapter \ref{bg} we refresh readers background knowledge in the field of problem solving and heuristics. In this chapter we also define the scope of thesis. Afterwards, in chapter \ref{relwork} we describe the related work and existing systems in defined scope. In Chapter 4 one will find the concept description of dynamic heuristics selection. Chapter 5 contains more detailed information about approach implementation and  embedding it to BRISE. The evaluation results and analysis could be found in Chapter 6. Finally, Chapter 7 concludes the thesis and Chapter 8 describe the future work.
 
