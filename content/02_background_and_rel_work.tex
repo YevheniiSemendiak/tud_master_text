@@ -1,72 +1,73 @@
-\chapter{Background and related work}\label{chap:background}
+\chapter{Background and related work analysis}\label{bg}
 \paragraph{The structure} is the same the beginning of introduction, but way more detailed.  
 
 
-\section{Optimization problems and solvers}\label{sec:opt problms, solvrs}
+\section{Optimization problems and solvers}\label{bg:opt problems and solvers}
 
 \subsection{Definition of optimization problems}
 \todoy{Need to find a classification of optimization problems.}
 
-\subsection{Optimization problems solvers} 
+\subsection{Optimization problems solvers}
+\todoy{rename to smth like "Types | Classes of solvers"} 
 Some (but not only) literature: \cite{bergstra2011algorithms}
 \subsubsection{Exact solvers}
-\subsubsection{Approximate solvers} 
+\subsubsection{Approximate solvers}
 \subsubsection{Comparison:} Pros and cons of both \cite{hromkovivc2013algorithmics}
 
 
 \section{Approximate solvers of optimization problems}
-TSP as the running example. I guess, I will introduce it as an example of pertrubation problems in previous section.\ref{sec:opt problms, solvrs}
+TSP as the running example. I guess, I will introduce it as an example of perturbation problems in previous section.\ref{sec:opt problms, solvrs}
 
-\subsection{Heurustics}
+\subsection{Heuristics}
 \subsubsection{Definition}
-\subsubsection{examples}
-\subsubsection{Conclution} 
+\subsubsection{Examples}
+\subsubsection{Conclusion}
 Heuristics are strictly problem dependent and each time require adaptations.
 
 \subsection{Meta-heuristics}
 \subsubsection{Definition}
-\subsubsection{classification}
-\subsubsection{examples}
+\subsubsection{Classification}
+\subsubsection{Examples}
 We distinguish following examples among all existing meta~-heuristics, since later we use them as the LLH in developed hyper~-heuristic.
 \paragraph{GA}
 \paragraph{SA}
 \paragraph{ES}
-\subsubsection{No-free-lunch theorem} 
+\subsubsection{No-free-lunch theorem}
 NFL is the problem of heuristics\cite{wolpert1997no}
 \subsubsection{Exploration-explotation balance}
-\subsubsection{Conclution} 
-Proper assignment of hyper~-parameters has great impact on exploration-explotation balance and those on (meta)~-heuristic performance. 
+\subsubsection{Conclusion} 
+Proper assignment of hyper~-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
 
 \subsection{Hybrid~-heuristics}
-\subsubsection{definition}
-\subsubsection{examples}
+\subsubsection{Definition}
+\subsubsection{Examples}
 \paragraph{Guided Loca Search (GLS) + Fast Local Search} \cite{tsang1997fast}
 \paragraph{Direct Global + Local search} \cite{syrjakow1999efficient}
 \paragraph{Simulated Annealing + Local Search} \cite{martin1996combining}
-\subsection{Conclution}
+\subsubsection{Conclusion}
 
 \subsection{Hyper~-heuristics}
-\subsubsection{definition}
+\subsubsection{Definition}
 \subsubsection{Classification}
 \paragraph{Search space:} heuristic selection, heuristic generation
 \paragraph{Learning time:} on-line learning hyper-heuristics, off-line learning hyper-heuristics, no-learning hyper-heuristics
-\paragraph{other classification characteristics} from \cite{surv:kerschke2019automated}, \cite{burke2019classification}, mb smth else. For instance, hyperparameter tuning
-\subsubsection{examples}% should I present it in following sections?
+\paragraph{Other classification characteristics} from \cite{surv:kerschke2019automated}, \cite{burke2019classification}, mb smth else. For instance, hyperparameter tuning
+\subsubsection{Examples}% should I present it in following sections?
 \cite{surv:drake2019recent} (Online algorithm selection at page 27); \cite{surv:kerschke2019automated}
-\subsubsection{conclution} they usually (need to check it) have lack of parameter control
+\subsubsection{Conclusion...?} they usually (need to check it) have lack of parameter control
 
-\subsection{Conclution on approximate solvers}
+\subsection{Conclusion on approximate solvers}
 \paragraph{Pros and cons of heuristics} - too problem dependent
 \paragraph{Pros and cons of meta~-heuristics} - no LLH selection, strict to one problem
 \paragraph{Pros and cons of hybrid~-heuristics} - no LLH selection, strict to one problem ? 
 \paragraph{Pros and cons of hyper~-heuristics} - no parameter control?
 
 
-\section{Parameter tuning}
+\section{Parameter tuning}\label{bg: parameter tuning}
 \todoy{The goal of section: analysis of existing systems for hyper~-parameter optimization (tuning), weaknesses and strength of each of the system}
 \todoy{Should I include the analysis from the code-basis point of view? If no, I do not see what should I conclude from this section exect "there are numer of parameter tuning systems each of them has pros and cons..}
 
-\subsection{problem definition, approaches (grid, random, mh..)}
+\subsection{Parameter tuning problem definition, approaches (grid, random, mh..)}
 
 \subsection{Systems for parameter tuning}
 
@@ -91,17 +92,17 @@ Proper assignment of hyper~-parameters has great impact on exploration-explotati
 
 \paragraph{Table for comparison}
 
-\subsubsection{conclution}
+\subsubsection{Conclusion}
 depends on the resolved question in todo...
 
 
-\section{Parameter control}
-\subsubsection{definition, approaches}
-\subsubsection{system examples}
-\subsubsection{conclution} impact of parameter control based on other's evaluation
+\section{Parameter control}\label{bg: parameter control}
+\subsection{definition, approaches}
+\subsection{system examples}
+\subsection{Conclusion} impact of parameter control based on other's evaluation
 
 
-\section{Conclution}
+\section{Conclusion}
 
 The meta-heuristic systems designers reported positive impact of parameter control embedding. 
 However, as the outcome of the no-free-lunch theorem, those systems can not tolerate broad range of problems, for instance, problem classes.
