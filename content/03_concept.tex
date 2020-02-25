@@ -1,12 +1,12 @@
 \chapter{Concept description}
-\paragraph{In this chapter} we describe the concept of developed selection Hyper~-Heuristic with parameter control, not diving deep into the implementation details.
+\paragraph{In this chapter} we describe the concept of developed selection Hyper-Heuristic with parameter control, not diving deep into the implementation details.
 The best practice in software engineering is to minimize an effort for the implementation and reuse already existing, well-tested and broadly used code.
-With this idea in mind we had decided to use one of previously created (and highlighted by us in \ref{bg: parameter tuning}) hyper~-parameter tuning systems as the code basis and those turn it into the core of hyper~-heuristic.
-We also reuse the set of already developed heuristics as the Low Level Heuristics for designed Hyper~-Heuristic.
+With this idea in mind we had decided to use one of previously created (and highlighted by us in \ref{bg: parameter tuning}) hyper-parameter tuning systems as the code basis and those turn it into the core of hyper-heuristic.
+We also reuse the set of already developed heuristics as the Low Level Heuristics for designed Hyper-Heuristic.
 
 The structure of this chapter is as follows.
 First, we define the Search Space entity in \ref{concept:search space}, it requirements and structure. 
-It should bound the world of Low Level Heuristics and the world of Hyper~-parameters of those heuristics.
+It should bound the world of Low Level Heuristics and the world of Hyper-parameters of those heuristics.
 
 
 Second, we describe the Prediction process within the previously defined Search Space in \ref{concept:prediction}.
@@ -14,14 +14,14 @@ Here we highlight an importance of a prediction model decoupling from the previo
 Doing so, we provide certain level of flexibility for user in the usage of different prediction models or developing his own.
 
 
-Third, in \ref{concept:llh} we gather our attention onto the Low Level Heuristics - a working horse of the hyper~-heuristic.
+Third, in \ref{concept:llh} we gather our attention onto the Low Level Heuristics - a working horse of the hyper-heuristic.
 Here we highlight the requirements for LLH in terms of features that will be used by HH.
 
 
-Later, we select the code basis. We analyze the existing systems and highlight important non-functional characteristics for \ref{concept:code basis selection} hyper~-heuristic and \ref{concept:llh code basis selection} low level heuristics set.
+Later, we select the code basis. We analyze the existing systems and highlight important non-functional characteristics for \ref{concept:code basis selection} hyper-heuristic and \ref{concept:llh code basis selection} low level heuristics set.
 
 
-Finally, in \ref{concept:changes analysis} we conclude this chapter with the analysis of required changes, that are needed to be accomplished for turning code base system into the hyper~-heuristic.
+Finally, in \ref{concept:changes analysis} we conclude this chapter with the analysis of required changes, that are needed to be accomplished for turning code base system into the hyper-heuristic.
 
 
 \section{Search Space}\label{concept:search space}
@@ -44,9 +44,9 @@ Finally, in \ref{concept:changes analysis} we conclude this chapter with the ana
 
 
 \section{Code basis selection}
-With the aim of effort reuse, the code base should be selected for implementation of the designed hyper~-heuristic approach.
+With the aim of effort reuse, the code base should be selected for implementation of the designed hyper-heuristic approach.
 
-\subsection{Hyper~-Heuristics Code Base}\label{concept:hh code basis selection}
+\subsection{Hyper-Heuristics Code Base}\label{concept:hh code basis selection}
 A.k.a. "brain". Need to find a better way to call this part of HH..
 \subsubsection{Requirements}
 \subsubsection{Parameter tuning frameworks}
@@ -89,6 +89,6 @@ jMetalPy is cool!
 \subsubsection{Description of current state}
 \subsubsection{Scope of work analysis}
 
-\subsection{Conclusion?}
+\section{Conclusion of concept}
 we selected BRISEv2, jMetalPy because they are cool.
 the amount of work is vast so lets dive into it in the next chapter!

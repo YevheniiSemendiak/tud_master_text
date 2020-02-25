@@ -1,5 +1,5 @@
 \chapter{Background and related work analysis}\label{bg}
-\paragraph{The structure} is the same the beginning of introduction, but way more detailed.  
+\paragraph{The structure} is the same as the beginning of introduction, but way more detailed.  
 
 
 \section{Optimization problems and solvers}\label{bg:opt problems and solvers}
@@ -28,7 +28,7 @@ Heuristics are strictly problem dependent and each time require adaptations.
 \subsubsection{Definition}
 \subsubsection{Classification}
 \subsubsection{Examples}
-We distinguish following examples among all existing meta~-heuristics, since later we use them as the LLH in developed hyper~-heuristic.
+We distinguish following examples among all existing meta-heuristics, since later we use them as the LLH in developed hyper-heuristic.
 \paragraph{GA}
 \paragraph{SA}
 \paragraph{ES}
@@ -36,9 +36,9 @@ We distinguish following examples among all existing meta~-heuristics, since lat
 NFL is the problem of heuristics\cite{wolpert1997no}
 \subsubsection{Exploration-explotation balance}
 \subsubsection{Conclusion} 
-Proper assignment of hyper~-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
+Proper assignment of hyper-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
 
-\subsection{Hybrid~-heuristics}
+\subsection{Hybrid-heuristics}
 \subsubsection{Definition}
 \subsubsection{Examples}
 \paragraph{Guided Loca Search (GLS) + Fast Local Search} \cite{tsang1997fast}
@@ -46,7 +46,7 @@ Proper assignment of hyper~-parameters has great impact on exploration-exploitat
 \paragraph{Simulated Annealing + Local Search} \cite{martin1996combining}
 \subsubsection{Conclusion}
 
-\subsection{Hyper~-heuristics}
+\subsection{Hyper-heuristics}
 \subsubsection{Definition}
 \subsubsection{Classification}
 \paragraph{Search space:} heuristic selection, heuristic generation
@@ -58,13 +58,13 @@ Proper assignment of hyper~-parameters has great impact on exploration-exploitat
 
 \subsection{Conclusion on approximate solvers}
 \paragraph{Pros and cons of heuristics} - too problem dependent
-\paragraph{Pros and cons of meta~-heuristics} - no LLH selection, strict to one problem
-\paragraph{Pros and cons of hybrid~-heuristics} - no LLH selection, strict to one problem ? 
-\paragraph{Pros and cons of hyper~-heuristics} - no parameter control?
+\paragraph{Pros and cons of meta-heuristics} - no LLH selection, strict to one problem
+\paragraph{Pros and cons of hybrid-heuristics} - no LLH selection, strict to one problem ? 
+\paragraph{Pros and cons of hyper-heuristics} - no parameter control?
 
 
 \section{Parameter tuning}\label{bg: parameter tuning}
-\todoy{The goal of section: analysis of existing systems for hyper~-parameter optimization (tuning), weaknesses and strength of each of the system}
+\todoy{The goal of section: analysis of existing systems for hyper-parameter optimization (tuning), weaknesses and strength of each of the system}
 \todoy{Should I include the analysis from the code-basis point of view? If no, I do not see what should I conclude from this section exect "there are numer of parameter tuning systems each of them has pros and cons..}
 
 \subsection{Parameter tuning problem definition, approaches (grid, random, mh..)}
@@ -106,6 +106,6 @@ depends on the resolved question in todo...
 
 The meta-heuristic systems designers reported positive impact of parameter control embedding. 
 However, as the outcome of the no-free-lunch theorem, those systems can not tolerate broad range of problems, for instance, problem classes.
-In other hand, hyper~-heuristics are designed with an aim to select the low level heuristics and those propose a possible solution of problem, stated in no-free-lunch theorem, but the lack of parameter control could dramatically decrease the performance of LLH (probably, I need to find a prove of this, or rephrase).
+In other hand, hyper-heuristics are designed with an aim to select the low level heuristics and those propose a possible solution of problem, stated in no-free-lunch theorem, but the lack of parameter control could dramatically decrease the performance of LLH (probably, I need to find a prove of this, or rephrase).
 
 \paragraph{Scope of work defined.} In this thesis we try to achieve the best of both worlds applying the best fitting LLH and tuning it's parameters while solving the problem on-line.
