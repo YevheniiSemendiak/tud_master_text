@@ -1,24 +1,41 @@
 \chapter{Implementation details}
-\todoy{I am more concern to put it into the appendix..}
-\paragraph{In this chapter} we define the implementation details of the selection hyper-heuristic with parameter control. You could find here a code snippets as well as the class diagrams.
+\paragraph{In this chapter} we dive into the implementation details of the selection hyper-heuristic with parameter control.
+ 
+The best practice in software engineering is to minimize an effort for the implementation and reuse already existing and well-tested code.
+With this idea in mind we had decided to reuse one of existing (and highlighted by us in \ref{bg: parameter tuning}) open-source hyper-parameter tuning systems as the code basis and those turn it into the core of hyper-heuristic. 
+Do to so we analyze the existing systems and highlight important non-functional characteristics from the implementation perspective in section \ref{implementation:hh code basis section}. Since the selected code base system is not the ideal in terms of such features as Search Space entity abilities and the prediction process, we consider some adaptations in sections \ref{implementation: search space} and \ref{implementation: prediction logic} respectively.
+We also reuse the set of Low Level Heuristics in section \ref{implementation:llh code basis selection}.
 
 
-\section{Search Space}
 
-\subsection{Description of base version (in BRISEv2)}
+\section{Hyper-Heuristics Code Base selection}\label{implementation:hh code basis section}
+A.k.a. "brain". Need to find a better way to call this part of HH..
+\subsubsection{Requirements}
+\subsubsection{Parameter tuning frameworks}
+\paragraph{SMAC}
+\paragraph{BOHB}
+\paragraph{IRACE}
+\paragraph{BRISEv2}
+\todoy{Maybe, smth else..}
+\subsubsection{Conclusion}
+BRISEv2 is the best system for code basis, however it has to be changed as we describe in following sections.
+
+
+\section{Search Space}\label{implementation: search space}
+
+\subsection{Base Version Description}
+What is the problem with the current Search Space?
+\paragraph{The Scope Refinement Work} Throw away and write a new one :D
 
 \subsection{Implementation}
 \paragraph{Description}
 \paragraph{Motivation of structure}
-\paragraph{Class diagram}
+\paragraph{Class diagram} - i think, I will put it into the appendix
 
 
-\section{Data preprocessing}
-\subsubsection{Unified data types (pandas Data Frame)}
-\subsubsection{Sklearn preprocessor wrapper}
-
-
-\section{Prediction logic}
+\section{Prediction logic}\label{implementation: prediction logic}
+\subsection{Base Version Description}
+\paragraph{The Scope Refinement Work} prediction should be done in feature-tree structured search space. Most models could handle only flat search space and we would like to enable reuse of those existing models. Though we decouple the structure of Search Space in entity \textbf{Predictor}, while actual prediction process is done in underlying models, that Predictor uses.
 
 \subsection{Predictor}
 to decouple prediction from structure of search space.
@@ -29,7 +46,29 @@ to decouple prediction from structure of search space.
 \subsubsection{Sklearn linear regression wrapper}
 
 
+\section{Data preprocessing}
+\subsubsection{Heterogeneous data?} description and motivation of data preprocessing notions
+
+\subsubsection{Base Version Description} and Scope of work analysis
+\subsubsection{Sklearn preprocessor wrapper}
+
+
 \section{Low Level Heuristics}
-\subsection{Meta-heuristics repository}
-\paragraph{Available Meta-heuristics}
+
+\subsection{Requirements}
+
+\subsection{Code Base Selection}\label{implementation:llh code basis selection}
+Available Meta-heuristics with description of their current state
+With the aim of effort reuse, the code base should be selected for implementation of the designed hyper-heuristic approach.
+% https://docs.google.com/spreadsheets/d/19xjL_ire0R5VLP9seCE5_4sWorSMZP4xvgx7d1q4a9s/edit#gid=0
+\paragraph{SOLID}
+\paragraph{MLRose}
+\paragraph{OR-tools}
+\paragraph{pyTSP}
+\paragraph{LocalSolver}
+\paragraph{jMetalPy}
+
+\subsection{Scope of work analysis}
 \paragraph{opened PR}
+
+\section{Conclusion of implementation}
