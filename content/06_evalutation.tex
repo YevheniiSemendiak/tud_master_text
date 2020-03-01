@@ -1,11 +1,96 @@
 \chapter{Evaluation}
 
-\section{Problem}
-which problem I wanna solve with hyper-heuristic
+
+\section{Evaluation Plan}
+
+\subsection{Optimization Problems Definition}
+\subsubsection{Traveling Salesman Problem}
+\paragraph{tsplib95 benchmark set}
+which problem I want to solve with hyper-heuristic
+\subsubsection{N-Queens Problem?}
+\subsubsection{Knapsack Problem?}
+
+\subsection{Hyper-Heuristic Settings}
+To evaluate the performance of developed system we first need to compare it with the base line. In our case it is the simple meta-heuristic that is solving the problem with static hyper-parameters.
+
+In order to organize the evaluation plan, we distinguish two stages of setup, where different approaches could be applied. 
+At the first stage we select Low Level Heuristic, while at the second one we select hyper-parameters for LLH.
+The approaches for each step are represented in table \ref{evaluation: settings table}.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		\textbf{Low Level Heuristics selection} & \textbf{LLH Hyper-parameters selection} \\
+		\hline
+		1. Random & 1. Default \\
+		2. Multi Armed Bandit & 2. Tuned beforehand \\
+		3. Sklearn Bayesian Optimization & 3. Random \\
+		4. Static selection of SA, GA, ES & 4. Tree Parzen Estimator \\
+		& 5. Sklearn Bayesian Optimization\\
+		\hline
+	\end{tabular}
+	
+	\caption{System settings for benchmark}
+	\label{evaluation: settings table}
+\end{table}
+
+
+For instance, mentioned above baseline could be described as $Settings 4.1.$ for meta-heuristics with default hyper-parameters and as $Settings 4.2.$ for meta-heuristics with tuned beforehand hyper-parameters.
+
+For our benchmark we selected following settings sets:
 
 \begin{itemize}
-	\item TSP
-	\item n-Queens
-	\item knapsack
+	\item \textit{Baseline:} $4.1, 4.2;$
+	\item \textit{Random Hyper-heuristic:} $1.1, 1.2, 1.3, 4.3;$
+	\item \textit{Parameter control:} $4.4, 4.5;$
+	\item \textit{Selection Hyper-Heuristic:} $2.1, 3.1, 2.2, 3.2;$
+	\item \textit{Selection Hyper-Heuristic with Parameter Control:} $2.4, 2.5, 3.4, 3.5;$
 \end{itemize}
 
+Each of this settings will be discussed in details in following section.
+
+
+\subsection{Selected for Evaluation Hyper-Heuristic Settings}
+\paragraph{Baseline}
+
+\paragraph{Hyper-heuristic With Random Switching of Low Level Heuristics}
+
+\paragraph{Parameter control}
+
+\paragraph{Selection Only Hyper-Heuristic}
+
+\paragraph{Selection Hyper-Heuristic with Parameter Control}
+
+
+\section{Results Discussion}
+
+\subsection{Baseline Evaluation}
+
+\paragraph{Meta-Heuristics With Default Hyper-Parameters}
+
+\paragraph{Meta-Heuristics With Tuned Hyper-Parameters}
+
+\paragraph{Results Description and Explanation}
+
+
+\subsection{Hyper-Heuristic With Random Switching of Low Level Heuristics}
+
+\paragraph{Results Description and Explanation}
+
+
+\subsection{Parameter Control}
+
+\paragraph{Results Description and Explanation}
+
+
+\subsection{Selection Only Hyper-Heuristic}
+
+\paragraph{Results Description and Explanation}
+
+
+\subsection{Selection Hyper-Heuristic with Parameter Control}
+
+\paragraph{Results Description and Explanation}
+
+\section{Conclusion}

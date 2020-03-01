@@ -1,0 +1,38 @@
+\chapter{Concept Description}
+\paragraph{In this chapter} we describe the concept of developed selection Hyper-Heuristic with parameter control, not diving deep into the implementation details.
+
+The structure of this chapter is as follows.
+\todoy{maybe we should not highlight the structure of such a small chapter}
+First, in in section \ref{concept:search space} we define the Search Space entity requirements and structure. 
+It should bound the world of Low Level Heuristics and the world of Hyper-parameters of those heuristics.
+
+
+Next, we describe the Prediction process within the previously defined Search Space in section \ref{concept:prediction}.
+Here we highlight an importance of a prediction model decoupling from the previously defined Search Space structure.
+Doing so, we provide certain level of flexibility for user in the usage of different prediction models or developing his own.
+
+
+Finally, in section \ref{concept:llh} we gather our attention onto the Low Level Heuristics - a working horse of the hyper-heuristic.
+Here we highlight the requirements for LLH in terms of features that will be used by HH.
+
+
+\section{Search Space}\label{concept:search space}
+\paragraph{Importance explanation}
+\paragraph{Required structure} feature-tree structured
+
+
+
+\section{Prediction Process}\label{concept:prediction}
+\paragraph{Importance explanation}
+\paragraph{Requirements} generality, top-down approach of optimization
+-- different views of same Configuration (level-dependent) - filtering, transformation
+-- consider problem features? while selecting meta-heuristic \cite{surv:kerschke2019automated} page 6
+
+
+\section{Low Level Heuristics}\label{concept:llh}
+\paragraph{Importance explanation}
+\paragraph{Requirements}
+
+
+\section{Conclusion of concept}
+to be done...

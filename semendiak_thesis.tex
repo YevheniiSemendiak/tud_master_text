@@ -1,74 +1,125 @@
-% possible options for type:
-%  da = Diplomarbeit
-%  gb = Großer Beleg
-%  ms = Master's Thesis
-%  bs = Bachelor's Thesis
-% possible options for language:
-%  english, german, ngerman
-% default is: \documentclass[da,ngerman]{stthesis}
-\documentclass[ms, english]{stthesis}
+\documentclass[english,BCOR=1.5cm,twoside]{tudscrreprt}
 
-% * use this package if you don't want to use a layout based on the offical corporate design from TU Dresden
-% * use the given parameter if you only want the title page to be set in TU Dresden layout
-%\usepackage[titlepageonly]{tudlayout}
+% --- Load packages START
+%\usepackage[T1]{fontenc}
+\usepackage{fontenc}
 
-% only used for exemplary lorem ipsum text
-\usepackage{lipsum}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{isodate}
+
+% Bibliography
+\usepackage[
+    style=numeric-comp,
+    backend=biber,
+    url=false,
+    doi=false,
+    isbn=false,
+    hyperref,
+]{biblatex}
+
+\addbibresource{content/bibliography.bib}
+\AtEveryBibitem{%
+    \clearfield{note}%
+}
+
+\usepackage[hidelinks]{hyperref} % makes all links clickable but hides ugly boxes
+\usepackage[capitalise,nameinlink,noabbrev]{cleveref} % automatically inserts Fig. X in the text with \cref{..}
 \usepackage{todonotes}
+\usepackage{pdfpages} % to insert a task description.
+\usepackage{tudscrsupervisor} % if you want to copy the sources of the task description into the thesis (was in the example file, maybe, I will check how it works)
+\usepackage{csquotes}
 
-% Define the title of the thesis
-\title{From Parameter Tuning to Dynamic Heuristic Selection}
-% Specify the author of the thesis
-\author{Yevhenii Semendiak}
-% Specify the date on which the thesis is handed in
-\date{\today}
-% Specify the birthday of the thesis submitter
-\birthday{07.02.1995}
-% Specify the place of birth
-\birthplace{Izyaslav}
-% Specify the name of the supervisor
-% Use '\newline' to separate multiple supervisors from each other
-\supervisor{MSc. Dmytro Pukhkaiev \newline Dr.-Ing. Sebastian Götz}
-% Optionally, you can also use \hsl to define the name of the supervising professor if this is necessary. 
-% This defaults to Prof. Aßmann
+\usepackage{caption}
+\captionsetup{font=sf,labelfont=bf,labelsep=space}
+\usepackage{floatrow}
+\floatsetup{font=sf}
+\floatsetup[table]{style=plaintop}
+\captionsetup{singlelinecheck=off,format=hang,justification=raggedright}
+\DeclareCaptionSubType[alph]{figure}
+\DeclareCaptionSubType[alph]{table}
+%\captionsetup[subfloat]{labelformat=brace,list=off}
+
+\usepackage{booktabs} % fancy tables. need to analyse.
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{tabulary}
+\usepackage{tabu}
+% \usepackage{longtable} % tables for the number of pages
+\usepackage{quoting}
+\usepackage[babel]{microtype}
+\usepackage{xfrac}
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep}
+
+\usepackage{ellipsis}
+\let\ellipsispunctuation\relax
+
+% \input{lst.tex}
+% --- Load packages END
+
+
 
 \newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
 \newcommand{\todoy}[1]{\todo[color=yellow,inline,size=\small]{Yevhenii: #1}}
 
+% usefull links
+% https://writingcenter.fas.harvard.edu/pages/developing-thesis
+% https://writingcenter.fas.harvard.edu/pages/beginning-academic-essay 
+% by defining a scope we narrow a topic. need to define it carefully, I think, the one we had in pre-defence will be slightly changed
+
 \begin{document}
+
+% title page of the thesis
+\faculty{Fakultät Informatik}
+\department{}
+\institute{Institut für Software- und Multimediatechnik}
+\chair{Lehrstuhl für Softwaretechnologie}
+\title{From Parameter Tuning to Dynamic Heuristic Selection}
+
+\thesis{master}
+\graduation[M.Sc.]{Master of Science}
+
+\author{Yevhenii Semendiak}
+\emailaddress[]{Yevhenii.Semendiak@tu-dresden.de}
+\matriculationnumber{4733680}
+\matriculationyear{2020}
+\dateofbirth{07.02.1995}
+\placeofbirth{Izyaslav}
+\course{Distributed Systems Engineering}
+
+\supervisor{%
+    MSc. Dmytro Pukhkaiev%
+    \and Dr. Sebastian Götz%
+}
+\professor{Prof. Dr. rer. nat habil. Uwe Aßmann}
+\date{\today}
+
   \maketitle % This sets the title page
   
+  \includepdf{taskDescription.pdf}
+
+  %\input{content/disclaimer.tex}\todoy{should I add a disclaimer like this?}
+  
   \tableofcontents
+
+  \listoffigures
+  \listoftables
   
-  \todoy{Abstract?}
-  
+  \input{content/00_abstract.tex}
   \input{content/01_intro.tex}
-  
-  \input{content/02_background.tex}
-  
-  \input{content/03_related_work.tex}
-  
-  \input{content/04_concept.tex}
-  
-  \input{content/05_implementation.tex}
-  
+  \input{content/02_background_and_rel_work.tex}
+  \input{content/03_concept.tex}
+  \input{content/04_implementation.tex}
   \input{content/06_evalutation.tex}
-  
   \input{content/07_conclution.tex}
-  
   \input{content/08_future_work.tex}
   
-  \bibliographystyle{IEEEtran}
-  \todoy{is it correct style?}
-  \bibliography{content/bibliography.bib}
+  \printbibliography[heading=bibintoc]\label{sec:bibliography}
 
-  % must be invoked for correct page numbering in the appendix and all lists
-  \backmatter
-  
-  \appendix
-  \chapter{Appendix}
-  \section{Additional Information}
-  
-  \section{More Important Information}
+  % \appendix
+  % \input{content/04_implementation.tex}
+
+  \confirmation
   
 \end{document}

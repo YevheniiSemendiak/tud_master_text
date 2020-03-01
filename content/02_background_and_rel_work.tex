@@ -1,0 +1,107 @@
+\chapter{Background and Related Work Analysis}\label{bg}
+\paragraph{The structure} is the same as the beginning of introduction, but way more detailed.  
+
+
+\section{Optimization Problems and Solvers}\label{bg:opt problems and solvers}
+
+\subsection{Definition of Optimization Problem}
+\todoy{Need to find a classification of optimization problems.}
+%https://www.solver.com/problem-types
+
+
+\subsection{Classes of Solvers}
+Some (but not only) literature: \cite{bergstra2011algorithms}
+\subsubsection{Exact Solvers}
+\subsubsection{Approximate Solvers}
+\subsubsection{Motivation of Approximate Solvers}
+Pros and cons of both \cite{hromkovivc2013algorithmics}
+
+
+\section{Approximate Solvers for Optimization Problems}
+TSP as the running example. I guess, I will introduce it as an example of perturbation problems in previous section.\ref{sec:opt problms, solvrs}
+
+\subsection{Heuristics}
+\subsubsection{Definition}
+\subsubsection{Examples}
+
+\subsection{Meta-Heuristics}
+\subsubsection{Definition}
+\subsubsection{Classification}
+\subsubsection{Examples}
+We distinguish following examples among all existing meta-heuristics, since later we use them as the LLH in developed hyper-heuristic.
+\paragraph{GA}
+\paragraph{SA}
+\paragraph{ES}
+
+\subsection{Hybrid-Heuristics}
+\subsubsection{Definition}
+\subsubsection{Examples}
+\paragraph{Guided Loca Search (GLS) + Fast Local Search} \cite{tsang1997fast}
+\paragraph{Direct Global + Local search} \cite{syrjakow1999efficient}
+\paragraph{Simulated Annealing + Local Search} \cite{martin1996combining}
+
+\subsubsection{No-Free-Lunch Theorem}
+NFL is the problem of heuristics\cite{wolpert1997no}
+\subsubsection{Exploration-Exploitation Balance}
+\subsubsection{Conclusion} 
+Proper assignment of hyper-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
+
+\subsection{Hyper-Heuristics}
+\subsubsection{Definition}
+\subsubsection{Classification}
+\paragraph{Search Space:} heuristic selection, heuristic generation
+\paragraph{Learning time:} on-line learning hyper-heuristics, off-line learning hyper-heuristics, no-learning hyper-heuristics
+\paragraph{Other classification characteristics} from \cite{surv:kerschke2019automated}, \cite{burke2019classification}, mb smth else. For instance, hyperparameter tuning
+\subsubsection{Examples}% should I present it in following sections?
+\cite{surv:drake2019recent} (Online algorithm selection at page 27); \cite{surv:kerschke2019automated}
+
+\subsection{Conclusion on Approximate Solvers}
+\paragraph{Pros and cons of heuristics} - Heuristics are strictly problem dependent and each time require adaptations.
+\paragraph{Pros and cons of meta-heuristics} - no LLH selection, strict to one problem
+\paragraph{Pros and cons of hybrid-heuristics} - no LLH selection, strict to one problem ? 
+\paragraph{Pros and cons of hyper-heuristics} - no parameter control?
+
+
+\section{Parameter Tuning as a Search Problem}\label{bg: parameter tuning}
+The goal of section: analysis of existing systems for hyper-parameter optimization (tuning), weaknesses and strength of each of the system
+
+\subsection{Parameter Tuning Problem Definition}
+\subsection{Approaches for Parameter Tuning}
+\paragraph{Grid Search}
+\paragraph{Random Search}
+\paragraph{Model Based Search}
+
+\subsection{Systems for Model Based Parameter Tuning}
+
+\subsubsection{IRACE}
+\paragraph{approach} \cite{irace:lopez2016irace}
+\paragraph{pros and cons}
+
+\subsubsection{SMAC}
+\paragraph{approach description}
+
+\subsubsection{BOHB}
+\paragraph{approach description}
+
+\subsubsection{AUTO-SKLEARN}
+\paragraph{CASH (Combined Algorithm Selection and Hyperparameter optimization) problem}
+\paragraph{pros and cons (on-line or off-line, problems to solve, extensibility)}\cite{autosklearn:feurer2015efficient}
+
+\subsubsection{BRISEv2}
+\paragraph{approach description}
+\todoy{Other systems?}
+
+
+\section{Parameter control as an Optimization Problem}\label{bg: parameter control}
+\subsection{Parameter Control Definition}
+\subsection{Examples and Reported Impact}
+impact of parameter control based on other's evaluation
+
+
+\section{Conclusion}
+
+The meta-heuristic systems designers reported positive impact of parameter control embedding. 
+However, as the outcome of the no-free-lunch theorem, those systems can not tolerate broad range of problems, for instance, problem classes.
+In other hand, hyper-heuristics are designed with an aim to select the low level heuristics and those propose a possible solution of problem, stated in no-free-lunch theorem, but the lack of parameter control could dramatically decrease the performance of LLH (probably, I need to find a prove of this, or rephrase).
+
+\paragraph{Scope of thesis defined.} In this thesis we try to achieve the best of both worlds applying the best fitting LLH and tuning it's parameters while solving the problem on-line.
