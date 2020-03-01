@@ -1,4 +1,4 @@
-\chapter{Implementation details}
+\chapter{Implementation Details}
 \paragraph{In this chapter} we dive into the implementation details of the selection hyper-heuristic with parameter control.
  
 The best practice in software engineering is to minimize an effort for the implementation and reuse already existing and well-tested code.
@@ -7,17 +7,16 @@ Do to so we analyze the existing systems and highlight important non-functional 
 We also reuse the set of Low Level Heuristics in section \ref{implementation:llh code basis selection}.
 
 
-
-\section{Hyper-Heuristics Code Base selection}\label{implementation:hh code basis section}
+\section{Hyper-Heuristics Code Base Selection}\label{implementation:hh code basis section}
 A.k.a. "brain". Need to find a better way to call this part of HH..
-\subsubsection{Requirements}
-\subsubsection{Parameter tuning frameworks}
+\subsection{Requirements}
+\subsection{Parameter Tuning Frameworks}
 \paragraph{SMAC}
 \paragraph{BOHB}
 \paragraph{IRACE}
 \paragraph{BRISEv2}
 \todoy{Maybe, smth else..}
-\subsubsection{Conclusion}
+\subsection{Conclusion}
 BRISEv2 is the best system for code basis, however it has to be changed as we describe in following sections.
 
 
@@ -33,24 +32,24 @@ What is the problem with the current Search Space?
 \paragraph{Class diagram} - i think, I will put it into the appendix
 
 
-\section{Prediction logic}\label{implementation: prediction logic}
+\section{Prediction Logic}\label{implementation: prediction logic}
 \subsection{Base Version Description}
 \paragraph{The Scope Refinement Work} prediction should be done in feature-tree structured search space. Most models could handle only flat search space and we would like to enable reuse of those existing models. Though we decouple the structure of Search Space in entity \textbf{Predictor}, while actual prediction process is done in underlying models, that Predictor uses.
 
 \subsection{Predictor}
 to decouple prediction from structure of search space.
 
-\subsection{Prediction models}
+\subsection{Prediction Models}
 \subsubsection{Tree parzen estimator}
 \subsubsection{Multi Armed Bandit}
 \subsubsection{Sklearn linear regression wrapper}
 
 
-\section{Data preprocessing}
-\subsubsection{Heterogeneous data?} description and motivation of data preprocessing notions
+\section{Data Preprocessing}
+\subsection{Heterogeneous Data} description and motivation of data preprocessing notions
 
-\subsubsection{Base Version Description} and Scope of work analysis
-\subsubsection{Sklearn preprocessor wrapper}
+\subsection{Base Version Description} and Scope of work analysis
+\subsection{Wrapper for Scikit-learn Preprocessors}
 
 
 \section{Low Level Heuristics}
@@ -71,4 +70,4 @@ With the aim of effort reuse, the code base should be selected for implementatio
 \subsection{Scope of work analysis}
 \paragraph{opened PR}
 
-\section{Conclusion of implementation}
+\section{Conclusion}
