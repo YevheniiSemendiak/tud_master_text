@@ -12,7 +12,7 @@ We highly recommend for everyone to refresh the knowledge of sections topics and
 \subsection{Definition of the Optimization Problem}
 %https://www.solver.com/problem-types
 % need to add some kind of catchy intro, here or in previous parts of this section.
-While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the "best possible" Solution for Computation Problem~\cite{goldreich2010p}.
+While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the "best possible" Solution for Computation Problem~\cite{goldreich2010p}. 
 
 
 In this thesis we focus on the Optimization Problems -- a special case of the Search Problems.
@@ -21,7 +21,7 @@ In this thesis we focus on the Optimization Problems -- a special case of the Se
 A lot of conducted studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is almost impossible to exclude the application domain from the definition. However, in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} authors distinguished OP characteristics that overlap through each of these works and we would like to mention them here.
 
 
-First of all, let us define the Subject of the Optimization. In general, it could be imagined as the Target System (TS) displayed on picture \ref{bg:pic:Target System}. Analytically it could be represented as the function $Y = f(X)$. Informally it accepts the information with it's \textit{inputs} \textbf{X}, sometimes also called variables or parameters, and produces the result, that could be received on \textit{outputs} \textbf{Y}.
+First of all, let us define the subject of the Optimization. In general, it could be imagined as the Target System (TS) displayed on picture \ref{bg:pic:Target System}. Analytically it could be represented as the function $Y = f(X)$. Informally it accepts the information with it's \textit{inputs} \textbf{X} sometimes also called variables or parameters, performs a \textit{Task} and produces the result on it's \textit{outputs} \textbf{Y}.
 
 \svgpath{{graphics/Background/}}
 \begin{figure}
@@ -31,29 +31,47 @@ First of all, let us define the Subject of the Optimization. In general, it coul
 	\label{bg:pic:Target System}
 \end{figure}
 
+Pair of $X$ and respective $Y$ form a Solution for Computation Problem. 
+The Solution could also be characterized by the \textit{objective} value(s) - a quantitative measure of TS performance that we minimize or maximize. 
+We could obtain those value(s) directly by reading the $Y$, or indirectly for instance, noting the time TS took to produce the output $Y$ for given $X$. 
+The Solution objective value(s) form object(s) of Optimization. 
+For the sake of simplicity we here use $Y$, \textit{outputs}, \textit{objectives} and $X$, variables, \textbf{parameters(?)}% will decide later
+ interchangeably.
 
-Next, let us highlight characteristics of Target Systems mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation}:
-\paragraph{The amount of knowledge about TS} One of important characteristic, differentiate in is the amount of \textbf{knowledge} that the Subject exposes about the dependencies $X \rightarrow Y$. With respect to this knowledge, the Optimization could be \textit{White Box} - the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
-%\textit{Gray Box} - the amount of exposed knowledge is significant, but not enough to build the algebraic model.
-\textit{Black Box} - the exposed knowledge is mostly negligible. 
-%In this case the Derivative Free Optimization approaches (such as Surrogate Optimization, different Meta-|Hybrid-|Hyper-Heuristics)  are applicable.
+\paragraph{}
+Next, let us highlight the Target System characteristics. 
+Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} we found those the most important:
+\begin{itemize}[itemsep=8pt]
+	\item \textbf{Input data types} of $X$ is a crucial characteristic. The variables could be either \textit{discrete} where representatives are binary strings, integer-ordered or categorical data, % One could apply mixed integer linear (nonlinear) programming here (MILP, MINLP) \cite{biegler2004retrospective}.
+	\textit{continuous} where variables are usually a range of real numbers, or \textit{mixed} as the mixture of previous two cases.
 
+	\item \textbf{Constrains} are functional dependencies that describe the relationships among inputs and defile the allowable values for them.
 
-%\paragraph{Dependency types} could be  The inputs to outputs dependencies the of Target System could also be distinguished form perspective of linearity \cite{biegler2004retrospective,figueira2014hybrid}.
-%\textit{Linear dependencies} reveal the Linear Programming Optimization approaches, while with \textbf{Nonlinear dependencies} one should consider Nonlinear Programming.
+	\item \textbf{Amount of knowledge} TS exposes about the dependencies between $X \rightarrow Y$ or objective values. With respect to this knowledge, the Optimization could be \textit{White Box} - the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
+	%\textit{Gray Box} - the amount of exposed knowledge is significant, but not enough to build the algebraic model.
+	\textit{Black Box} - the exposed knowledge is mostly negligible. As an example, imagine the 
+	%In this case the Derivative Free Optimization approaches (such as Surrogate Optimization, different Meta-|Hybrid-|Hyper-Heuristics)  are applicable.
 
+	%\paragraph{Dependency types} could be  The inputs to outputs dependencies the of Target System could also be distinguished form perspective of linearity \cite{biegler2004retrospective,figueira2014hybrid}.
+	%\textit{Linear dependencies} reveal the Linear Programming Optimization approaches, while with \textbf{Nonlinear dependencies} one should consider Nonlinear Programming.
 
-\paragraph{Dependency randomness} One of possible challenges, while obtaining the knowledge about TS is uncertainty of output. Ideal case is the \textit{deterministic} dependency between $X$ and $Y$, however in most of real-world challenges engineers tackle with the \textit{stochastic} systems whose output is affected by random processes. 
- 
+	\item \textbf{Dependencies randomness} One of possible challenges, while obtaining the knowledge about TS is uncertainty of output. Ideal case is the \textit{deterministic} dependency between $X$ and $Y$, however in most of real-world challenges engineers tackle with the \textit{stochastic} systems whose output is affected by random processes. 
 
-\paragraph{Data types} of inputs $X$ is a crucial characteristic. \textit{Discrete input} representatives are binary strings, integer-ordered or categorical data. One could apply mixed integer linear (nonlinear) programming here (MILP, MINLP) \cite{biegler2004retrospective}. \textit{Continuous input}] is usually a range of real numbers. \textit{Mixed input} is the mixture of previous two cases.
+	\item \textbf{Cost of evaluation} is the amount of resources (computational, time, money, etc.) TS will spend to obtain the result for particular input. It vary from very cheap if the TS is a simple algebraic formula and Task is to evaluate it, to very expensive if the TS is a complex Neuron Network and the Task is to train it on data.
 
+	\item \textbf{Number of objectives} could be either \textit{Single}, or \textit{Multiple}. According to the number of objectives, the result of optimization will be either single Solution, or set of non-dominated (Pareto-optimal) Solutions \cite{deb2014multi}.
 
-\paragraph{Number of Outputs} could be either \textit{Single}, or \textit{Multiple}. According to the number of objectives, the result of optimization will be either single Solution, or set of non-dominated Solutions (Pareto-optimal set) \cite{deb2014multi}.
+\end{itemize}
 
 
 \subsection{Classes of Solvers}
 Some (but not only) literature: \cite{bergstra2011algorithms}
+
+The characteristics of Target System could restrict and sometimes strictly define the possible approach to perform an Optimization. 
+As instance, for Black Box TS one will not be able to apply any Mixed Integer Programming Optimization approaches, however Heuristics still will work.
+In opposite case, if the TS exposes algebraic dependencies between input variables and output objective, the MIP optimization, in particular MILP or MINLP approaches could be used to derive mathematically proved optimal Solution \cite{biegler2004retrospective}. 
+
+
 \subsubsection{Exact Solvers}
 \subsubsection{Approximate Solvers}
 \subsubsection{Motivation of Approximate Solvers}
