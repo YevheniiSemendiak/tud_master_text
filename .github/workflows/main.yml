@@ -14,7 +14,9 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@master
         with:
+          extra_system_packages: inkscape
           root_file: semendiak_thesis.tex
+          args: -pdf -file-line-error -interaction=nonstopmode -shell-escape
 
       - name: upload compiled pdf
         uses: actions/upload-artifact@v1
