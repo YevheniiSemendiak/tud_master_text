@@ -18,7 +18,10 @@ While the Search Problem (SP) defines the process of finding a possible Solution
 In this thesis we focus on the Optimization Problems -- a special case of the Search Problems.
 
 
-A lot of conducted studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is almost impossible to exclude the application domain from the definition. However, in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} authors distinguished OP characteristics that overlap through each of these works and we would like to mention them here.
+A lot of conducted studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is almost impossible to exclude the application domain from the definition. The description of every possible Optimization Problem and all approaches for solving it are out of the scope of this thesis. However, a birds-eye view should be presented in order to make sure that reader is familiar with all notions used through this thesis. 
+
+
+In \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} authors distinguished OP characteristics that overlap through each of these works and those we would like to start from them.
 
 
 First of all, let us define the subject of the Optimization. In general, it could be imagined as the Target System (TS) displayed on picture \ref{bg:pic:Target System}. Analytically it could be represented as the function $Y = f(X)$. Informally it accepts the information with it's \textit{inputs} \textbf{X} sometimes also called variables or parameters, performs a \textit{Task} and produces the result on it's \textit{outputs} \textbf{Y}.
@@ -39,7 +42,7 @@ For the sake of simplicity we here use $Y$, \textit{outputs}, \textit{objectives
  interchangeably.
 
 \paragraph{}
-Next, let us highlight the Target System characteristics. 
+Next, let us highlight the Target System characteristics.
 Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} we found those the most important:
 \begin{itemize}[itemsep=8pt]
 	\item \textbf{Input data types} of $X$ is a crucial characteristic. The variables could be either \textit{discrete} where representatives are binary strings, integer-ordered or categorical data, % One could apply mixed integer linear (nonlinear) programming here (MILP, MINLP) \cite{biegler2004retrospective}.
@@ -47,9 +50,9 @@ Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016s
 
 	\item \textbf{Constrains} are functional dependencies that describe the relationships among inputs and defile the allowable values for them.
 
-	\item \textbf{Amount of knowledge} TS exposes about the dependencies between $X \rightarrow Y$ or objective values. With respect to this knowledge, the Optimization could be \textit{White Box} - the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
+	\item \textbf{Amount of knowledge} TS exposes about the dependencies between $X \rightarrow Y$ or objective values. With respect to this knowledge, the Optimization could be \textit{White Box} -- the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
 	%\textit{Gray Box} - the amount of exposed knowledge is significant, but not enough to build the algebraic model.
-	\textit{Black Box} - the exposed knowledge is mostly negligible. As an example, imagine the 
+	\textit{Black Box} -- the exposed knowledge is mostly negligible.
 	%In this case the Derivative Free Optimization approaches (such as Surrogate Optimization, different Meta-|Hybrid-|Hyper-Heuristics)  are applicable.
 
 	%\paragraph{Dependency types} could be  The inputs to outputs dependencies the of Target System could also be distinguished form perspective of linearity \cite{biegler2004retrospective,figueira2014hybrid}.
@@ -64,13 +67,31 @@ Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016s
 \end{itemize}
 
 
+Combining different characteristic, one could obtain broad range of Optimization Problem types.
+As an example, let's grasp these characteristics for Traveling Salesman Problem \cite{applegate2006traveling} - one of the most studied combinatorial OP, yet still remaining one of the most challenging (here we consider deterministic, symmetric TSP).
+The informal definition of TSP is as follows: "Given a set of cities and the distances between each of them, what is the shortest path to visit each city once and return to the origin city?"
+The input data (path) is a vector of city indexes, and those the type is a non-negative integers \textit{0, 1, 2...}.
+There are two constrains on path: it should contain only unique indexes (those, each city will be visited only once) and it should start and end from the same city. 
+The TSP distance (or cost) matrix here plays role of Target System, clearly that this TS exposes all internal knowledge and those it is the white box.
+Since the cost matrix is fixed and not changing, the TS is considered to be deterministic, cost for two identical paths are always the same (although there exist Dynamic TSP where the cost matrix changes while computing the path cost to reflect a real-time traffic information updates while traveling \cite{cheong2011dynamic}).
+It is extremely cheap to compute a cost for given path using cost matrix, those overall Solution evaluation in this TS is cheap.
+Since we are optimizing only the route distance, it is a Single objective OP.
+
+
 \subsection{Classes of Solvers}
+The provided by TS characteristics of Optimization Problem could restrict and sometimes strictly define the possible approach to solve it.
+For instance, imagine you have white box deterministic Target System with discrete constrained input data and cheap evaluation. The Optimization Problem of this TS could be described using Integer Linear Programming \todoy{ref} approaches (but for scalability reasons not all problems could be tackled with ILP), or heuristics \todoy{ref}. If this TS turned to be a black box, the ILP approaches are not applicable and one should consider heuristics usage \cite{biegler2004retrospective}.
+
+
+As the point of interest, we distinguish 2 broad families of Solvers for Optimization Problems:
+\begin{itemize}
+	\item \textbf{Exact Solvers} that proved to solve the OP optimally. In most cases, these Solvers are not able to produce any intermediate Solution. 
+	\item \textbf{Approximate Solvers} that often start from some random Solution, but improve it quality while solving the OP.
+\end{itemize}
+
+Indeed, in real life use-cases sometimes it worse to sacrifice a bit the Solution quality in order to obtain it much faster. 
+\todoy{to be continued...}
 Some (but not only) literature: \cite{bergstra2011algorithms}
-
-The characteristics of Target System could restrict and sometimes strictly define the possible approach to perform an Optimization. 
-As instance, for Black Box TS one will not be able to apply any Mixed Integer Programming Optimization approaches, however Heuristics still will work.
-In opposite case, if the TS exposes algebraic dependencies between input variables and output objective, the MIP optimization, in particular MILP or MINLP approaches could be used to derive mathematically proved optimal Solution \cite{biegler2004retrospective}. 
-
 
 \subsubsection{Exact Solvers}
 \subsubsection{Approximate Solvers}
