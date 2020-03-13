@@ -9,13 +9,13 @@ We highly recommend for everyone to refresh the knowledge of sections topics and
 \section{Optimization, Search Problems and their Solvers}\label{bg:opt problems and solvers}
 
 
-\subsection{Definition of the Optimization Problem}
+\subsection{Optimization Problems and Their Characteristics}
 %https://www.solver.com/problem-types
 % need to add some kind of catchy intro, here or in previous parts of this section.
-While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the "best possible" Solution for Computation Problem~\cite{goldreich2010p}. 
+While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the 'best possible' Solution for Computation Problem~\cite{goldreich2010p}. 
 
 
-In this thesis we focus on the Optimization Problems -- a special case of the Search Problems.
+In this thesis we focus on the Optimization Problems — a special case of the Search Problems.
 
 
 A lot of conducted studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is almost impossible to exclude the application domain from the definition. The description of every possible Optimization Problem and all approaches for solving it are out of the scope of this thesis. However, a birds-eye view should be presented in order to make sure that reader is familiar with all notions used through this thesis. 
@@ -24,7 +24,7 @@ A lot of conducted studies in this field have tried to formalize the concept of 
 In \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} authors distinguished OP characteristics that overlap through each of these works and those we would like to start from them.
 
 
-First of all, let us define the subject of the Optimization. In general, it could be imagined as the Target System (TS) displayed on picture \ref{bg:pic:Target System}. Analytically it could be represented as the function $Y = f(X)$. Informally it accepts the information with it's \textit{inputs} \textbf{X} sometimes also called variables or parameters, performs a \textit{Task} and produces the result on it's \textit{outputs} \textbf{Y}.
+First, let us define the subject of the Optimization. In general, it could be imagined as the Target System (TS) displayed on picture \ref{bg:pic:Target System}. Analytically it could be represented as the function $Y = f(X)$. Informally it accepts the information with its \textit{inputs} \textbf{X} sometimes also called variables or parameters, performs a \textit{Task} and produces the result on its \textit{outputs} \textbf{Y}.
 
 \svgpath{{graphics/Background/}}
 \begin{figure}
@@ -34,14 +34,15 @@ First of all, let us define the subject of the Optimization. In general, it coul
 	\label{bg:pic:Target System}
 \end{figure}
 
-Pair of $X$ and respective $Y$ form a Solution for Computation Problem. 
-The Solution could also be characterized by the \textit{objective} value(s) - a quantitative measure of TS performance that we minimize or maximize. 
+Pair of $X$ and respective $Y$ form a \textit{Solution} for Computation Problem.
+All possible inputs $X$ form a \textit{Search Space}, while all outcomes $Y$ form an \textit{Objective Space}.
+The Solution could also be characterized by the \textit{objective} value(s) — a quantitative measure of TS performance that we minimize or maximize. 
 We could obtain those value(s) directly by reading the $Y$, or indirectly for instance, noting the time TS took to produce the output $Y$ for given $X$. 
 The Solution objective value(s) form object(s) of Optimization. 
 For the sake of simplicity we here use $Y$, \textit{outputs}, \textit{objectives} and $X$, variables, \textbf{parameters(?)}% will decide later
  interchangeably.
 
-\paragraph{}
+
 Next, let us highlight the Target System characteristics.
 Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} we found those the most important:
 \begin{itemize}[itemsep=8pt]
@@ -50,9 +51,9 @@ Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016s
 
 	\item \textbf{Constrains} are functional dependencies that describe the relationships among inputs and defile the allowable values for them.
 
-	\item \textbf{Amount of knowledge} TS exposes about the dependencies between $X \rightarrow Y$ or objective values. With respect to this knowledge, the Optimization could be \textit{White Box} -- the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
+	\item \textbf{Amount of knowledge} TS exposes about the dependencies between $X \rightarrow Y$ or objective values. With respect to this knowledge, the Optimization could be \textit{White Box} — the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
 	%\textit{Gray Box} - the amount of exposed knowledge is significant, but not enough to build the algebraic model.
-	\textit{Black Box} -- the exposed knowledge is mostly negligible.
+	\textit{Black Box} — the exposed knowledge is mostly negligible.
 	%In this case the Derivative Free Optimization approaches (such as Surrogate Optimization, different Meta-|Hybrid-|Hyper-Heuristics)  are applicable.
 
 	%\paragraph{Dependency types} could be  The inputs to outputs dependencies the of Target System could also be distinguished form perspective of linearity \cite{biegler2004retrospective,figueira2014hybrid}.
@@ -60,7 +61,7 @@ Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016s
 
 	\item \textbf{Dependencies randomness} One of possible challenges, while obtaining the knowledge about TS is uncertainty of output. Ideal case is the \textit{deterministic} dependency between $X$ and $Y$, however in most of real-world challenges engineers tackle with the \textit{stochastic} systems whose output is affected by random processes. 
 
-	\item \textbf{Cost of evaluation} is the amount of resources (computational, time, money, etc.) TS will spend to obtain the result for particular input. It vary from very cheap if the TS is a simple algebraic formula and Task is to evaluate it, to very expensive if the TS is a complex Neuron Network and the Task is to train it on data.
+	\item \textbf{Cost of evaluation} is the amount of resources (computational, time, money, etc.) TS will spend to obtain the result for particular input. It varies from very cheap if the TS is a simple algebraic formula and Task is to evaluate it, to very expensive if the TS is a complex Neuron Network and the Task is to train it on data.
 
 	\item \textbf{Number of objectives} could be either \textit{Single}, or \textit{Multiple}. According to the number of objectives, the result of optimization will be either single Solution, or set of non-dominated (Pareto-optimal) Solutions \cite{deb2014multi}.
 
@@ -68,8 +69,14 @@ Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016s
 
 
 Combining different characteristic, one could obtain broad range of Optimization Problem types.
-As an example, let's grasp these characteristics for Traveling Salesman Problem \cite{applegate2006traveling} - one of the most studied combinatorial OP, yet still remaining one of the most challenging (here we consider deterministic, symmetric TSP).
-The informal definition of TSP is as follows: "Given a set of cities and the distances between each of them, what is the shortest path to visit each city once and return to the origin city?"
+
+
+In this thesis we tackle such a real life problems as bin packing, job-shop scheduling or vehicle routing.
+The mentioned above problems has been shown to be NP-complete computational complexity \cite{garey1979computers}.
+
+
+As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP) \cite{applegate2006traveling} — an instance of vehicle routing problem and one of the most studied combinatorial OP, yet still remaining one of the most challenging (here we consider deterministic, symmetric TSP).
+The informal definition of TSP is as follows: 'Given a set of cities and the distances between each of them, what is the shortest path to visit each city once and return to the origin city?'.
 The input data (path) is a vector of city indexes, and those the type is a non-negative integers \textit{0, 1, 2...}.
 There are two constrains on path: it should contain only unique indexes (those, each city will be visited only once) and it should start and end from the same city. 
 The TSP distance (or cost) matrix here plays role of Target System, clearly that this TS exposes all internal knowledge and those it is the white box.
@@ -78,28 +85,67 @@ It is extremely cheap to compute a cost for given path using cost matrix, those 
 Since we are optimizing only the route distance, it is a Single objective OP.
 
 
-\subsection{Classes of Solvers}
-The provided by TS characteristics of Optimization Problem could restrict and sometimes strictly define the possible approach to solve it.
-For instance, imagine you have white box deterministic Target System with discrete constrained input data and cheap evaluation. The Optimization Problem of this TS could be described using Integer Linear Programming \todoy{ref} approaches (but for scalability reasons not all problems could be tackled with ILP), or heuristics \todoy{ref}. If this TS turned to be a black box, the ILP approaches are not applicable and one should consider heuristics usage \cite{biegler2004retrospective}.
+\subsection{Optimization Problem Solvers and Their Classes}
+Any Optimization Problem could be solved by an exhaustive search. 
+But when the problem size significantly increase, the amount of time needed for an exhaustive search becomes infeasible and in most cases even relatively small problem instances could not be solved by an enumeration.
+
+Here different techniques come into play, but the provided by Target System characteristics of Optimization Problem could restrict and sometimes strictly define the applicable approach.
+For instance, imagine you have white box deterministic TS with discrete constrained input data and cheap evaluation. The OP in this case could be described using Integer Linear Programming \todoy{ref} approaches, or heuristics \todoy{ref}. If this TS turned out to be a black box, the ILP approaches are not applicable and one should consider using heuristics \cite{biegler2004retrospective}.
 
 
-As the point of interest, we distinguish 2 broad families of Solvers for Optimization Problems:
+Again, there exist a lot of different facets for OP Solvers classification, however they are a subject of surveying works. Here as the point of interest we decided to highlight two of them.
+
+From the perspective of solution quality:
 \begin{itemize}
-	\item \textbf{Exact Solvers} that proved to solve the OP optimally. In most cases, these Solvers are not able to produce any intermediate Solution. 
-	\item \textbf{Approximate Solvers} that often start from some random Solution, but improve it quality while solving the OP.
+	\item \textbf{Exact} Solvers are those algorithms that always provide an optimal Solution for OP.
+	\item \textbf{Approximate} Solvers produce a sub-optimal output with guarantee in quality (some order of distance to the optimal solution).
+	\item \textbf{Heuristics} Solvers do not give any worst-case guarantee for the final result quality.
 \end{itemize}
 
-Indeed, in real life use-cases sometimes it worse to sacrifice a bit the Solution quality in order to obtain it much faster. 
-\todoy{to be continued...}
-Some (but not only) literature: \cite{bergstra2011algorithms}
+From the perspective of solution availability:
+\begin{itemize}
+	\item Algorithms that expose the Solution \textbf{at the end} of their run.
+	\item In opposite, \textbf{anytime} algorithms designed to improve the solution quality step-by-step while solving the OP and those, intermediate results are naturally accessible. 
+\end{itemize}
 
-\subsubsection{Exact Solvers}
-\subsubsection{Approximate Solvers}
-\subsubsection{Motivation of Approximate Solvers}
+Each if this algorithm families has its own advantages and disadvantages in comparison to other, and require more detailed description in following chapters.
+
+\subsubsection{Solution Quality Perspective}
+\paragraph{Exact Solvers}
+As we stated previously, the exact algorithms are those which always solve an OP to optimality.
+
+For some OP it is possible to develop an algorithm that is much faster than exhaustive search — it runs in super-polynomial time providing an optimal solution. As it stated in \cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, those super-polynomial time algorithms are the best we can hope to get when dealing with an NP-complete problem.
+
+By the definition in \cite{fomin2013exact}, the objective of an exact algorithm is to perform better (in terms of running time) than exhaustive search.
+In both works \cite{woeginger2003exact} author had enumerated the main techniques for exact algorithms designing each of which enhance this 'better' independently.
+A brief explanation of them will help to refresh the knowledge.
+
+\begin{itemize}
+	\item \textbf{Branching and bounding} techniques when applied to origin problem, split the search space of all possible solutions (e.g. exhaustive search space) to a set of smaller sub-spaces (more formally, branching the search tree into subtrees). This is done with an intent to later prove that some sub-spaces never lead to an optimal solution and those could be ignored in order to speed-up the search.
+	
+	\item \textbf{Dynamic programming across the Subsets} techniques in some sort could be combined with the mentioned above branching techniques. After forming the Search Space subsets (branches), the dynamic programming attempts to derive solutions for smaller subsets and combine them into solutions for lager subsets unless finally derive a solution for original search space.
+	
+	\item \textbf{Problem preprocessing} could be applied as an initial phase of the solving process. This technique is dependable upon the underlying OP, but when applied properly, significantly reduce the running time. A toy example from \cite{woeginger2003exact} elegantly illustrate this technique: imagine problem of finding a pair of two integers $x_i$ and $y_i$ that sum up to integer $S$ in $X_k$ and $Y_k$ sets of unique numbers ($k$ here denotes the size of a set). The exhaustive search will enumerate all $x-y$ pairs in $O(k^2)$ time. But one could first preprocess the data by sorting it, after that use bisection search repeatedly in this sorted array and search for $k$ values $S - y_i$, the overall time complexity becomes $O(k\log(k))$.
+\end{itemize}
+
+
+\paragraph{Approximate Solvers} (or approximate algorithms) as representatives of theoretical computer science, have been created in order to tackle the computationally difficult OP, which is handful when the OP is $NP-hard$. %In words of Garey and Johnson it means "I can't find an efficient (polynomial time) algorithm, but neither can all of these famous people."
+If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs cannot be solved with exact solvers efficiently (in polynomial time).
+
+
+In contradistinction to exact, these algorithms find an approximate solution effectively with the provable assurances on the distance from an optimal solution \cite{williamson2011design}. The worst case results quality guarantee is crucial in design of approximation algorithms and involves mathematical proofs.
+A lot of OPs have a \textit{polynomial-time approximation schemes} so the approximate solvers could be applied to them, but not all problems have those schemes. For instance, one could apply approximate solver for TSP or Knapsack Problem, but not for Maximum Satisfiability Problem \cite{williamson2011design}.
+
+\paragraph{Heuristics} in contradiction to approximate solvers do not provide any guarantee on distance of provided result to optimal result.
+
+\subsubsection{Motivation of Heuristics}
+An old engineering slogan says, "Fast. Cheap. Reliable. Choose two."
+Approximation Solvers are representatives of the theoretical computer science field. 
 Pros and cons of both \cite{hromkovivc2013algorithmics}
+Indeed, in real life use-cases sometimes it worse to sacrifice the optimal Solution quality in order to obtain near-optimal quality, but much faster.
 
 
-\section{Approximate Solvers for Optimization Problems}
+\section{Heuristic Solvers for Optimization Problems}
 TSP as the running example. I guess, I will introduce it as an example of perturbation problems in previous section.\ref{sec:opt problms, solvrs}
 
 \subsection{Heuristics}
