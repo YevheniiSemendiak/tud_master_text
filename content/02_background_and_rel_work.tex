@@ -6,10 +6,10 @@ We highly recommend for everyone to refresh the knowledge of sections topics and
 \paragraph{In this chapter we...} 
 
 
-\section{Optimization, Search Problems and their Solvers}\label{bg:opt problems and solvers}
+\section{Optimization Problems and their Solvers}\label{bg:opt problems and solvers}
 
 
-\subsection{Optimization Problems and Their Characteristics}
+\subsection{Optimization Problems}
 %https://www.solver.com/problem-types
 % need to add some kind of catchy intro, here or in previous parts of this section.
 While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the 'best possible' Solution for Computation Problem~\cite{goldreich2010p}. 
@@ -85,7 +85,7 @@ It is extremely cheap to compute a cost for given path using cost matrix, those 
 Since we are optimizing only the route distance, it is a Single objective OP.
 
 
-\subsection{Optimization Problem Solvers and Their Classes}
+\subsection{Optimization Problem Solvers}
 Any Optimization Problem could be solved by an exhaustive search. 
 But when the problem size significantly increase, the amount of time needed for an exhaustive search becomes infeasible and in most cases even relatively small problem instances could not be solved by an enumeration.
 
@@ -110,7 +110,7 @@ From the perspective of solution availability:
 
 Each if this algorithm families has its own advantages and disadvantages in comparison to other, and require more detailed description in following chapters.
 
-\subsubsection{Solution Quality Perspective}
+\subsubsection{Solution Quality Classes}
 \paragraph{Exact Solvers}
 As we stated previously, the exact algorithms are those which always solve an OP to optimality.
 
@@ -129,14 +129,34 @@ A brief explanation of them will help to refresh the knowledge.
 \end{itemize}
 
 
-\paragraph{Approximate Solvers} (or approximate algorithms) as representatives of theoretical computer science, have been created in order to tackle the computationally difficult OP, which is handful when the OP is $NP-hard$. %In words of Garey and Johnson it means "I can't find an efficient (polynomial time) algorithm, but neither can all of these famous people."
-If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs cannot be solved with exact solvers efficiently (in polynomial time).
+\paragraph{Approximate Solvers} (or approximate algorithms) as representatives of the field of theoretical computer science. They have been created in order to tackle the computationally difficult white box OP, which is handful when the OP is $NP-hard$. %In words of Garey and Johnson it means "I can't find an efficient (polynomial time) algorithm, but neither can all of these famous people."
+If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs (ILP) are $NP-hard$ and cannot be solved with exact solvers in polynomial time, those require relaxation either in efficiency or quality of optimization.
 
 
-In contradistinction to exact, these algorithms find an approximate solution effectively with the provable assurances on the distance from an optimal solution \cite{williamson2011design}. The worst case results quality guarantee is crucial in design of approximation algorithms and involves mathematical proofs.
-A lot of OPs have a \textit{polynomial-time approximation schemes} so the approximate solvers could be applied to them, but not all problems have those schemes. For instance, one could apply approximate solver for TSP or Knapsack Problem, but not for Maximum Satisfiability Problem \cite{williamson2011design}.
+In contradistinction to exact, approximate algorithms relax the quality requirements and solve an OP effectively with the provable assurances on the result distance from an optimal solution \cite{williamson2011design}. The worst case results quality guarantee is crucial in design of approximation algorithms and involves mathematical proofs. 
 
-\paragraph{Heuristics} in contradiction to approximate solvers do not provide any guarantee on distance of provided result to optimal result.
+One may ask a question "How do these algorithms guarantee on quality, if the optimal solution is unknown ahead?" Certainly it sounds contradictive since knowing the optimal solution cancels an optimization problem itself. The answer to this question highlights a key technique in the design of approximation algorithms.
+
+In \cite{williamson2011design} authors stated several techniques of an approximate solvers design. The \textbf{Linear Programming} relaxation plays a central role in approximate solvers. It is well known that solving the ILP is $NP-hard$ problem, however it could be relaxed to polynomial-time solvable LP. %Those, one of techniques is relaxation of ILP to LP. An optimal solution for LP will have value $S_LP \le S_IP = OPT$ (for the minimization case). Here we could derive a lower bound for the original minimization or upper bound for maximization problem. 
+Later fractional solution for the LP should be rounded to obtain a feasible solution for the ILP. % that is within a cerain factor $f$ the value of the LP $S_LP$. Thus, the ILP solution will cost no more than $f * OPT$.
+Different rounding strategies define separate technique for approximate solvers \cite{williamson2011design}: 
+\begin{itemize}
+	\item \textbf{Deterministic rounding} follows predefined ahead strategy for rounding.
+	\item In \textbf{Randomized rounding} the algorithm will do a round-up of each fractional solution value to integer uniformly.
+\end{itemize}
+
+Another technique in contrast to rounding requires building a \textit{dual linear program} for LP. This technique utilizes a \textit{weak} and \textit{strong duality} properties of dual linear program to derive the distance of approximate from an optimal solution. Other properties of dual linear program form a basis for \textbf{Primal-dual} algorithms. They start with a dual feasible solution and use dual information to derive a solution (possible infeasible) for primal linear program. If the \textit{primal} solution is infeasible, algorithm modifies dual solution to increase the values of the dual objective function \cite{williamson2011design}. 
+
+
+A \textbf{greedy algorithm} is a quite different method that while constructing the solution, follows the logic of making a sequence of locally optimal decisions. Indeed, these decisions might not lead to a globally optimal solution, but the advantage of greedy algorithms is a simplicity in implementation \cite{williamson2011design}.
+
+
+\paragraph{Heuristics} in contradiction to approximate solvers do not provide any guarantee on the Solution quality however, they are applicable not only to white box, but also to black box OP.
+
+
+
+\subsubsection{Solution Availability Classes}
+
 
 \subsubsection{Motivation of Heuristics}
 An old engineering slogan says, "Fast. Cheap. Reliable. Choose two."
