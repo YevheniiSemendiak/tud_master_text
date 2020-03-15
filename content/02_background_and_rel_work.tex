@@ -108,10 +108,10 @@ From the perspective of solution availability:
 	\item In opposite, \textbf{anytime} algorithms designed to improve the solution quality step-by-step while solving the OP and those, intermediate results are naturally accessible. 
 \end{itemize}
 
-Each if this algorithm families has its own advantages and disadvantages in comparison to other, and require more detailed description in following chapters.
+Each if this algorithm families has own advantages and disadvantages in comparison to other, and if the property of solution availability is clear, the solution quality faced require more detailed description.
 
 \subsubsection{Solution Quality Classes}
-\paragraph{Exact Solvers}
+\paragraph{Exact Solvers.}
 As we stated previously, the exact algorithms are those which always solve an OP to optimality.
 
 For some OP it is possible to develop an algorithm that is much faster than exhaustive search — it runs in super-polynomial time providing an optimal solution. As it stated in \cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, those super-polynomial time algorithms are the best we can hope to get when dealing with an NP-complete problem.
@@ -129,8 +129,8 @@ A brief explanation of them will help to refresh the knowledge.
 \end{itemize}
 
 
-\paragraph{Approximate Solvers} (or approximate algorithms) as representatives of the field of theoretical computer science. They have been created in order to tackle the computationally difficult white box OP, which is handful when the OP is $NP-hard$. %In words of Garey and Johnson it means "I can't find an efficient (polynomial time) algorithm, but neither can all of these famous people."
-If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs (ILP) are $NP-hard$ and cannot be solved with exact solvers in polynomial time, those require relaxation either in efficiency or quality of optimization.
+\paragraph{Approximate Solvers.} When the OP cannot be solved to optimal in polynomial time, people start thinking in alternative solutions and mostly relax their requirements. Approximate algorithms are representatives of the theoretical computer science field that have been created in order to tackle the computationally difficult white box OP. %In words of Garey and Johnson it means "I can't find an efficient (polynomial time) algorithm, but neither can all of these famous people."
+%If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs (ILP) are $NP-hard$ and cannot be solved with exact solvers in polynomial time, those require relaxation either in efficiency or quality of optimization.
 
 
 In contradistinction to exact, approximate algorithms relax the quality requirements and solve an OP effectively with the provable assurances on the result distance from an optimal solution \cite{williamson2011design}. The worst case results quality guarantee is crucial in design of approximation algorithms and involves mathematical proofs. 
@@ -148,24 +148,46 @@ Different rounding strategies define separate technique for approximate solvers 
 Another technique in contrast to rounding requires building a \textit{dual linear program} for LP. This technique utilizes a \textit{weak} and \textit{strong duality} properties of dual linear program to derive the distance of approximate from an optimal solution. Other properties of dual linear program form a basis for \textbf{Primal-dual} algorithms. They start with a dual feasible solution and use dual information to derive a solution (possible infeasible) for primal linear program. If the \textit{primal} solution is infeasible, algorithm modifies dual solution to increase the values of the dual objective function \cite{williamson2011design}. 
 
 
-A \textbf{greedy algorithm} is a quite different method that while constructing the solution, follows the logic of making a sequence of locally optimal decisions. Indeed, these decisions might not lead to a globally optimal solution, but the advantage of greedy algorithms is a simplicity in implementation \cite{williamson2011design}.
+A \textbf{greedy algorithm} is a quite different method that while constructing the solution, follows the logic of making a sequence of locally optimal decisions. Indeed, these decisions might not lead to a globally optimal solution, but the advantage of greedy algorithms is a simplicity in implementation \cite{williamson2011design}. \todoy{somewhere I found this alg in approximate solvers, otherwhere in heuristics..}
 
 
-\paragraph{Heuristics} in contradiction to approximate solvers do not provide any guarantee on the Solution quality however, they are applicable not only to white box, but also to black box OP.
+\paragraph{Heuristics.} In contradiction to approximate solvers, heuristics do not provide any guarantee on the Solution quality. They are applicable not only to white box TS, but also in black box cases. They are sufficient to quickly reach immediate, short-term goal for those problems, where finding an optimal solution is impossible or impractical because of the huge search space size.
+
+Heuristics could be defied as rules of thumb, or strategies to use available from TS and obtained solution information to control a problem-solving process \cite{pearl1984intelligent}. Scientists draw the inspiration for heuristics creation from all aspects of our being — from observations of how humans tackle problems using intuition to mechanisms discovered in nature.
+
+
+Heuristic approaches could be discerned by the level of generality:
+\begin{itemize}
+	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They use the domain knowledge from Optimization Problem to gain a performance. For instance, while solving a Traveling Salesman Problem, heuristic approach could suggest proceeding with the next closest city from currently discovered. Simple heuristics do not provide any mechanisms to escape a local optimum and those could be easily trapped to it \cite{pearl1984intelligent}.
+	
+	\item \textbf{Meta-heuristics} are high-level heuristics that do not require problem domain knowledge and those could be applied to broad range of OPs. Often they are nature-inspired and comprise mechanisms to escape local optima and also converge slower than simple heuristics \cite{bianchi2009survey}.
+	
+	\item \textbf{Hybrid-heuristics} arise combinations of two or more meta-heuristics. It could be imagined as a combination of recipes from the cook book to create something new and probably better, merging the best characteristics.
+	
+	\item \textbf{Hyper-heuristics} is a heuristic that operates not on the Search Space constructed for the OP, but on a set of low-level heuristics, used to solve the Optimization Problem. The research and experiments have shown that some meta-heuristics perform better for some types of problems, but poorly for other. In addition, it could happen so that for different instances of the same problem, various meta-heuristics provide unexpected performance metrics. Even in different stages of the problem solving process the dominance of one heuristic over another could change. Here comes hyper-heuristics to intelligently pick suitable meta-heuristics to solve a problem \cite{burke2003hyper}.
+\end{itemize}
+
+Later, in \ref{bg: heuristics section} section dedicated to heuristics we will discuss each of aforementioned approaches in more details including examples.
+
+
+\subsubsection{Motivation of Heuristics}% maybe, change the name to remove a spoiler? 
+An old engineering slogan says, "Fast, Cheap or Good? Choose two."
+And here we should make a decision now, which way to follow.
+
+In one hand, we have an exact solver for the Optimization Problems. As we mentioned above, it guarantees to derive an optimal solution, always. Today, tomorrow or in next century, but an exact solver will find it. The only thing we need is simply (or not) construct an exact algorithm for our specific problem. This approach definitely provides us \textit{good}, say the best, quality of final solution, however it sacrifices simplicity and speed in building a solver and solving the problem.
+
+
+On the other hand we have an approximate solver. It does not guarantee to find an optimal solution, but instead reasonably good one. The required effort for constructing an algorithm and proving its preciseness remains the same as for exact solvers, from our perspective. Nevertheless, this approach beats the previous one in terms of speed in problem solving, sacrificing a reasonably small amount of the result quality. Sounds like a good deal.
+
+
+In third hand (why not?) remains bright and shining heuristic. It is super-fast in comparison to previous two approaches in problem solving. It is much easier to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in this approach is that it does not guarantee to provide an optimal solution at all and those, one should consider use it up to own risk.
+
+
+Modern world is highly dynamic, in business survive those who faster and stronger. In most cases former plays settle role for success and great products build iteratively, enhancing existing solution step-by-step and throwing away unlucky decisions quickly.\todoy{will continue...}
 
 
 
-\subsubsection{Solution Availability Classes}
-
-
-\subsubsection{Motivation of Heuristics}
-An old engineering slogan says, "Fast. Cheap. Reliable. Choose two."
-Approximation Solvers are representatives of the theoretical computer science field. 
-Pros and cons of both \cite{hromkovivc2013algorithmics}
-Indeed, in real life use-cases sometimes it worse to sacrifice the optimal Solution quality in order to obtain near-optimal quality, but much faster.
-
-
-\section{Heuristic Solvers for Optimization Problems}
+\section{Heuristic Solvers for Optimization Problems}\label{bg: heuristics section}
 TSP as the running example. I guess, I will introduce it as an example of perturbation problems in previous section.\ref{sec:opt problms, solvrs}
 
 \subsection{Heuristics}
