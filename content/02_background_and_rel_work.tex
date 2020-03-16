@@ -9,7 +9,7 @@ We highly recommend for everyone to refresh the knowledge of sections topics and
 \section{Optimization Problems and their Solvers}\label{bg:opt problems and solvers}
 
 
-\subsection{Optimization Problems}
+\subsection{Optimization Problems}\label{BG: subsection OPs}
 %https://www.solver.com/problem-types
 % need to add some kind of catchy intro, here or in previous parts of this section.
 While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the 'best possible' Solution for Computation Problem~\cite{goldreich2010p}. 
@@ -72,7 +72,7 @@ Combining different characteristic, one could obtain broad range of Optimization
 
 
 In this thesis we tackle such a real life problems as bin packing, job-shop scheduling or vehicle routing.
-The mentioned above problems has been shown to be NP-complete computational complexity \cite{garey1979computers}.
+The mentioned above problems has been shown to impose $NP-complete$ (meaning that they are both $NP$ and $NP-hard$) computational complexity \cite{garey1979computers}.
 
 
 As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP) \cite{applegate2006traveling} — an instance of vehicle routing problem and one of the most studied combinatorial OP, yet still remaining one of the most challenging (here we consider deterministic, symmetric TSP).
@@ -85,7 +85,7 @@ It is extremely cheap to compute a cost for given path using cost matrix, those 
 Since we are optimizing only the route distance, it is a Single objective OP.
 
 
-\subsection{Optimization Problem Solvers}
+\subsection{Optimization Problem Solvers}\label{BG: subsection OP Solvers}
 Any Optimization Problem could be solved by an exhaustive search. 
 But when the problem size significantly increase, the amount of time needed for an exhaustive search becomes infeasible and in most cases even relatively small problem instances could not be solved by an enumeration.
 
@@ -147,18 +147,15 @@ Different rounding strategies define separate technique for approximate solvers 
 
 Another technique in contrast to rounding requires building a \textit{dual linear program} for LP. This technique utilizes a \textit{weak} and \textit{strong duality} properties of dual linear program to derive the distance of approximate from an optimal solution. Other properties of dual linear program form a basis for \textbf{Primal-dual} algorithms. They start with a dual feasible solution and use dual information to derive a solution (possible infeasible) for primal linear program. If the \textit{primal} solution is infeasible, algorithm modifies dual solution to increase the values of the dual objective function \cite{williamson2011design}. 
 
-
-A \textbf{greedy algorithm} is a quite different method that while constructing the solution, follows the logic of making a sequence of locally optimal decisions. Indeed, these decisions might not lead to a globally optimal solution, but the advantage of greedy algorithms is a simplicity in implementation \cite{williamson2011design}. \todoy{somewhere I found this alg in approximate solvers, otherwhere in heuristics..}
-
-
 \paragraph{Heuristics.} In contradiction to approximate solvers, heuristics do not provide any guarantee on the Solution quality. They are applicable not only to white box TS, but also in black box cases. They are sufficient to quickly reach immediate, short-term goal for those problems, where finding an optimal solution is impossible or impractical because of the huge search space size.
 
 Heuristics could be defied as rules of thumb, or strategies to use available from TS and obtained solution information to control a problem-solving process \cite{pearl1984intelligent}. Scientists draw the inspiration for heuristics creation from all aspects of our being — from observations of how humans tackle problems using intuition to mechanisms discovered in nature.
 
 
-Heuristic approaches could be discerned by the level of generality:
+As well as in previous approaches, there exists a lot of facets for heuristic approaches classification.
+However, from the \textit{level of generality} perspective exist:
 \begin{itemize}
-	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They use the domain knowledge from Optimization Problem to gain a performance. For instance, while solving a Traveling Salesman Problem, heuristic approach could suggest proceeding with the next closest city from currently discovered. Simple heuristics do not provide any mechanisms to escape a local optimum and those could be easily trapped to it \cite{pearl1984intelligent}.
+	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They use the domain knowledge from Optimization Problem to gain a performance. Simple heuristics do not provide any mechanisms to escape a local optimum and those could be easily trapped to it \cite{pearl1984intelligent}.
 	
 	\item \textbf{Meta-heuristics} are high-level heuristics that do not require problem domain knowledge and those could be applied to broad range of OPs. Often they are nature-inspired and comprise mechanisms to escape local optima and also converge slower than simple heuristics \cite{bianchi2009survey}.
 	
@@ -170,7 +167,7 @@ Heuristic approaches could be discerned by the level of generality:
 Later, in \ref{bg: heuristics section} section dedicated to heuristics we will discuss each of aforementioned approaches in more details including examples.
 
 
-\subsubsection{Motivation of Heuristics}% maybe, change the name to remove a spoiler? 
+\subsubsection{Selecting Best Suited Solver}
 An old engineering slogan says, "Fast, Cheap or Good? Choose two."
 And here we should make a decision now, which way to follow.
 
@@ -180,23 +177,59 @@ In one hand, we have an exact solver for the Optimization Problems. As we mentio
 On the other hand we have an approximate solver. It does not guarantee to find an optimal solution, but instead reasonably good one. The required effort for constructing an algorithm and proving its preciseness remains the same as for exact solvers, from our perspective. Nevertheless, this approach beats the previous one in terms of speed in problem solving, sacrificing a reasonably small amount of the result quality. Sounds like a good deal.
 
 
-In third hand (why not?) remains bright and shining heuristic. It is super-fast in comparison to previous two approaches in problem solving. It is much easier to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in this approach is that it does not guarantee to provide an optimal solution at all and those, one should consider use it up to own risk.
+Last but not least, remains bright and shining heuristic. It is super-fast in comparison to previous two approaches in problem solving. It is much easier to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in this approach is that it does not guarantee to provide an optimal solution at all and those, one should consider use it up to own risk.
 
 
-Modern world is highly dynamic, in business survive those who faster and stronger. In most cases former plays settle role for success and great products build iteratively, enhancing existing solution step-by-step and throwing away unlucky decisions quickly.\todoy{will continue...}
+Modern world is highly dynamic, in business survive those who faster and stronger. In most cases former plays settle role for success and great products build iteratively, enhancing existing solution step-by-step and throwing away unlucky decisions quickly. As we mentioned in \ref{BG: subsection OPs} this thesis is dedicated to facing a real-life problems such as TSP. The problems showed to be $NP-complete$ that is why we are not allowed to apply exact solvers, only approximate and heuristics left. In both cases we are sacrificing a solution optimallity, although in different quantities, but the heuristic algorithms repay in time-to develop and getting first results. It motivates us to follow the heuristic approach through the thesis.
 
+In following section \ref{bg: heuristics section} we shortly survey different types and examples of heuristics with their properties, weaknesses and ways to deal with them in order to select the best suited heuristics class.
 
 
 \section{Heuristic Solvers for Optimization Problems}\label{bg: heuristics section}
-TSP as the running example. I guess, I will introduce it as an example of perturbation problems in previous section.\ref{sec:opt problms, solvrs}
+Before diving into description of heuristics and their concrete examples, it is worth to scratch a use-case. We base our descriptions on mentioned in section \ref{BG: subsection OPs} Traveling Salesman Problem (TSP) \cite{applegate2006traveling}, which informal definition sounds as: 'Given a set of cities and the distances between each of them, what is the shortest path to visit each city once and return to the origin city?'. 
+The input data $X$ to our heuristics will be the distance matrix (or coordinates to build this matrix) between cities, as an output from heuristics we expect to get the sequence of cities, describing the route plan.
 
-\subsection{Heuristics}
-\subsubsection{Definition}
-\subsubsection{Examples}
+In general, heuristics when applied to particular problem do not use the gradient or Hessian matrix of the objective function for optimizations \cite{boussaid2013survey}.
+
+Most heuristic approaches imply and use following concepts:
+\begin{itemize}
+	\item \textbf{Neighborhood} defines the set of Solutions, which could be derived performing one step of heuristic search.
+	\item \textbf{Iteration} could be defined as the action (or set of actions) done over Solution in order to derive a new, hopefully better Solution.
+	\item \textbf{Exploration} (diversification) is the process of discovering unvisited and high quality parts of the Search Space.
+	\item \textbf{Exploitation} (intensification) is the usage of already obtained Solution to derive a new one, but similar to existing.
+\end{itemize}
+
+
+%Naturally, there are lots of characteristics that could be used to classify heuristics starting from the use of memory, kind of neighborhood, way to derive a solution (construction or perturbation) or number of solutions carried from one iteration to following. 
+
+\subsection{Simple Heuristics}
+As we mentioned above, the simple heuristics are domain dependent algorithms, designed to solve a particular problem.
+
+An example of simple heuristic is \textit{greedy algorithm}. When applied to Traveling Salesman Problem, it tackles the path construction by simply taking the next closest city from currently discovered. In general, the greedy algorithm follows the logic of making a sequence of locally optimal decisions. Indeed, they might not lead to a globally optimal solution, but the advantage of greedy algorithms is a simplicity in implementation \cite{williamson2011design}. 
+
 
 \subsection{Meta-Heuristics}
-\subsubsection{Definition}
+A meta-heuristic is an algorithm created to solve wide range of hard optimization problems without need to deeply adapt to each problem. 
+
+
+The prefix \textit{meta} indicates that these algorithms are heuristics of a \textit{higher level} when compared to a simple problem specific heuristics. A typical meta-heuristic structure could be imagined as $n-T--H$ (template-hook) framework variation pattern. The template part is problem independent and fixed from changes, it forms a core of an algorithm and usually exposes \textit{hyper-parameters} for tuning. The hook parts are domain dependent and those should be adapted for problem in hand.
+Also, the optimizer could contain stochastic components, what gives it an ability to escape from local optimum. However,it also means that the output is stochastic and could not guarantee the result preciseness \cite{boussaid2013survey}.
+
+
+The success of meta-heuristic on a given OP depends on the balance between exploration and exploitation. If there is a strong bias towards diversification, the solving process could naturally skip a good solution while performing a huge steps over the search space, but when the intensification dominating, the process will quickly converge to local optima. A simple heuristic approaches suffer from high exploitation dominance. 
+In general, the difference among existing meta-heuristics laid in a way how they achieve this balance, but the common property is that most of them are inspired by processes in nature — physics, biology, ethology or evolution.
+
+
 \subsubsection{Classification}
+A fancy classification will be described \cite{wiki_MH_classification}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{graphics/Background/Metaheuristics_classification}
+	\caption{Meta-heuristics Classification}
+	\label{}
+\end{figure}
+
+
 \subsubsection{Examples}
 We distinguish following examples among all existing meta-heuristics, since later we use them as the LLH in developed hyper-heuristic.
 \paragraph{GA}
@@ -204,7 +237,6 @@ We distinguish following examples among all existing meta-heuristics, since late
 \paragraph{ES}
 
 \subsection{Hybrid-Heuristics}
-\subsubsection{Definition}
 \subsubsection{Examples}
 \paragraph{Guided Loca Search (GLS) + Fast Local Search} \cite{tsang1997fast}
 \paragraph{Direct Global + Local search} \cite{syrjakow1999efficient}

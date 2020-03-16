@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="629.53979" height="579.09869" id="svg2" sodipodi:version="0.32" inkscape:version="0.48.1 r9760" version="1.0" sodipodi:docname="Metaheuristics_classification.svg" inkscape:output_extension="org.inkscape.output.svg.inkscape" inkscape:export-filename="/home/nojhan/travail/publications/metaheuristics_classification_metaphor.png" inkscape:export-xdpi="276.92001" inkscape:export-ydpi="276.92001">
+  <defs id="defs4"/>
+  <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="1" inkscape:cx="370.59568" inkscape:cy="285.99268" inkscape:document-units="px" inkscape:current-layer="layer4" width="650px" height="650px" inkscape:window-width="1434" inkscape:window-height="854" inkscape:window-x="0" inkscape:window-y="0" showgrid="false" inkscape:window-maximized="0" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0"/>
+  <metadata id="metadata7">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title>Metaheuristics classifications</dc:title>
+        <dc:date>2007-09-26</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Johann "nojhan" Dréo</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/"/>
+        <dc:description>Based on "C.Blum, A.Roli. Metaheuristics in Combinatorial Optimization: Overview and Conceptual Comparison. ACM Computing Surveys, Vol.35, N.3, 2003" and "J. Dreo, J.-P. Aumasson, W. Tfaili, P. Siarry, Adaptive Learning Search, a new tool to help comprehending metaheuristics, International Journal on Artificial Intelligence Tools, Vol. 16, No. 3.. - 1 June 2007".</dc:description>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:requires rdf:resource="http://web.resource.org/cc/Notice"/>
+        <cc:requires rdf:resource="http://web.resource.org/cc/Attribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+        <cc:requires rdf:resource="http://web.resource.org/cc/ShareAlike"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g inkscape:label="classes" inkscape:groupmode="layer" id="layer1" style="display:inline" transform="translate(-95.460236,-45.901352)">
+    <g inkscape:groupmode="layer" id="layer9" inkscape:label="meta/local" style="display:inline">
+      <rect style="opacity:0.61935485;fill:#cfcfcf;fill-opacity:1;stroke:#7f7f7f;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect2256" width="544.85181" height="551.86493" x="130.93065" y="46.901352" rx="34.162498" ry="34.034134"/>
+      <rect style="opacity:0.61935485;fill:#cfcfcf;fill-opacity:1;stroke:#7f7f7f;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect2278" width="120.4784" height="178.00473" x="603.52161" y="424.15735" rx="18.071674" ry="18.854404"/>
+      <text xml:space="preserve" style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="400.3876" y="66.000847" id="text2170" sodipodi:linespacing="125%"><tspan sodipodi:role="line" id="tspan2172" x="400.3876" y="66.000847">Meta-heuristics</tspan></text>
+      <text xml:space="preserve" style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="512.70776" y="-698.80847" id="text2280" sodipodi:linespacing="125%" transform="matrix(0,1,-1,0,0,0)"><tspan sodipodi:role="line" id="tspan2282" x="512.70776" y="-698.80847">Local search</tspan></text>
+    </g>
+    <g inkscape:groupmode="layer" id="layer3" inkscape:label="population/trajectory" style="display:inline">
+      <rect style="opacity:0.61935485;fill:#b1c6ed;fill-opacity:1;stroke:#3366cc;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect3260" width="446.13098" height="341.52176" x="141.48688" y="85.504189" rx="29.863913" ry="32.168468"/>
+      <rect style="opacity:0.61935485;fill:#b1c6ed;fill-opacity:1;stroke:#3366cc;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect2284" width="436.92822" height="147.45453" x="146.41716" y="433.19373" rx="20.782978" ry="25.200415"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="205.25616" y="107.39182" id="text3262" sodipodi:linespacing="125%"><tspan sodipodi:role="line" id="tspan3264" x="205.25616" y="107.39182">Population</tspan></text>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="204.28175" y="569.27838" id="text2286" sodipodi:linespacing="125%"><tspan sodipodi:role="line" id="tspan2288" x="204.28175" y="569.27838">Trajectory</tspan></text>
+    </g>
+    <g inkscape:groupmode="layer" id="layer4" inkscape:label="nature" style="display:inline">
+      <rect style="opacity:0.61935485;fill:#89f061;fill-opacity:0.58766234;stroke:#33ba00;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect5393" width="474.68652" height="354.03983" x="96.460236" y="122.44715" rx="27.070095" ry="24.978039"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="-233.32532" y="117.29725" id="text6364" sodipodi:linespacing="100%" transform="matrix(0,-1,1,0,0,0)"><tspan sodipodi:role="line" id="tspan2291" x="-233.32532" y="117.29725">Naturally inspired</tspan></text>
+    </g>
+    <g inkscape:groupmode="layer" id="layer7" inkscape:label="dynamic OF" style="display:inline">
+      <rect style="opacity:0.61935485;fill:#fff774;fill-opacity:1;stroke:#fed500;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect8339" width="392.76315" height="82.065941" x="278.03912" y="541.93408" rx="16.357746" ry="12.669173"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="413.55954" y="615.28247" id="text8341" sodipodi:linespacing="125%"><tspan sodipodi:role="line" id="tspan8343" x="413.55954" y="615.28247">Dynamic objective function</tspan></text>
+    </g>
+    <g inkscape:groupmode="layer" id="layer8" inkscape:label="evolutionary" style="display:inline">
+      <rect style="opacity:0.61935485;fill:#cfcfcf;fill-opacity:1;stroke:#7f7f7f;stroke-width:1.9264102;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect2254" width="230.88974" height="244.98909" x="153.08409" y="134.72142" rx="25.454994" ry="30.111696"/>
+      <text xml:space="preserve" style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="277.25812" y="154.84387" id="text2162" sodipodi:linespacing="125%"><tspan sodipodi:role="line" id="tspan2295" x="277.25812" y="154.84387">Evolutionary</tspan><tspan sodipodi:role="line" x="277.25812" y="177.34387" id="tspan5510">algorithms</tspan></text>
+    </g>
+    <g inkscape:groupmode="layer" id="layer6" inkscape:label="memory" style="display:inline">
+      <rect style="opacity:0.5;fill:#ffaaaa;fill-opacity:1;stroke:#ff5d5d;stroke-width:1.99999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect9314" width="374.29327" height="282.4783" x="292.51285" y="307.99524" rx="19.880579" ry="19.373896"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="380.82214" y="-648.17297" id="text9320" sodipodi:linespacing="125%" transform="matrix(0,1,-1,0,0,0)"><tspan sodipodi:role="line" id="tspan9322" x="380.82214" y="-648.17297">No memory</tspan></text>
+    </g>
+    <g inkscape:groupmode="layer" id="layer5" inkscape:label="IED" style="display:inline">
+      <rect style="opacity:0.5;fill:#58feff;fill-opacity:0.58766234;stroke:#00cdcf;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect14220" width="175.6579" height="66.447365" x="385.93393" y="399.68414" rx="15.657866" ry="12.669173"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="432.3924" y="-541.99084" id="text15191" sodipodi:linespacing="125%" transform="matrix(0,1,-1,0,0,0)"><tspan sodipodi:role="line" id="tspan15193" x="432.3924" y="-541.99084">Direct</tspan></text>
+      <rect style="opacity:0.5;fill:#58feff;fill-opacity:0.58766234;stroke:#00cdcf;stroke-width:1.99999964;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" id="rect15195" width="261.18414" height="103.28946" x="300.40762" y="284.88153" rx="11.281189" ry="12.45682"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="336.90378" y="-543.54163" id="text15197" sodipodi:linespacing="125%" transform="matrix(0,1,-1,0,0,0)"><tspan sodipodi:role="line" id="tspan15199" x="336.90378" y="-543.54163">Explicit</tspan></text>
+      <path style="opacity:0.5;fill:#58feff;fill-opacity:0.58766234;stroke:#00cdcf;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;display:inline" d="m 180.13116,187.18415 362.26282,0 c 10.45302,0 18.86826,8.01176 18.86826,17.9636 l 0,53.74694 c 0.34438,9.43908 -6.19064,13.615 -17.54123,14.50145 l -238.49858,0.42968 c -10.31909,0.74131 -19.42228,6.77938 -18.86826,17.96359 l -0.65969,113.81264 c -0.0261,7.89579 -3.49189,13.15999 -14.52501,13.16105 l -91.03831,0.65789 c -10.45302,0 -18.86826,-8.01176 -18.86826,-17.96359 l 0,-196.30965 c 0,-9.95184 8.41524,-17.9636 18.86826,-17.9636 z" id="rect15201" sodipodi:nodetypes="ccccccccccccc" inkscape:connector-curvature="0"/>
+      <text xml:space="preserve" style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans" x="230.71623" y="-542.04614" id="text15206" sodipodi:linespacing="125%" transform="matrix(0,1,-1,0,0,0)"><tspan sodipodi:role="line" id="tspan15208" x="230.71623" y="-542.04614">Implicit</tspan></text>
+    </g>
+  </g>
+  <g inkscape:groupmode="layer" id="layer2" inkscape:label="algorithms" style="display:inline" transform="translate(-95.460236,-45.901352)">
+    <g id="g5544">
+      <rect ry="7.1077318" rx="7.4467006" y="465.11838" x="167.34183" height="23.026318" width="99.999199" id="rect5371" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.83310163;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2180" y="481.10516" x="218.91449" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="481.10516" x="218.91449" id="tspan2182" sodipodi:role="line">Tabu search</tspan></text>
+    </g>
+    <g id="g5490">
+      <rect ry="7.9182301" rx="7.8625789" y="213.10429" x="423.84915" height="35.526318" width="93.986214" id="rect5264" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.84847534;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="100%" id="text2184" y="228.17801" x="471.03757" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan sodipodi:role="line" x="471.03757" y="228.17801" id="tspan2307">Particle swarm</tspan><tspan sodipodi:role="line" x="471.03757" y="240.17801" id="tspan5484">optimization</tspan></text>
+    </g>
+    <g id="g5358" transform="translate(-78.539759,0.999951)">
+      <rect ry="10.107733" rx="9.6177053" y="414.80264" x="478.61838" height="38.157898" width="80.263153" id="rect5356" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="100%" id="text2188" y="431.19214" x="518.89935" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="431.19214" x="518.89935" sodipodi:role="line" id="tspan2325">Simulated</tspan><tspan y="443.19214" x="518.89935" sodipodi:role="line" id="tspan5048">annealing</tspan></text>
+    </g>
+    <g id="g5532">
+      <rect ry="9.2547197" rx="14.393203" y="259.64523" x="389.94589" height="40.789471" width="146.98576" id="rect5304" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1.13497102;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2192" y="275.85049" x="463.47711" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="275.85049" x="463.47711" sodipodi:role="line" id="tspan5064">Ant colony optimization</tspan><tspan y="290.85049" x="463.47711" sodipodi:role="line" id="tspan5068">algorithms</tspan></text>
+    </g>
+    <rect style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.92764336;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" id="rect5332" width="66.71627" height="40.717541" x="310.19077" y="258.98602" rx="7.0831308" ry="8.7196941"/>
+    <text xml:space="preserve" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" x="342.91473" y="275.15533" id="text2196" sodipodi:linespacing="125%"><tspan id="tspan2303" sodipodi:role="line" x="342.91473" y="275.15533">Evolution</tspan><tspan id="tspan5522" sodipodi:role="line" x="342.91473" y="290.15533">strategy</tspan></text>
+    <g id="g5499">
+      <rect ry="10.107733" rx="8.6812649" y="197.25021" x="171.93666" height="25.657898" width="116.39222" id="rect5325" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.89302552;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2200" y="213.38971" x="230.35762" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="213.38971" x="230.35762" id="tspan2202" sodipodi:role="line">Genetic algorithm</tspan></text>
+    </g>
+    <g id="g2384">
+      <rect ry="10.107733" rx="9.864439" y="327.86838" x="310.27603" height="40.13158" width="159.92105" id="rect4284" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2208" y="343.74472" x="390.1897" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan id="tspan2315" y="343.74472" x="390.1897" sodipodi:role="line">Estimation of distribution</tspan><tspan y="358.74472" x="390.1897" sodipodi:role="line" id="tspan5054">algorithm</tspan></text>
+    </g>
+    <g id="g5341" transform="translate(160.61842,105.45111)">
+      <rect ry="10.107733" rx="9.6177063" y="123.35527" x="12.828948" height="40.13158" width="98.026314" id="rect5339" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2212" y="139.23161" x="61.842106" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="139.23161" x="61.842106" sodipodi:role="line" id="tspan2299">Genetic</tspan><tspan y="154.23161" x="61.842106" sodipodi:role="line" id="tspan5506">programming</tspan></text>
+    </g>
+    <g id="g10338" transform="translate(52.381292,72.052582)">
+      <rect ry="9.0639725" rx="8.4938002" y="252.14473" x="124.14679" height="42.763157" width="84.210533" id="rect5311" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2216" y="270.49994" x="166.22276" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="270.49994" x="166.22276" sodipodi:role="line" id="tspan2416">Differential</tspan><tspan y="285.49994" x="166.22276" sodipodi:role="line" id="tspan5518">evolution</tspan></text>
+    </g>
+    <g id="g5366" transform="translate(-208.48551,31.434014)">
+      <rect ry="10.107733" rx="9.6177073" y="462.82898" x="509.53949" height="22.368423" width="61.184216" id="rect5364" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1.00000012;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2220" y="478.38135" x="540.00269" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="478.38135" x="540.00269" id="tspan2222" sodipodi:role="line">GRASP</tspan></text>
+    </g>
+    <g id="g2409">
+      <rect ry="7.365581" rx="7.519659" y="548.77631" x="297.10495" height="24.34211" width="195.13156" id="rect5347" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2224" y="564.25793" x="393.63947" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="564.25793" x="393.63947" id="tspan4282" sodipodi:role="line">Variable neighborhood search</tspan></text>
+    </g>
+    <g id="g5569">
+      <rect ry="10.107732" rx="9.767375" y="511.85516" x="511.73657" height="25" width="157.67932" id="rect5378" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.91761637;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2228" y="528.8288" x="590.48828" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="528.8288" x="590.48828" id="tspan2230" sodipodi:role="line">Stochastic local search</tspan></text>
+    </g>
+    <g id="g5577">
+      <rect ry="10.107732" rx="8.2239542" y="481.26312" x="512.72339" height="25" width="132.76315" id="rect6370" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.88826847;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text6372" y="498.23676" x="579.4751" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="498.23676" x="579.4751" id="tspan6374" sodipodi:role="line">Iterated local search</tspan></text>
+    </g>
+    <g id="g5561">
+      <rect ry="10.107732" rx="8.1929817" y="548.44733" x="510.40759" height="25" width="132.26315" id="rect8316" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.92296493;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text8318" y="565.42096" x="578.2179" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="565.42096" x="578.2179" id="tspan8320" sodipodi:role="line">Guided local search</tspan></text>
+    </g>
+    <g id="g5549">
+      <rect ry="7.4761529" rx="6.3876414" y="387.18417" x="169.76286" height="25" width="102.68177" id="rect9326" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:0.8878423;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text9328" y="404.15781" x="222.51457" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="404.15781" x="222.51457" id="tspan9330" sodipodi:role="line">Scatter search</tspan></text>
+    </g>
+    <g style="display:inline" id="g2267" transform="translate(159.38801,152.02962)">
+      <rect ry="10.107733" rx="9.6177063" y="123.35527" x="12.828948" height="40.13158" width="98.026314" id="rect2269" style="opacity:0.61935485;fill:#ffffff;fill-opacity:0.58766234;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"/>
+      <text sodipodi:linespacing="125%" id="text2271" y="139.23161" x="61.842106" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan y="139.23161" x="61.842106" sodipodi:role="line" id="tspan2276">Evolutionary</tspan><tspan y="154.23161" x="61.842106" sodipodi:role="line" id="tspan5514">programming</tspan></text>
+    </g>
+  </g>
+</svg>
