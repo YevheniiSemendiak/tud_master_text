@@ -279,15 +279,15 @@ After brief explanation of previous two hybrids, an observant reader might make 
 Authors named this method "Chained Local Optimization", in other words it is yet another representative of staged hybridization. Iteration starts with the current Solution perturbation (authors called this action a "kick", referring a dramatic change of current position within a Search Space). After this, the Local Search heuristic applies to intensify obtained Solution. When the local optimum reached, the control flow returned to the Simulated Annealing for acceptance criteria evaluation in order to accept or reject a new Solution, what concludes an iteration.
 
 
+\subsection{No Free Lunch Theorem}
+A nature question could arise "if we have all this fancy and well-performing heuristics, why should we spend effort and develop new algorithms, instead of using existing?" And the answer to this question is quite simple — the perfect algorithm suited for all OP that will do not exist and can not exist. All algorithms that search for optimal parameters of a Target System perform exactly the same, when the results are averaged over all possible Target Systems. If an algorithm is gaining the performance in one problems class, it loses in another class. This statement is a consequence of so-called \textbf{No Free Lunch Theorem} (NFLT)~\cite{wolpert1997no}.
 
+In fact, one could not predict, how exactly will behave one or another algorithm with problem in hand. A possible and the most obvious way is to probe the specific approach, and analyze it behavior with respect to another in problem solving process. Here simple heuristics and meta-heuristics are out of competition, since if you optimized once, you wouldn't optimize a second time.
+Here come \textbf{Hyper-Heuristics}. We will proceed with their description and how they deal with the NFLT consequences in following section, stay on-line.
 
-\subsubsection{No-Free-Lunch Theorem}
-NFL is the problem of heuristics\cite{wolpert1997no}
-\subsubsection{Exploration-Exploitation Balance}
-\subsubsection{Conclusion} 
-Proper assignment of hyper-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
 
 \subsection{Hyper-Heuristics}
+
 \subsubsection{Definition}
 \subsubsection{Classification}
 \paragraph{Search Space:} heuristic selection, heuristic generation
@@ -304,6 +304,7 @@ Proper assignment of hyper-parameters has great impact on exploration-exploitati
 
 
 \section{Parameter Tuning as a Search Problem}\label{bg: parameter tuning}
+Proper assignment of hyper-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
 The goal of section: analysis of existing systems for hyper-parameter optimization (tuning), weaknesses and strength of each of the system
 
 \subsection{Parameter Tuning Problem Definition}
