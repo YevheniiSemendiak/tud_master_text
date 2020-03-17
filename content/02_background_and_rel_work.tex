@@ -196,7 +196,7 @@ Most heuristic approaches imply and use following concepts:
 	\item \textbf{Neighborhood} defines the set of Solutions, which could be derived performing one step of heuristic search.
 	\item \textbf{Iteration} could be defined as the action (or set of actions) done over Solution in order to derive a new, hopefully better Solution.
 	\item \textbf{Exploration} (diversification) is the process of discovering unvisited and high quality parts of the Search Space.
-	\item \textbf{Exploitation} (intensification) is the usage of already obtained Solution to derive a new one, but similar to existing.
+	\item \textbf{Exploitation} (intensification) is the usage of already accumulated information about the Search Space to derive a new one, but similar to existing Solutions.
 \end{itemize}
 
 
@@ -204,8 +204,18 @@ Most heuristic approaches imply and use following concepts:
 
 \subsection{Simple Heuristics}
 As we mentioned above, the simple heuristics are domain dependent algorithms, designed to solve a particular problem.
+Since each application is highly defined by the concrete OP instance, it is hard to distinguish commonalities among simple heuristics except of only domain knowledge utilization.
 
-An example of simple heuristic is \textit{greedy algorithm}. When applied to Traveling Salesman Problem, it tackles the path construction by simply taking the next closest city from currently discovered. In general, the greedy algorithm follows the logic of making a sequence of locally optimal decisions. Indeed, they might not lead to a globally optimal solution, but the advantage of greedy algorithms is a simplicity in implementation \cite{williamson2011design}. 
+A general example of simple heuristic could be a \textit{Hill Climbing} — the representative of \textit{Local Search} heuristics. This approach plays a central role in many high-order heuristics.
+
+A concrete example of Local Search is \textit{Greedy Algorithm}, also known as \textit{Best Improvement Local Search}. When applied to Traveling Salesman Problem, it tackles the path construction by simply accepts the next closest city from currently discovered. In general, the Greedy Algorithm follows the logic of making a sequence of locally optimal decisions. 
+
+
+Other instance of Local Search is \textit{First Improvement} Local Search \cite{voudouris1999guided}. This algorithm accepts a better Solution as soon as it finds it. The advantage of this methodology over the Greedy Algorithm is the velocity of Search Space traversing, since to perform a move, Best Improvement first should evaluate entire Neighborhood, which in some cases could be enormously huge.
+
+Indeed, the use of simple local search heuristics might not lead to a globally optimal solution, since the optimization result is fully defined be the starting point, but the advantage is a simplicity in implementation \cite{williamson2011design}.
+
+\todoy{need to add more info, probably structurize somehow}
 
 
 \subsection{Meta-Heuristics}
@@ -217,30 +227,59 @@ Also, the optimizer could contain stochastic components, what gives it an abilit
 
 
 The success of meta-heuristic on a given OP depends on the balance between exploration and exploitation. If there is a strong bias towards diversification, the solving process could naturally skip a good solution while performing a huge steps over the search space, but when the intensification dominating, the process will quickly converge to local optima. A simple heuristic approaches suffer from high exploitation dominance. 
-In general, the difference among existing meta-heuristics laid in a way how they achieve this balance, but the common property is that most of them are inspired by processes in nature — physics, biology, ethology or evolution.
+In general, the difference among existing meta-heuristics laid in a particular way how they try to achieve this balance, but the common property is that most of them are inspired by processes in nature — physics, biology, ethology or evolution.
 
 
 \subsubsection{Classification}
-A fancy classification will be described \cite{wiki_MH_classification}
+The research of meta-heuristics field arise even before 1940s, when they had being used but not formally studied. In the period of between 1940 and 1980s appear first formal studies and later till 2000 the field of meta-heuristics appears in wide and numbers of methods were proposed. The period from 2000 and until now in \cite{sorensen2017history} authors refer as the time of framework growth. It is now a time, where meta-heuristics widely appear as frameworks, requiring a domain specific adaptation and providing a reusable core. 
+
+The development of novel methods has slowed down, the research community began to organize these algorithms and many classification facets were distinguished. As an example, the research conducted by \cite{birattari2001classification} highlights following characteristics:
+\begin{itemize}
+	\item The \textbf{method of walk-through} could be either trajectory based or discontinuous. The former one corresponds a closed walk on the neighborhood where Simulated Annealing, Tabu Search or Local Search are typical examples. The later one allows large jumps in the search space where examples are Variable Neighborhood Search, Lin-Kernighan Heuristic for the TSP \cite{lin1973effective}.
+	
+	\item By the \textbf{number of concurrent solutions} we distinguish \textit{single-point} and \textit{population-based} approaches with Tabu Search, Simulated Annealing, Iterated Local Search examples of former and Evolutionary Algorithms, Ant Colony Optimization, Particle Swarm Optimization are instances of later.
+	
+	\item From the \textbf{memory usage} perspective highlighted those which \textit{does utilize memory} and \textit{memory-less} approaches. The Tabu Search explicitly use memory in forms of tabu lists, but Simulated Annealing is memory-less.
+	
+	\item \textbf{Neighborhood structure} could be either \textit{static} or \textit{dynamic}. Most local search algorithms such as Simulated Annealing and Tabu Search are based on static neighborhood. The Variable Neighborhood Search is an opposite case, where various structures of neighborhood are defined and interchanged while solving an OP. 
+\end{itemize}
+
+Picture \ref{BG: MH classification} illustrates the summarized classification including some other characteristics and well-known meta-heuristic samples \cite{wiki_MH_classification}.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\textwidth]{graphics/Background/Metaheuristics_classification}
 	\caption{Meta-heuristics Classification}
-	\label{}
+	\label{BG: MH classification}
 \end{figure}
 
 
-\subsubsection{Examples}
-We distinguish following examples among all existing meta-heuristics, since later we use them as the LLH in developed hyper-heuristic.
+\subsubsection{Examples}\label{BG: MH Examples}
+We distinguish following examples among all existing meta-heuristics, since later we use them as the LLH in developed Hyper-Heuristic.
 \paragraph{GA}
 \paragraph{SA}
 \paragraph{ES}
 
 \subsection{Hybrid-Heuristics}
+The hybridization of different systems constantly provides a positive effect — you take advantages of one system and merge them with the strong sides from other those getting the best from both of them. The same could be applied for the heuristics. Imagine you have two algorithms biased towards exploration and exploitation respectively. If you use them separately, the expecting results in most cases may be way far from optimal as the outcome of disrupted diversification-intensification balance. But with merging them into say stages of hybrid heuristic, one will obtain both advantages of finding a good quality results and escaping local optima. Most of available hybridizations are done exactly with this idea — \textit{staging combination} two heuristics, one exploration and second exploitation suited for getting outperforming hybrid.
+
+
 \subsubsection{Examples}
-\paragraph{Guided Loca Search (GLS) + Fast Local Search} \cite{tsang1997fast}
-\paragraph{Direct Global + Local search} \cite{syrjakow1999efficient}
-\paragraph{Simulated Annealing + Local Search} \cite{martin1996combining}
+
+The methods to construct hybrid mostly defined by the undertaken heuristics and those, to the best of our knowledge, could not be generalized and classified well, except a \textit{staging} approach, when the output of one algorithm is used as initial state of other, is broadly used. Instead, we will introduce some examples of performed hybridization in order to give you a better understanding of possible hook parts within algorithms and influence of aforementioned balance onto the search process.
+
+\paragraph{Guided Local Search (GLS) + Fast Local Search (FLS) \cite{tsang1997fast}.}
+It is an example of repeatedly applying two heuristics in sequence (staging) and passing the output from one to second one.
+The main focus of GLS here is on the Search Space exploration and process guidance using incubated information. In some sort, GLS is closely related to the \textit{Frequency-based memory} used in Tabu Search. In runtime, GLS modifies the cost function of the problem to include penalties and passes this modified cost function to local search procedure. The penalties form memory that describe a local optimum solution and guide the process out of it. A local search procedure then carried out by FLS algorithm. The main feature of FLS is the ability to quickly traverse a neighborhood. It is done by braking it into a number of small sub-neighborhoods, and ignoring those without an improving moves. By performing depth first search over these sub-neighborhoods. At some point of time FLS appears in the local optimum, passes back control to GLS and iteration repeats. 
+
+\paragraph{Direct Global + Local Search \cite{syrjakow1999efficient}.}
+As stated in the name this hybridization combines global and local optimization strategies into two-stages: stochastic global pre-optimization and deterministic local fine-optimization. For global optimizations authors apply one of two well-known meta-heuristics — Genetic Algorithm, or Simulated Annealing described earlier in section~\ref{BG: MH Examples} with Meta-heuristics examples. The transition from Global to Local search happens when the predefined conditions are met, for instance when the number of Target System (goal function) evaluations exceeds a boundary or when no distinguishable improvement was done. The Pattern Search~\cite{hooke1961direct} algorithm also known as direct, derivative-free, or black-box search plays role of Local Search heuristic in this combination. Hybrid-heuristic terminates when Pattern Search converges.
+
+\paragraph{Simulated Annealing + Local Search \cite{martin1996combining}.}
+After brief explanation of previous two hybrids, an observant reader might make a guess what happens in this particular case, and he will be completely right!
+Authors named this method "Chained Local Optimization", in other words it is yet another representative of staged hybridization. Iteration starts with the current Solution perturbation (authors called this action a "kick", referring a dramatic change of current position within a Search Space). After this, the Local Search heuristic applies to intensify obtained Solution. When the local optimum reached, the control flow returned to the Simulated Annealing for acceptance criteria evaluation in order to accept or reject a new Solution, what concludes an iteration.
+
+
+
 
 \subsubsection{No-Free-Lunch Theorem}
 NFL is the problem of heuristics\cite{wolpert1997no}
