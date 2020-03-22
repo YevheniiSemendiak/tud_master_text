@@ -304,27 +304,52 @@ Here come \textbf{Hyper-Heuristics}. We will proceed with their description and 
 
 
 \subsection{Hyper-Heuristics}
-Lots of state-of-art heuristics and meta-heuristics are developed in a very domain-dependent way, say they use the domain knowledge too intensively to be broadly reused. It motivated research community to raise the level of generality at which the optimization systems can operate and still provide good quality Solutions for various Optimization Problems. The term \textbf{Hyper-Heuristic} (HH) was defined to describe an approach of using some high level (meta-)heuristics (HLH) to choose other low level (meta-)heuristics (LLH) to solve the OP in hand. Indeed, a combination of different low-level heuristics produced better results than if hey were applied separately~\cite{drake2019recent}.
-It can be explained by the nature of search process and how it evolves in time. When you apply heuristic, it sooner or later converge to some extreme point, hopefully global optimum, since it is `blind' to those not visited regions in the Search Space. But changing the trajectory of investigation by (1) drastically varying the Neighborhood, (2) changing the strategy of Neighborhood exploration and exploitation could (1) bring you to those previously unreachable zones (2) rapidly. However, it is not possible to predict how one LLH will behave in every stage of the search process in comparison to another, here HLH comes to help.
+Lots of state-of-art heuristics and meta-heuristics are developed in a very domain-dependent way, say they use the domain knowledge too intensively to be broadly reused. It motivated research community to raise the level of generality at which the optimization systems can operate and still provide good quality Solutions for various Optimization Problems. The term \textbf{Hyper-Heuristic} (HH) was defined to describe an approach of using some High-Level-(Meta-)Heuristics (HLH) to choose other Low-Level-(Meta-)Heuristics (LLH) and use it to solve the OP in hand. Indeed, a combination of different low-level heuristics produced better results than if hey were applied separately~\cite{drake2019recent}.
+It can be explained by the nature of search process and how it evolves in time. When you apply heuristic, it sooner or later converge to some extreme point, hopefully global optimum, since it is `blind' to those not visited regions in the Search Space. But changing the trajectory of investigation by (1) drastically varying the Neighborhood, (2) changing the strategy of Neighborhood exploration and exploitation could (1) bring you to those previously unreachable zones (2) rapidly. However, it is not possible to predict how one LLH will behave in every stage of the search process in comparison to another, here HLH comes to help. In \cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can be viewed as a form of Reinforcement Learning, which is sounds logically.
 
-* add smth about domain barrier 
+
+The new concept, implicitly used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textit{Domain Barrier}.
+As we told previously, HH do not directly tackle an OP, they use LLH instead. This means, that HH are usually unaware of the domain details such as what are those data types, their relationship, etc. within a domain. HH encapsulates this information in LLHs and those could be used to broader range of Optimization Problems.
+
+
+
 
 \subsubsection{Classification}
 Although, the research in Hyper-Heuristics field actively ongoing, a lot of different instances were already created and some trials to organize approaches were conducted~\cite{ryser2014review,drake2019recent,burke2019classification,kerschke2019automated}.
-Researchers in their surveys classify HHs by different characteristics, some of them overlap, but it also happens that other intriguing parameters were not distinguished in other works. 
+Researchers in their surveys classify HHs by different characteristics, some of them overlap, but it also happens that intriguing parameters distinguished were not highlighted in other works. 
 
-In this section we present some of them in order to better justify the goal of this thesis.
-
-
-We begin with the two broadest classes, which define HH \textit{routine}. The first class is the heuristics to \textbf{select} heuristic, in other words \textbf{Selection Hyper-Heuristic}. We referred this class previously, when we were talking about Hyper-Heuristics in general. These algorithms operate on the Search Space defined by LLHs that solve Optimization Problem, but not by the Problem itself. The task of HLH is to pick the best suited LLH basing on available prior knowledge and apply it to OP underway. The second class is the heuristics to \textbf{construct} or generate LLH by using the components of other heuristics as Lego bricks. These approaches could lead to creating new and unforeseen heuristics that are expected to reveal good performance~\cite{burke2019classification}.
+In this section we present some (but not all) facets of Hyper-Heuristics classification to better justify the goal of this thesis.
 
 
-The other broadly used characteristic is the \textit{use of memory}. From this perspective we distinguish Hyper-Heuristics with \textbf{on-line}, \textit{off-line} and \textbf{no} learning mechanisms. 
+We begin with the two broadest classes, which differentiate HH \textit{routine}.
+The first class is the heuristics to \textbf{select} heuristic, in other words \textbf{Selection Hyper-Heuristic}. In previous sections we were referring to this class, when we were talking about Hyper-Heuristics in general. These algorithms operate on the Search Space defined by simple Low-Level-Heuristics that solve Optimization Problem. The task of HLH is to pick the best suited LLH based on available prior knowledge and apply it to OP underway.
+The second class is the heuristics to \textbf{construct} or generate LLH by using the atomic components of other heuristics as Lego bricks. These approaches could lead to creating new and unforeseen heuristics that are expected to reveal good performance~\cite{burke2019classification} while solving the problem in hand.
 
 
-\paragraph{Search Space:} heuristic selection, heuristic generation
-\paragraph{Learning time:} on-line learning hyper-heuristics, off-line learning hyper-heuristics, no-learning hyper-heuristics
-\paragraph{Other classification characteristics} from \cite{kerschke2019automated}, \cite{burke2019classification}, mb smth else. For instance, hyperparameter tuning
+The other broadly used characteristic is the \textit{use of memory}. From this perspective we distinguish Hyper-Heuristics in which the learning happens on-line, off-line or learning mechanisms are not present at all~\cite{ryser2014review,burke2019classification}.
+\begin{itemize}
+	\item In \textbf{on-line} case, the HH derives an information, used to select among LLH, while those LLH are solving a problem.
+
+	\item In \textbf{off-line} case, the learning happens before solving an Optimization Problem. Here one should first train an HH using other, but homogeneous to current problems. After this preparation step, the HH could be applied to problem in hand.
+
+	\item There exist also \textbf{mixed} cases, where learning happens both on-line and off-line. Definitely it is a promising research direction, despite high dependency on off-line phase.
+	
+	\item The last case here is an approach \textbf{without learning} mechanisms involved. Usually, these Hyper-Heuristics perform some sort of Random Search selection of LLH.
+\end{itemize}
+
+
+Yet another faced of Hyper-Heuristics classification is the way of assigning hyper-parameters (here we use parameters and hyper-parameter concepts interchangeably) for LLHs (or their components)~\cite{drake2019recent}:
+\begin{itemize}
+	\item In \textbf{static} assignment, the underlying heuristics use provided beforehand (usually default) hyper-parameters and do not change them while solving the problem in hand.
+
+	\item The \textbf{dynamic} case uses some kind of rule for parameters changing, specified in advance.
+
+	\item There exist also an \textbf{adaptive} approach, in which HH assigns the parameters for LLH as the response to the learning process. In some sort, it is similar to the parameter control techniques used in Meta-heuristics.
+\end{itemize}
+
+
+For other classification facets and respective Hyper-Heuristic examples we encourage reader to look into~\cite{burke2003hyper,ryser2014review,drake2019recent,burke2019classification,kerschke2019automated} researches.
+
 \subsubsection{Examples}\label{bg: hh examples}% should I present it in following sections?
 \cite{drake2019recent} (Online algorithm selection at page 27); \cite{kerschke2019automated}
 
