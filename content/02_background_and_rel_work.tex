@@ -307,11 +307,18 @@ Here come \textbf{Hyper-Heuristics}. We will proceed with their description and 
 Lots of state-of-art heuristics and meta-heuristics are developed in a very domain-dependent way, say they use the domain knowledge too intensively to be broadly reused. It motivated research community to raise the level of generality at which the optimization systems can operate and still provide good quality Solutions for various Optimization Problems. The term \textbf{Hyper-Heuristic} (HH) was defined to describe an approach of using some High-Level-(Meta-)Heuristics (HLH) to choose other Low-Level-(Meta-)Heuristics (LLH) and use it to solve the OP in hand. Indeed, a combination of different low-level heuristics produced better results than if hey were applied separately~\cite{drake2019recent}.
 It can be explained by the nature of search process and how it evolves in time. When you apply heuristic, it sooner or later converge to some extreme point, hopefully global optimum, since it is `blind' to those not visited regions in the Search Space. But changing the trajectory of investigation by (1) drastically varying the Neighborhood, (2) changing the strategy of Neighborhood exploration and exploitation could (1) bring you to those previously unreachable zones (2) rapidly. However, it is not possible to predict how one LLH will behave in every stage of the search process in comparison to another, here HLH comes to help. In \cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can be viewed as a form of Reinforcement Learning, which is sounds logically.
 
+\begin{figure}
+	\centering
+	\includesvg{HH}
+	\caption[Hyper-Heuristics]{Hyper-Heuristics\protect\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}}
+	\label{bg:pic:HH}
+\end{figure}
 
-The new concept, implicitly used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textit{Domain Barrier}.
-As we told previously, HH do not directly tackle an OP, they use LLH instead. This means, that HH are usually unaware of the domain details such as what are those data types, their relationship, etc. within a domain. HH encapsulates this information in LLHs and those could be used to broader range of Optimization Problems.
+%\footnotetext[1]{Icons from \href{https://thenounproject.com/}{thenounproject.com}}
 
 
+The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier}.
+As we told previously, HH do not directly tackle an OP, they use LLH instead. This means, that HH are usually unaware of the domain details such as what are those data types, their relationship, etc. within a domain, but rather encapsulates this information in LLHs and those could be used to broader range of Optimization Problems as it is illustrated on picture~\ref{bg:pic:HH}.
 
 
 \subsubsection{Classification}
@@ -351,6 +358,12 @@ Yet another faced of Hyper-Heuristics classification is the way of assigning hyp
 For other classification facets and respective Hyper-Heuristic examples we encourage reader to look into~\cite{burke2003hyper,ryser2014review,drake2019recent,burke2019classification,kerschke2019automated} researches.
 
 \subsubsection{Examples}\label{bg: hh examples}% should I present it in following sections?
+\paragraph{HyFlex~\cite{ochoa2012hyflex}} Hyper-Heuristics Flexible Framework is a software skeleton, created specifically to encourage researchers creating Hyper-Heuristics. It provides the implementation of components for 6 problem domains (Boolean Satisfiability, Bin Packing, Personnel Scheduling, Permutation Flow Shop, Traveling Salesman and Vehicle Routing problems), evaluation functions and a set of Low-Level-Heuristics. The benchmark sets as well as comparison to other existing HH is included to framework. The intent of HyFlex creators to provide these features was to enable others focus directly on High-Level-Heuristics implementation without need to challenge other minor needs and those bring clear comparison among HLH performance~\cite{ochoa2012hyflex}. From the classification perspective, all derivatives from the HyFlex framework are Selection Hyper-Heuristics, however they utilize different learning approaches and hyper-parameter settings. Algorithms, built on top of HyFlex framework could be found in~\cite{misir2012intelligent,ryser2014review,drake2019recent} or on the CHeSC 2011 challenge website\footnote{\href{http://www.asap.cs.nott.ac.uk/external/chesc2011/}{Cross Domain Heuristic Search Challenge website: asap.cs.nott.ac.uk/external/chesc2011/}}.
+
+
+
+
+
 \cite{drake2019recent} (Online algorithm selection at page 27); \cite{kerschke2019automated}
 
 \subsection{Conclusion on Approximate Solvers}
