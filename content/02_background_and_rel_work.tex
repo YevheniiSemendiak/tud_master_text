@@ -12,7 +12,7 @@ We highly recommend for everyone to refresh the knowledge of sections topics and
 \subsection{Optimization Problems}\label{BG: subsection OPs}
 %https://www.solver.com/problem-types
 % need to add some kind of catchy intro, here or in previous parts of this section.
-While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the 'best possible' Solution for Computation Problem~\cite{goldreich2010p}. 
+While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the \emph{best possible} Solution for Computation Problem~\cite{goldreich2010p}. 
 
 
 In this thesis we focus on the Optimization Problems — a special case of the Search Problems.
@@ -405,14 +405,52 @@ Operating by the other Heuristics, HHs analyze how good former are and definitel
 Imposing such great abilities, Hyper-Heuristics are able to tackle not only the concrete optimization problem, but entire class of problems, although requiring more development effort.
 
 
-\section{Parameter Tuning as a Search Problem}\label{bg: parameter tuning}
-Proper assignment of hyper-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
-The goal of section: analysis of existing systems for hyper-parameter optimization (tuning), weaknesses and strength of each of the system
+\section{Parameter Tuning as an Optimization Problem}\label{bg: parameter tuning}
+Most of existing learning algorithms expose some parameter set, needed to be assigned before applying this algorithm to solve a problem. Modifying these parameters, one could change the system behavior and possible result.
+In \textit{machine learning} these parameters are called \textbf{Hyper-Parameters}. Note, that we are referring both terms $Parameters$ and $Hyper-Parameters$ $(HPs)$ interchangeably through the thesis.
+
+
+For instance, consider neuron network. Hyper-parameters in this case will specify the structure (number of hidden layers, units, etc.) and learning process (learning rate, regularization parameters, etc.) of network. Changing them will result in changes of system accuracy.
+
+
+One of the most frequent optimization applications is \textbf{Parameter Tuning} — searching of hyper-parameter values to optimize some characteristic of system. When talking about our example, we could apply Parameter Tuning to maximize network accuracy. Considering simultaneously number of characteristics such as running time + accuracy results in Multi-Objective Parameter Tuning.
+When talking about heuristics, proper assignment of hyper-parameters has a great impact on exploration-exploitation balance and those on algorithm performance.
+
 
 \subsection{Approaches for Parameter Tuning}
-\paragraph{Grid Search}
-\paragraph{Random Search}
-\paragraph{Model Based Search}
+Nowadays there exist wast number of ways to assign parameters for system. 
+One of the simplest and error-prone ways is just trusting your (or someones else) intuition and using those parameters that seems to you more or less logic for particular system and problem instance. People quickly abandoned it in favor of automatic approaches, since novel computational capacities easily provide a possibility for it.
+
+We briefly outline existing automated approaches illustrating each with a picture~\ref{bg: fig:automated parameter tuning approaches}. Each graphic shows dependencies between parameters $X1$ ($x$ axis), $X2$ ($y$ axis) and optimization subject values (which we are maximizing here) along those axes.
+
+\begin{figure}
+	 \centering
+	\begin{subfigure}[b]{0.25\linewidth}
+		\includegraphics[width=\linewidth]{graphics/Background/hyperparameter-grid-search.png}
+		\caption{Grid Search.}
+		\label{bg: fig:automated parameter tuning approaches: grid}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.25\linewidth}
+		\includegraphics[width=\linewidth]{graphics/Background/hyperparameter-random-search.png}
+		\caption{Random Search.}
+		\label{bg: fig:automated parameter tuning approaches: random}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.25\linewidth}
+		\includegraphics[width=\linewidth]{graphics/Background/hyperparameter-learning-search.png}
+		\caption{Learning Search.}
+		\label{bg: fig:automated parameter tuning approaches: learning}
+	\end{subfigure}
+	\caption{Automated Parameter Tuning Approaches\protect\footnote{Graphics from~\cite{koch2017automated}}.}
+	\label{bg: fig:automated parameter tuning approaches}
+\end{figure}
+
+
+\paragraph{Grid Search.} It is a simple approach of solving the search problem by exchanging enumeration of possible solutions (parameter sets) for relaxed problem instance. This relaxation is derived by user specifying finite number of possible values for each of hyper-parameters under consideration. After evaluating each possible configuration for system under estimation, algorithm reports the best found solution. Obviously, this approach could skip promising parts of search space as shown on picture~\ref{bg: fig:automated parameter tuning approaches: grid}.
+
+
+\paragraph{Random Search.} This methodology relies on random (usually uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}. Compare visually the best configurations (highlighted in pink) found by grid (picture~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (picture~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
+
+\paragraph{Model Based Search.} 
 
 \subsection{Systems for Model Based Parameter Tuning}\label{bg: parameter tuning expamples}
 
