@@ -386,27 +386,29 @@ Along with $HyFlex$, a number of Hyper-Heuristic frameworks is growing, some of 
 \paragraph{HITO~\cite{guizzo2015hyper}}\textit{Hyper-Heuristic for Integration and Test Order Problem}. It is an example of HH for selection of LLH. LLHs in this case are presented as a composition of basic EAs operators — crossover and mutation forming multi objective evolutionary algorithms (MOEA). HH  selects those components from $jMetal$ framework\cite{durillo2011jmetal} using interchangeably Choice Function (in form of weighted linear equation) and Multi Armed Bandit based logic to yet again balance exploitation of good LLHs and exploration of new LLHs.
 
 
-\paragraph{MCHH~\cite{mcclymont2011markov}}\textit{Markov Chain Hyper-Heuristic} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive Heuristics selection method. While solving an OP, $MCHH$ updates prior knowledge about the probability of producing Pareto dominating Solutions by each LLH using Markov Chains those guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition weights in the Markov Chains constructed from all available LLHs those updating prior knowledge for LLH selection.
+\paragraph{MCHH~\cite{mcclymont2011markov}}\textit{Markov Chain Hyper-Heuristic} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive Heuristic selection method. While solving an OP, $MCHH$ updates prior knowledge about the probability of producing Pareto dominating Solutions by each LLH using Markov Chains those guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition weights in the Markov Chains constructed from all available LLHs those updating prior knowledge for LLH selection.
 
 \paragraph{Auto-Sklearn\cite{kerschke2019automated}} Although, the application of Machine Learning (ML) techniques is not a brand-new idea, there exist numbers of automated machine learning systems. They automatically choose the best suited algorithm, feature preprocessing methods for a new dataset at hand with an objective of algorithm's accuracy maximization. From perspective of Optimization Problem solving, automatic ML processes are quite similar to Hyper-Heuristics. They both operate on Search Space of algorithms which later applied to problem in hand with objective to find the best performing one. In particular, based on $Scikit-learn$ framework~\cite{scikit-learn} $Auto-Sklearn$ system uses number of sklearn classifiers to process a data which in some sort similar to usage of LLHs to process a Search Space. Resulting problem, formally called \textit{Combined Algorithm Selection and Hyper-parameter Optimization}problem (CASH) is then solved by hyper-parameter optimization framework $SMAC$~\cite{hutter2011sequential}. We outline a definition of CASH problem as well as description of $SMAC$ framework in~\ref{bg: parameter tuning} and~\ref{bg: smac} respectively.
 
 
-\subsection{Conclusion on Approximate Solvers}
-\paragraph{Pros and cons of heuristics} - Heuristics are strictly problem dependent and each time require adaptations.
-\paragraph{Pros and cons of meta-heuristics} - no LLH selection, strict to one problem
-\paragraph{Pros and cons of hybrid-heuristics} - no LLH selection, strict to one problem ? 
-\paragraph{Pros and cons of hyper-heuristics} - no parameter control?
+\subsection{Conclusion on Heuristic Solvers}
+To conclude our review on Heuristic approaches for Optimization Problems solving, we shortly remind you pros and cons of each heuristic level.
 
+On the basis remain Simple Heuristics with all their domain-specific knowledge usage and particular tricks for solving problem in hand. Usually, they are created to tackle a concrete problem in hand applying simple algorithmic approach. The simplicity of application and usually fast runtime is balanced by medium solution quality.
 
+On the next level inhabit Meta-Heuristics. They could be compared with more sophisticated hunters which could not only charge directly, but also take a step back when stuck in a dead end. This additional skill enables them to survive in a new environment (Optimization Problem), however some adaptations should be performed to understand the problem and parameter tuning to perform well.
 
-It could be compared with a warp-engine usage on a spacecraft, which gives the possibility to travel faster than speed of light by orders of magnitude. It is definitely fast enough, however if you consider a space-folding engine for instant traveling and use it to jump onto a huge distance, while warp-engine is 
+Among with MHs, Hybrid-Heuristics do exist. It is nothing special here, they just took some survival abilities from several Meta-Heuristics hoping to outperform, however still requiring adaptation. In some cases this hybridization provides it advantage, but as time shows, they did not kick out MHs and reside together with their parents. Those we can conclude that the exposed balance between development effort and providing results quality not always assure users to apply them.
+
+Finally, the chosen ones that lead the others, Hyper-Heuristics are inhabitants of the upper level generality. 
+Operating by the other Heuristics, HHs analyze how good former are and definitely make use of this knowledge by solving concrete problem using the best suited Heuristic.
+Imposing such great abilities, Hyper-Heuristics are able to tackle not only the concrete optimization problem, but entire class of problems, although requiring more development effort.
 
 
 \section{Parameter Tuning as a Search Problem}\label{bg: parameter tuning}
 Proper assignment of hyper-parameters has great impact on exploration-exploitation balance and those on (meta)~-heuristic performance. 
 The goal of section: analysis of existing systems for hyper-parameter optimization (tuning), weaknesses and strength of each of the system
 
-\subsection{Parameter Tuning Problem Definition}
 \subsection{Approaches for Parameter Tuning}
 \paragraph{Grid Search}
 \paragraph{Random Search}
@@ -440,6 +442,9 @@ impact of parameter control based on other's evaluation
 
 
 \section{Conclusion}
+
+It could be compared with a warp-engine usage on a spacecraft, which gives the possibility to travel faster than speed of light by orders of magnitude. It is definitely fast enough, however if you consider a space-folding engine for instant traveling and use it to jump onto a huge distance, while warp-engine is 
+
 
 The meta-heuristic systems designers reported positive impact of parameter control embedding. 
 However, as the outcome of the no-free-lunch theorem, those systems can not tolerate broad range of problems, for instance, problem classes.
