@@ -388,7 +388,7 @@ Along with $HyFlex$, a number of Hyper-Heuristic frameworks is growing, some of 
 
 \paragraph{MCHH~\cite{mcclymont2011markov}}\textit{Markov Chain Hyper-Heuristic} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive Heuristic selection method. While solving an OP, $MCHH$ updates prior knowledge about the probability of producing Pareto dominating Solutions by each LLH using Markov Chains those guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition weights in the Markov Chains constructed from all available LLHs those updating prior knowledge for LLH selection.
 
-\paragraph{Auto-Sklearn\cite{kerschke2019automated}} Although, the application of Machine Learning (ML) techniques is not a brand-new idea, there exist numbers of automated machine learning systems. They automatically choose the best suited algorithm, feature preprocessing methods for a new dataset at hand with an objective of algorithm's accuracy maximization. From perspective of Optimization Problem solving, automatic ML processes are quite similar to Hyper-Heuristics. They both operate on Search Space of algorithms which later applied to problem in hand with objective to find the best performing one. In particular, based on $Scikit-learn$ framework~\cite{scikit-learn} $Auto-Sklearn$ system uses number of sklearn classifiers to process a data which in some sort similar to usage of LLHs to process a Search Space. Resulting problem, formally called \textit{Combined Algorithm Selection and Hyper-parameter Optimization}problem (CASH) is then solved by hyper-parameter optimization framework $SMAC$~\cite{hutter2011sequential}. We outline a definition of CASH problem as well as description of $SMAC$ framework in~\ref{bg: parameter tuning} and~\ref{bg: smac} respectively.
+\paragraph{Auto-Sklearn~\cite{kerschke2019automated}} Although, the application of Machine Learning (ML) techniques is not a brand-new idea, there exist numbers of automated machine learning systems. They automatically choose the best suited algorithm, feature preprocessing methods for a new dataset at hand with an objective of algorithm's accuracy maximization. From perspective of Optimization Problem solving, automatic ML processes are quite similar to Hyper-Heuristics. They both operate on Search Space of algorithms which later applied to problem in hand with objective to find the best performing one. In particular, based on $Scikit-learn$ framework~\cite{scikit-learn} $Auto-Sklearn$ system uses number of sklearn classifiers to process a data which in some sort similar to usage of LLHs to process a Search Space. Resulting problem, formally called \textit{Combined Algorithm Selection and Hyper-parameter Optimization}problem (CASH) is then solved by hyper-parameter optimization framework $SMAC$~\cite{hutter2011sequential}. We outline a definition of CASH problem as well as description of $SMAC$ framework in~\ref{bg: parameter tuning} and~\ref{bg: smac} respectively.
 
 
 \subsection{Conclusion on Heuristic Solvers}
@@ -407,6 +407,15 @@ Imposing such great abilities, Hyper-Heuristics are able to tackle not only the 
 
 \section{Parameter Tuning as an Optimization Problem}\label{bg: parameter tuning}
 Most of existing learning algorithms expose some parameter set, needed to be assigned before applying this algorithm to solve a problem. Modifying these parameters, one could change the system behavior and possible result.
+
+When we are talking about parameter tuning problem, the following terms should be refined explicitly:
+\begin{enumerate}
+	\item \textbf{Target System (TS)} is the subject of parameter tuning optimization problem. Simply, it is the system which parameters are tuned.
+	\item \textbf{Parameter} a.k.a. Hyper-Parameter (HP) is one of exposed by TS hooks for tuning. Should be described in terms of type and possible values.
+	\item \textbf{Configuration} is formed by unique combination of parameter values, required to run TS.
+	\item \textbf{Search Space} is formed by all possible Configurations for defined HPs.
+\end{enumerate}
+
 In \textit{machine learning} these parameters are called \textbf{Hyper-Parameters}. Note, that we are referring both terms $Parameters$ and $Hyper-Parameters$ $(HPs)$ interchangeably through the thesis.
 
 
@@ -417,11 +426,16 @@ One of the most frequent optimization applications is \textbf{Parameter Tuning} 
 When talking about heuristics, proper assignment of hyper-parameters has a great impact on exploration-exploitation balance and those on algorithm performance.
 
 
+% the motivation of using parameter tuning system as basis for hyper-heuristics
+We believe, that a central role of off-line selective Hyper-Heuristics, namely solving the algorithm selection problem could be represented as the parameter tuning problem, where instead of parameter selection we select entire system according to reported performance. With this idea in mind, we investigate a possibility of turning parameter tuning system into a Hyper-Heuristic.
+For doing so, our next step is the review and comparison of existing parameter tuning approaches and systems. 
+
+
 \subsection{Approaches for Parameter Tuning}
 Nowadays there exist wast number of ways to assign parameters for system. 
 One of the simplest and error-prone ways is just trusting your (or someones else) intuition and using those parameters that seems to you more or less logic for particular system and problem instance. People quickly abandoned it in favor of automatic approaches, since novel computational capacities easily provide a possibility for it.
 
-We briefly outline existing automated approaches illustrating each with a picture~\ref{bg: fig:automated parameter tuning approaches}. Each graphic shows dependencies between parameters $X1$ ($x$ axis), $X2$ ($y$ axis) and optimization subject values (which we are maximizing here) along those axes.
+We briefly outline existing automated approaches illustrating each with a picture~\ref{bg: fig:automated parameter tuning approaches}. Each graphic shows dependencies between parameters $X_1$ ($x$ axis), $X_2$ ($y$ axis) and optimization subject values (which we are maximizing here) along those axes.
 
 \begin{figure}
 	 \centering
@@ -450,15 +464,51 @@ We briefly outline existing automated approaches illustrating each with a pictur
 
 \paragraph{Random Search.} This methodology relies on random (usually uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}. Compare visually the best configurations (highlighted in pink) found by grid (picture~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (picture~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
 
-\paragraph{Model Based Search.} 
+\paragraph{Model Based Search.} In most cases, the dependencies between tuned parameter values and optimization objective do exist, can be observed and utilized for hyper-parameter tuning by predicting which parameter combinations could produce a better results, those making guesses more precise. As it showed on picture~\ref{bg: fig:automated parameter tuning approaches: learning}, after accumulating more information, learning algorithm will make more precise guesses, what in contrast to previously described model-free approaches is more preferable and robust.
+With this idea researchers started to build systems that (1) traverse the search space more efficiently and (2) could mimic dependencies between parameters and objective resulting in surrogate models. The later is some sort of enhancement used in combination with former enabling you to simulate evaluation of real system instead of expensive real probe.
 
-\subsection{Systems for Model Based Parameter Tuning}\label{bg: parameter tuning expamples}
 
-\subsubsection{IRACE}
-\paragraph{approach} \cite{irace:lopez2016irace}
-\paragraph{pros and cons}
 
-\subsubsection{SMAC}\label{bg: smac}
+\subsection{Systems for Model-Based Parameter Tuning}\label{bg: parameter tuning expamples}
+The parameter tuning is an obligatory task for getting the maximum system performance and should be done at design time.
+Novel approaches for tuning are usually built in form of frameworks with exposed hooks for attaching system under estimation.
+Naturally, the Target System evaluations here supposed to be extremely costly since it requires actually executing of target algorithm, that is why algorithms in those frameworks are trying to utilize every single bit of information from evaluations, building surrogate models and using Bayesian optimization approaches for making each evaluation valuable.
+
+In this section we review some among existing open-source parameter tuning systems from following perspectives:%, that could be used as basis for Hyper-Heuristic.
+%TODO: in implementation. While analyzing, we discuss each system with following perspectives, highlight characteristics that later will be used to select the best suited system as basis for Hyper-Heuristic:
+\begin{itemize}
+	\item \textbf{Conditional parameters support} It exposed for user ability of tuning system to describe and tackle conditional dependencies between hyper-parameters. As an example imagine parameter that can take only some specific values, for instance \textit{crossover type} in Genetic Algorithm could be \textit{Partially Mapped Crossover ($PMX$)}, \textit{Cycle Crossover ($CX$)}, etc.~\cite{larranaga1999genetic} Selecting concrete crossover type, one will also need to specify respective parameters for this crossover type. But it could turn out, that these parameters are illegal, when the other crossover type is selected. This type of dependency could be described by parent-child relationship, however other types of dependencies also exists.
+	
+	\item \textbf{Parameter types support} It is one of basic features required in system to be usable. Namely, Target System parameters could be not only numerical (more concretely integer or fractional), but also categorical in form of strings, boolean values, etc. Considering categorical data types, they could be either nominal or ordinal. Difference between categorical types lays in fact, that the latest depict not only possible atomic values, but also order between them. For concrete example we discuss the Genetic Algorithm again with following parameters: population size (numerical integer in range $[1...\inf)$), mutation probability (numerical fractional $[0...1]$), crossover type (categorical nominal ${PMX, CX}$). Indeed, population size could also be displayed as a set of finite values ${10, 100, 1000}$ (categorical ordinal type).
+	
+	\item \textbf{Extensibility} This feature is crucial in cases, if one would like to try a new promising and intriguing learning algorithm, that was not included in parameter tuning system yet. In fact, one may need not only new learning algorithm, but other features like non-trivial stopping criterion, tools for handling stochastic behaviors, or different strategies for random sampling (which are utilized while tuning system is learning before making a prediction).
+	
+	\item \textbf{Parallel Evaluations }The simultaneous evaluation of multiple Configurations required for utilizing available computing resources that could scale horizontally. 
+	
+	% TODO: implementation \item[Support for Online Problem Solving.] This is a bit complex characteristic of system that we are willing to distinguish. As it turns out, most parameter tuning systems require full evaluation of Target System for Configuration comparison. However, in case of Hyper-Heuristic, the Configuration evaluation is a trial to solve the problem in hand using particular $LLH$ (tuned parameter) Here we compare final result quality, reported by each $LLH$
+	
+\end{itemize}
+
+
+\subsubsection{IRACE~\cite{lopez2016irace}}\label{bg: irace}
+The first system under investigation is an implementation if Iterated Racing Algorithm\cite{birattari2010f} in IRACE package for off-line hyper-parameters tuning.
+The underlying methodology consists three main steps: (1) using prior knowledge, sample new Configurations, (2) distinguish the best ones among sampled using racing algorithm and (3) update prior knowledge to bias next samplings in (1) towards better Configurations. 
+Prior knowledge here represented as probability distribution for each tuned parameter independently (truncated normal and discrete distributions for numeric and categorical hyper-parameters respectively). During update step (3), the probability distributions are increased for those values, where the best Configurations were found.
+
+Racing step (2) could be described as process of running Target System using Configuration under evaluation on a set of heterogeneous problem instances. While solving those instances, the statistically worse-performing Configurations are rejected and racing proceeds with remaining ones. This process continues until reaching required number of survivals or number of solved problem instances. 
+% TODO: I am considering adding a scheme from their paper for illustration if readers found the text-only description hard to grasp.
+
+As it was mentioned above, IRACE supports various data types such as numerical and categorical as well as the possibility of conditions description. While the problem of data types solved by different distributions used, the conditional relationships are determined by the dependency graphs. During sampling (1), first non-conditional and only afterwards dependent parameters are sampled, if respective conditions are satisfied. The framework highly utilize racing algorithm for evaluations and \textit{Friedman test}~\cite{conover1980practical} or alternatively \textit{paired t-test} for statistical analysis of parameters, those it is static in terms of variability and extensibility of learning mechanisms. In terms of parallel evaluations, the algorithm is doing well at the beginning of each racing step, however as the process proceeds less and less evaluations are executed in parallel those all available resources are utilized optimally at all steps of algorithm.
+
+
+\subsubsection{SMAC~\cite{hutter2011sequential}}\label{bg: smac}
+Sequential Model-based Algorithm Configuration (SMAC) is a system for algorithm parameters optimization developed by AutoML research group (here we review SMACv3). In their research, authors shown that the machine learning mechanisms and regression models in particular could be applied not only for tuning parameters, but also for optimizing any expensive black-box functions in general (we believe that the last holds also for the majority of other parameter tuning systems). 
+
+The routine in Sequential Model-based Optimization is somehow similar to one implemented in IRACE, and could be imagined as iterated application two  steps: (1) fitting models, (2) using them for making choices which Configuration to investigate next and actually evaluation of predicted parameters.
+The system development was directed to tackle existing (at that point of time) limitations of all published SMBO approaches namely, expand an applicability not only to numerical, but also categorical parameters and optimize target algorithm not only to single, but to number of problem instances (benchmark set of problem instances).
+
+
+
 \paragraph{approach description}
 
 \subsubsection{BOHB}
