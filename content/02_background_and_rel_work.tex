@@ -474,6 +474,8 @@ The parameter tuning is an obligatory task for getting the maximum system perfor
 Novel approaches for tuning are usually built in form of frameworks with exposed hooks for attaching system under estimation.
 Naturally, the Target System evaluations here supposed to be extremely costly since it requires actually executing of target algorithm, that is why algorithms in those frameworks are trying to utilize every single bit of information from evaluations, building surrogate models and using Bayesian optimization approaches for making each evaluation valuable.
 
+%TODO: describe SMBO problem
+
 In this section we review some among existing open-source parameter tuning systems from following perspectives:%, that could be used as basis for Hyper-Heuristic.
 %TODO: in implementation. While analyzing, we discuss each system with following perspectives, highlight characteristics that later will be used to select the best suited system as basis for Hyper-Heuristic:
 \begin{itemize}
@@ -491,30 +493,53 @@ In this section we review some among existing open-source parameter tuning syste
 
 
 \subsubsection{IRACE~\cite{lopez2016irace}}\label{bg: irace}
-The first system under investigation is an implementation if Iterated Racing Algorithm\cite{birattari2010f} in IRACE package for off-line hyper-parameters tuning.
+The first system under investigation is an implementation if Iterated Racing Algorithm\cite{birattari2010f} in \textbf{IRACE} package for off-line hyper-parameters tuning.
 The underlying methodology consists three main steps: (1) using prior knowledge, sample new Configurations, (2) distinguish the best ones among sampled using racing algorithm and (3) update prior knowledge to bias next samplings in (1) towards better Configurations. 
 Prior knowledge here represented as probability distribution for each tuned parameter independently (truncated normal and discrete distributions for numeric and categorical hyper-parameters respectively). During update step (3), the probability distributions are increased for those values, where the best Configurations were found.
 
 Racing step (2) could be described as process of running Target System using Configuration under evaluation on a set of heterogeneous problem instances. While solving those instances, the statistically worse-performing Configurations are rejected and racing proceeds with remaining ones. This process continues until reaching required number of survivals or number of solved problem instances. 
-% TODO: I am considering adding a scheme from their paper for illustration if readers found the text-only description hard to grasp.
 
-As it was mentioned above, IRACE supports various data types such as numerical and categorical as well as the possibility of conditions description. While the problem of data types solved by different distributions used, the conditional relationships are determined by the dependency graphs. During sampling (1), first non-conditional and only afterwards dependent parameters are sampled, if respective conditions are satisfied. The framework highly utilize racing algorithm for evaluations and \textit{Friedman test}~\cite{conover1980practical} or alternatively \textit{paired t-test} for statistical analysis of parameters, those it is static in terms of variability and extensibility of learning mechanisms. In terms of parallel evaluations, the algorithm is doing well at the beginning of each racing step, however as the process proceeds less and less evaluations are executed in parallel those all available resources are utilized optimally at all steps of algorithm.
-
-
-\subsubsection{SMAC~\cite{hutter2011sequential}}\label{bg: smac}
-Sequential Model-based Algorithm Configuration (SMAC) is a system for algorithm parameters optimization developed by AutoML research group (here we review SMACv3). In their research, authors shown that the machine learning mechanisms and regression models in particular could be applied not only for tuning parameters, but also for optimizing any expensive black-box functions in general (we believe that the last holds also for the majority of other parameter tuning systems). 
-
-The routine in Sequential Model-based Optimization is somehow similar to one implemented in IRACE, and could be imagined as iterated application two  steps: (1) fitting models, (2) using them for making choices which Configuration to investigate next and actually evaluation of predicted parameters.
-The system development was directed to tackle existing (at that point of time) limitations of all published SMBO approaches namely, expand an applicability not only to numerical, but also categorical parameters and optimize target algorithm not only to single, but to number of problem instances (benchmark set of problem instances).
+As it was mentioned above, \textbf{IRACE} supports various data types such as numerical and categorical as well as the possibility of conditions description. While the problem of data types solved by different distributions used, the conditional relationships are determined by the dependency graphs. During sampling (1), first non-conditional and only afterwards dependent parameters are sampled, if respective conditions are satisfied. The framework highly utilize racing algorithm for evaluations and \textit{Friedman test}~\cite{conover1980practical} or alternatively \textit{paired t-test} for statistical analysis of parameters, those it is static in terms of variability and extensibility of learning mechanisms. In terms of parallel evaluations, the algorithm is doing well at the beginning of each racing step, however as the process proceeds less and less evaluations are executed in parallel those all available resources are utilized optimally at all steps of algorithm.
 
 
+\subsubsection{SMACv3~\cite{hutter2011sequential}}\label{bg: smac}
+Sequential Model-based Algorithm Configuration (\textbf{SMAC}) is a system for parameters optimization developed by AutoML research group (here we review \textbf{SMACv3}). It is an extension introducing learning models to previously existing Random Online Aggressive Racing (\textbf{ROAR}) mechanism. Authors in their research showed that the machine learning mechanisms and regression models in particular could be applied not only for tuning parameters, but also for optimizing any expensive black-box functions in general (we believe that the last holds also for the majority of other parameter tuning systems). 
 
-\paragraph{approach description}
+This system development was directed to tackle existing (at that point of time) limitations of all published \textbf{SMBO} approaches, namely expanding an applicability not only to numerical, but also to categorical parameters and optimizing target algorithm not only on single, but on number of problem instances (benchmark set of problem instances) for facing the variance.
+A routine in Sequential Model-based Optimization is somehow similar to one implemented in \textbf{IRACE} and could be imagined as iterated application two tree steps: (1) building learning model, (2) using it for making choices which Configurations to investigate next and (3) actual evaluation of sampled Configurations.
+The evaluation (3) here carried out by original ROAR mechanism in which evaluation of each new candidate Solution continues until enough data (from benchmark set of problem instances) obtained to either replace current Solution or reject candidate. In contrary to original model-less ROAR, at step (1) \textbf{SMAC} builds machine learning regression random forest~\cite{breiman2001random}. The usage of regression decision trees (which form the forest) was motivated by known fact that they are known to fit well with categorical data. Later, at step (2) an Iterative Local Search (\textbf{ILS}) heuristic applied in combination with Bayesian optimization technique evaluating \textit{Expected Improvement} (EI). \textbf{ILS} started on the best previously found Configurations and was used for sampling new promising ones while distinguish between them carried out by EI using regression model built at step (1). EI is large for those Configurations, with low predicted cost, or for those with high uncertainty those providing exploration-exploitation balance automatically~\cite{jones1998efficient}.
 
-\subsubsection{BOHB}
-\paragraph{approach description}
+% TODO: try a random forest as a 1ST level of HH, SMAC paper (short version), PAGE 7, CITES 18, 19.
+
+Exposing such a great learning capabilities and using Expected Improvement technique that guarantees to converge the search process to global optimum given enough time, the major drawback in this system is lack of flexibility to include conditional dependencies between parameters into search space description. 
+One of possible solutions here could be the use of conditional-aware neighborhood definition in \textbf{ILS} (currently it just carried out by sampling in Gaussian distribution). In fact, used Search Space representation framework ConfigSpace\cite{configspace} is able to specify dependencies among hyper-parameters and verify the Configuration validity in terms of parameter conditions violation. However, to the best of our knowledge, during the Configuration sampling those conditions are not taken into account and could be broken thus resulting in illegal parameter combination. Obviously those cases are handled and broken Configurations are rejected, but in case of `sparse' Search Spaces (where significant amount of parameter combinations are restricted by conditions) this approach could lead to ineffective sampling and predictive abilities of system will suffer greatly. Unfortunately, we did not find any officially published evaluations of such cases and could only make guesses based on own intuition and framework developers advises for SMACv3 application in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{https://github.com/automl/SMAC3/issues/403}}.
+
+ROAR mechanism is the derivative from \textbf{FocusedILS} algorithm (solver in \textbf{ParamILS} parameter tuning framework~\cite{hutter2009paramils}) where each evaluation of new candidate Solution on problem instance performed sequentially. Since the ROAR evaluation strategy is applied at step (3), we conclude that the utilization of, in principle, available parallel computation capabilities is another drawback of \textbf{SMACv3} framework.
+
+
+\subsubsection{BOHB~\cite{falkner2018bohb}}\label{bg: bohb}
+While SMAC outperforms and partially reuses decisions done in ParamILS, BOHB (Bayesian Optimization combined with HyperBand) is the parameter tuning tool that outperforms SMAC and was introduced by the same AutoML research group.
+
+As it stated in name, the main routines here are carried out with mainly two algorithms: learning (1) and Configurations sampling (2) is done with Bayesian Optimization technique Tree Parzen Estimator (TPE) while Configurations evaluation and comparison carried out by HyperBand (HB) algorithm.
+
+The TPE instead of na\"ive Gaussian Processes-based (GP BO) Bayesian Optimization was motivated by better dimensional scaling and internal support of both numerical and categorical data types (however, some minor transformations are still required). Unlike GP where optimization done by modeling distributions of Configuration results given it parameters, TPE builds two \textit{parameter distributions} splitting Configurations into two sets according to their `goodness'. For more detailed explanation we refer to original TPE description~\cite{bergstra2011algorithms}.
+
+The other part of BOHB, namely HyperBand is a promising multi-armed bandit strategy for hyper-parameter optimization~\cite{li2017hyperband} in which the \textit{budget} for Configurations evaluation is defined beforehand and divided into iterations. The role of budget could play any control parameter that denotes the accuracy of Configuration evaluation by TS where the maximum budget gives you the most precise Configuration evaluation while minimum amount results in the least accurate approximation of result.
+Running examples of budget could be the number of iterations in iterative algorithm or time to train the neuron network.
+As the result, requirements arise for TS to expose and support budget usage as expected in algorithm.
+At each iteration, HB randomly samples a number of Configurations for evaluation which, in fact, decreases for former iterations while the amount of budget remains the same. As the outcome, first iterations of HB are full of coarse-grain evaluated Configurations while later iterations produce higher number of more accurate measurements. At each iteration of HB, the Successful Halving (SH) procedure is executed to drop (usually $\frac{2}{3}$) badly performing Configurations. As one could expect, since the number of measuring Configurations in each iteration decreases, the measurements could be done more precisely since the amount of SHs execution drops too.
+
+Binding of HyperBand and Bayesian Tree Parzen Estimator exists is several places. Firstly, the learning models are updated each time when new results are available for every budget value. Next, at each iteration of HB, TPE model is used for sampling new Configurations. Note that BOHB uses model built with results obtained with the largest budget only. This decision leads in more precise predictions in the later stages of parameter optimization procedure.
+
+The drawback of this system lays in the way of handling conditions between hyper-parameters. BOHB actual implementation HpBandSter (a distributed HyperBand implementation on Steroids)~\footnote{GitHub repository: \url{https://github.com/automl/HpBandSter}} as SMACv3 system uses ConfigSpace framework for Configuration Space definition. As we discussed in SMACv3 description (section~\ref{bg: smac}), it naturally allows to encode the dependencies and conditions among parameters within space. As authors stated, the TPE learning models accomplish this knowledge implicitly by shrinking the densities for forbidden parameters (actually those parameters are still added to models by \textit{imputation} mechanism where empty or default values are assigned). 
+However, consider case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$. The actual number of such parameters could vary dramatically in `sparse' Search Spaces those distributions estimated by KDEs will not reflect the reality. As a consequence, the prediction performed using such distributions will often result in `invalid' Configuration within `sparse' spaces hurting the performance and accuracy of sampling.
+
+% TODO: it is more for concept description
+% Even if fix of Configuration sampling in such cases is relatively simple task (parent-child relationship utilized in IRACE), then building proper density distributions of `good' parameters reflecting conditions is hard.
+
 
 \subsubsection{AUTO-SKLEARN}
+Architecture search.
 \paragraph{CASH (Combined Algorithm Selection and Hyperparameter optimization) problem}
 \paragraph{pros and cons (on-line or off-line, problems to solve, extensibility)}\cite{autosklearn:feurer2015efficient}
 
@@ -530,6 +555,10 @@ impact of parameter control based on other's evaluation
 
 
 \section{Conclusion}
+
+%TODO: need to add a review of available techniques for making a predictions within conditional search spaces
+% https://www.etsmtl.ca/Unites-de-recherche/LIVIA/Recherche-et-innovation/Publications/Publications-2017/Levesque_ijcnn_2017.pdf
+% https://arxiv.org/pdf/1909.13404.pdf - omg, 30.09.2019 -_-, smth really similar to proposed here approach..
 
 It could be compared with a warp-engine usage on a spacecraft, which gives the possibility to travel faster than speed of light by orders of magnitude. It is definitely fast enough, however if you consider a space-folding engine for instant traveling and use it to jump onto a huge distance, while warp-engine is 
 
