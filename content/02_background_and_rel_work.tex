@@ -439,17 +439,17 @@ We briefly outline existing automated approaches illustrating each with a pictur
 	 \centering
 	\begin{subfigure}[b]{0.25\linewidth}
 		\includegraphics[width=\linewidth]{graphics/Background/hyperparameter-grid-search.png}
-		\caption{Grid Search.}
+		\caption{Grid}
 		\label{bg: fig:automated parameter tuning approaches: grid}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.25\linewidth}
 		\includegraphics[width=\linewidth]{graphics/Background/hyperparameter-random-search.png}
-		\caption{Random Search.}
+		\caption{Random}
 		\label{bg: fig:automated parameter tuning approaches: random}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.25\linewidth}
 		\includegraphics[width=\linewidth]{graphics/Background/hyperparameter-learning-search.png}
-		\caption{Learning Search.}
+		\caption{Learning}
 		\label{bg: fig:automated parameter tuning approaches: learning}
 	\end{subfigure}
 	\caption{Automated Parameter Tuning Approaches\protect\footnote{Graphics from~\cite{koch2017automated}}.}
@@ -556,19 +556,31 @@ Information from the meta-learning phase is used as follows: for a given new dat
 However, the potential of this meta-learning approach is derived entirely from such dataset repository existence and depends on homogeneous datasets availability, while the strength of proposed on-line methodology is more universal and lays only on the applicability of underlying machine learning models and strength of optimization mechanisms.
 The investigation of proposed approach universality would be rather intriguing, since Auto-sklearn was applied only to classification, but not a regression problems~\cite{feurer2015efficient,biedenkapp-ecai20}.
 
-Field of automated machine learning is one of trending research directions those there exist many open-source (\textit{Auto-Weka}~\cite{thornton2013auto}, \textit{Hyperopt-Sklearn}~\cite{komer2014hyperopt}, \textit{Auto-Sklearn}~\cite{feurer2015efficient}, \textit{TPOT}~\cite{olson2019tpot}, \textit{Auto-Keras}~\cite{jin2019auto}, etc.) as well as commercial (\textit{RappidMiner.com}, \textit{DataRobot.com}, Microsoft’s \textit{Azure Machine Learning}, Google’s \textit{Cloud AutoML}, and Amazon's \textit{Machine Learning on AWS}) auto-ml systems.
 
-%\paragraph{CASH, Architecture Search, } add a paragraph here, or write additional chapter? 
+
 
 \subsubsection{BRISEv2}
 \paragraph{approach description}
 \todoy{Other systems?}
 
 
-\section{Parameter control as an Optimization Problem}\label{bg: parameter control}
-\subsection{Parameter Control Definition}
-\subsection{Examples and Reported Impact}
+\subsubsection{Parameter control as an Optimization Problem}\label{bg: parameter control}
+\paragraph{Parameter Control Definition}
+\paragraph{Examples and Reported Impact}
 impact of parameter control based on other's evaluation
+
+
+\subsection{Beyond Parameter Tuning} 
+
+CASH, Architecture Search, Hyper-Heuristics with parameter control (do they exist?)
+
+
+Field of automated machine learning is one of trending research directions those there exist many open-source (\textit{Auto-Weka}~\cite{thornton2013auto}, \textit{Hyperopt-Sklearn}~\cite{komer2014hyperopt}, \textit{Auto-Sklearn}~\cite{feurer2015efficient}, \textit{TPOT}~\cite{olson2019tpot}, \textit{Auto-Keras}~\cite{jin2019auto}, etc.) as well as commercial (\textit{RappidMiner.com}, \textit{DataRobot.com}, Microsoft’s \textit{Azure Machine Learning}, Google’s \textit{Cloud AutoML}, and Amazon's \textit{Machine Learning on AWS}) auto-ml systems.
+
+
+
+
+
 
 
 \section{Conclusion}
