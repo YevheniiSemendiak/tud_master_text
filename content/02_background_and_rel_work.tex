@@ -430,6 +430,7 @@ For doing so, our next step is the review and comparison of existing parameter t
 
 
 \subsection{Approaches for Parameter Tuning}
+% TODO: rename to "Parameter Setting", split "Parameter tuning" and "Parameter control"
 Nowadays there exist wast number of ways to assign parameters for system. 
 One of the simplest and error-prone ways is just trusting your (or someones else) intuition and using those parameters that seems to you more or less logic for particular system and problem instance. People quickly abandoned it in favor of automatic approaches, since novel computational capacities easily provide a possibility for it.
 
@@ -457,15 +458,15 @@ We briefly outline existing automated approaches illustrating each with a pictur
 \end{figure}
 
 
-\paragraph{Grid Search.} It is a simple approach of solving the search problem by exchanging enumeration of possible solutions (parameter sets) for relaxed problem instance. This relaxation is derived by user specifying finite number of possible values for each of hyper-parameters under consideration. After evaluating each possible configuration for system under estimation, algorithm reports the best found solution. Obviously, this approach could skip promising parts of search space as shown on picture~\ref{bg: fig:automated parameter tuning approaches: grid}.
+\paragraph{Grid Search Parameter Tuning.} It is a simple approach of solving the search problem by exchanging enumeration of possible solutions (parameter sets) for relaxed problem instance. This relaxation is derived by user specifying finite number of possible values for each of hyper-parameters under consideration. After evaluating each possible configuration for system under estimation, algorithm reports the best found solution. Obviously, this approach could skip promising parts of search space as shown on picture~\ref{bg: fig:automated parameter tuning approaches: grid}.
 
 
-\paragraph{Random Search.} This methodology relies on random (usually uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}. Compare visually the best configurations (highlighted in pink) found by grid (picture~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (picture~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
+\paragraph{Random Search Parameter Tuning.} This methodology relies on random (usually uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}. Compare visually the best configurations (highlighted in pink) found by grid (picture~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (picture~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
 
-\paragraph{Model Based Search.} In most cases, the dependencies between tuned parameter values and optimization objective do exist, can be observed and utilized for hyper-parameter tuning by predicting which parameter combinations could produce a better results, those making guesses more precise. As it showed on picture~\ref{bg: fig:automated parameter tuning approaches: learning}, after accumulating more information, learning algorithm will make more precise guesses, what in contrast to previously described model-free approaches is more preferable and robust.
+\paragraph{Model Based Search Parameter Tuning.} In most cases, the dependencies between tuned parameter values and optimization objective do exist, can be observed and utilized for hyper-parameter tuning by predicting which parameter combinations could produce a better results, those making guesses more precise. As it showed on picture~\ref{bg: fig:automated parameter tuning approaches: learning}, after accumulating more information, learning algorithm will make more precise guesses, what in contrast to previously described model-free approaches is more preferable and robust.
 With this idea researchers started to build systems that (1) traverse the search space more efficiently and (2) could mimic dependencies between parameters and objective resulting in surrogate models. The later is some sort of enhancement used in combination with former enabling you to simulate evaluation of real system instead of expensive real probe.
 
-\paragraph{Parameter control.} One prominent characteristic of the system is its adaptation ability in runtime. In particular, if we are talking about the process of problem solving, it is a well-known fact, that algorithm performing promisingly in early beginning, later could struggle hard and vise versa. This could be caused by various reasons, and it is hard to tell, which of them you are facing right now. Parameter control in such cases is the ability of system to change its parameters automatically as the response to changes in solving process. The drawback of this approach lays in its generality, since every algorithm should implement its own parameter control technique that is moreover often dependent upon the underlying problem.
+\paragraph{Parameter control.} One prominent characteristic of the system is its adaptation ability in runtime. In particular, if we are talking about the process of problem solving, it is a well-known fact, that algorithm performing promisingly in early beginning, later could struggle hard and vise versa. This could be caused by various reasons, and it is hard to tell, which of them you are facing right now. Parameter control in such cases is the ability of system to change its parameters automatically as the response to changes in solving process in other words it is known as \textit{on-line} version of parameter tuning. The drawback of this approach lays in its generality, since every algorithm should implement its own parameter control technique that is moreover often dependent upon the underlying problem.
 
 
 \subsection{Systems for Model-Based Parameter Tuning}\label{bg: parameter tuning expamples}
@@ -567,7 +568,7 @@ For concrete optimizer to be usable for searching the parameters, it should expo
 
 The great part of software potential lays not only in its ability to tackle a problem in hand, but also on the general usability and adaptivity to unforeseen tasks. 
 
-Here we review BRISE major version 2 (more concretely, v2.2 available on September 2019\footnote[1]{GitHub link: \url{https://github.com/dpukhkaiev/BRISE2/tree/10485473070bac01c0b3104e56e694e85fa816ad}}), since the very early BRISE versions (major 1~\cite{brise1monolite}) were more monolithic and those hard to apply for parameter tuning problem in hand.
+Here we review BRISE major version 2 (more concretely, v2.2 available on September 2019\footnote[1]{GitHub: \url{github.com/dpukhkaiev/BRISE2/tree/10485473070bac01c0b3104e56e694e85fa816ad}}), since the very early BRISE versions (major 1~\cite{brise1monolite}) were more monolithic and those hard to apply for parameter tuning problem in hand.
 
 While designing this system, authors are focused not only on particular learning mechanisms for parameter prediction, but overall system modularity.
 Being a Software Product Line, BRISE was designed as a set of interchangeable interactive components (nodes) each acting according to its own specific role. 
@@ -585,22 +586,34 @@ From our perspective, the advantage of BRISE over other systems comes from the d
 As every other system, BRISE also has flaws. Talking about the Search Space representation, BRISE relies on ConfigSpace module~\cite{configspace} which is also used SMACv3 and BOHB frameworks, so all statements claimed previously are also valid here. The predictive models are acting pretty the same here those it is hard to apply BRISE in cases of sparse Configurations spaces.
 
 
-\subsection{Parameter control as tuning technique}\label{bg: parameter control}
-As we defined before reviewing tuning systems, the parameter control is an approach built into the algorithm to react on changes in solving process by changing the algorithm hyper-parameters on-the-fly.
+\subsection{Parameter control}\label{bg: parameter control}
+As we defined before, the parameter control is an approach of \textit{on-line} settings the parameters, built into the algorithm to react on changes in solving process on-the-fly.
+
+The biggest disadvantage of Parameter Tuning defined by the fact, that it usually requires large number of algorithm runs (evaluations) to evaluate performance with different settings.
+On opposite site, the parameter control approaches are solving this issue but with the drawback of non-universality. Meaning, the proper control strategies for one algorithm usually is not applicable for other.
 
 Searching the examples of parameter tuning for heuristics, one definitely will find himself exhausted to enumerate all methodologies proposed for evolutionary algorithms since this idea have come from EAs~\cite{karafotias2014parameter}, however techniques for other meta-heuristics do exist too.
-Since the idea of adapting parameters exclusively dependent onto concrete algorithm instance, it is impossible to classify or formalize it somehow except providing an insight by reviewing a couple of examples.
+Since the idea of adapting parameters exclusively dependent onto concrete algorithm instance, it is hard to generally classify approaches for all algorithms somehow, but for each particular one it could be done.
 
-\paragraph{Parameter Control in Evolutionary Algorithms.} The motivation for such number of performed studies tackling adaptive changes in EAs is that the performance of later greatly depends not only on (1) parameter values used in EAs which is usually solved by tuning but also on (2) the fact, that the best parameter values may change during the run of EAs. 
+The only one generic classification facet is the type of controlling mechanism, where \textit{deterministic} (following a predefined schedule), \textit{adaptive} (assign parameter values upon received learning feedback) types are distinguishable.
+
+We provide an insight of parameter control by reviewing some examples among numbers of existing adaptation strategies in meta-heuristics.
+Authors reported significant optimization performance improvements in each of mentioned later researches, but for more comprehensive review of recently published parameter control strategies we encourage reader to examine~\cite{huang2019survey}.
+
+\subsubsection{Parameter Control in Evolutionary Algorithms} 
+The motivation for huge number of performed studies tackling adaptive changes in Evolutionary Algorithms is that the performance of later greatly depends not only on (1) parameter values used in EAs which is usually found by tuning approaches but also on (2) the fact, that the best parameter values may change during the run of EAs. 
+Shortly, there exists strategies for controlling each EA parameter separately or together.  Most commonly implicated parameters are: \textit{population size}, \textit{selection strategies} and \textit{variation aspects} (namely crossover and mutation operators). For more detailed explanation and analysis of each approach we suggest reader to refer recently conducted reviews and researches if field of parameter control in Evolutionary Algorithms~\cite{karafotias2014parameter,aleti2016systematic,smith2020self}.
+The only common distinction here that listed previously mechanisms are extended by 3rd control type — \textit{self-adaptive} which implies encoding of mentioned parameter values in solution genomes those allowing them to co-evolve with solutions in the runtime. 
+
+\subsubsection{Parameter Control in Simulated Annealing}
+In Simulated Annealing, however, one of the most frequently controlled parameters are the \textit{cooling schedule} (the velocity of decreasing temperature) and the \textit{acceptance criteria}.
+
+The control in cooling rate is motivated by the fact, that if the temperature decreasing too rapidly, an optimization process may stuck in local optima, while too slow cooling rate is usually computationally costly. Many researches were made to investigate which is the best \textit{deterministic} strategy among linear, exponential, proportional, non-linear, logarithmic or geometrical. In contrast, \cite{karabin2020simulated} propose the adaptive strategy based on statistical information evaluated on each optimization step.
+
+The other example of adapting the acceptance criteria was proposed in~\cite{ghandeshtani2019entropy}, based on thermodynamics fundamentals such as \textit{entropy} and \textit{kinetic energy}. Authors suggest replacing the standard acceptance criteria (based on current temperature and found solution quality) with the criteria based on change in solutions entropy.
 
 
-
-\paragraph{Parameter Control Definition}
-\paragraph{Examples and Reported Impact}
-impact of parameter control based on other's evaluation
-
-
-\subsection{Beyond Parameter Tuning} 
+\subsection{Beyond Parameters Settings} 
 
 CASH, Architecture Search, Hyper-Heuristics with parameter control (do they exist?)
 
