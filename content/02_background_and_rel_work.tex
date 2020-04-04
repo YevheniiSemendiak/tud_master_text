@@ -1,225 +1,229 @@
 \chapter{Background and Related Work Analysis}\label{bg}
-In this chapter we provide reader with the base knowledge in field of Optimization Problems and the process of their solving.
-The reader who is an expert in field of Optimization and Search Problems could find this chapter as an obvious discussion of well-known facts. If the notions of \textit{Parameter Tuning} and \textit{Parameter Control} seems like two different names for one thing, we encourage you to read this chapter carefully.
-We highly recommend for everyone to refresh the knowledge of sections topics and examine the examples of Hyper-Heuristics in \ref{bg: hh examples} and Systems for parameter tuning in \ref{bg: parameter tuning expamples} since we use them later in concept implementation.
+In this chapter we provide reader with a review of the base knowledge in fields of Optimization Problems and approaches for solving them.
+An experienced reader in field of Optimization and Search Problems could find this chapter as an obvious discussion of well-known facts. 
+If the notions of \textit{Parameter Tuning} and \textit{Parameter Control} are not familiar to you or seems like two different names for one thing, we highly encourage you to spend some time with reading this chapter carefully.
+In any case, it is worth for everyone to refresh the knowledge with coarse-grained description of sections topics and examine the examples of Hyper-Heuristics in \ref{bg: hh examples} and Systems for parameter tuning in \ref{bg: parameter tuning expamples} since we use them later in concept implementation.
 
 % TODO: finalize intro to chapter
 % add brief outline of lieterature review
 
 \section{Optimization Problems and their Solvers}\label{bg:opt problems and solvers}
+Our life is full of different hard and sometimes contradicting choices. 
 
+But what is an Optimization? It is an art of making good decisions.
 
-\subsection{Optimization Problems}\label{BG: subsection OPs}
-%https://www.solver.com/problem-types
-% need to add some kind of catchy intro, here or in previous parts of this section.
-While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the \emph{best possible} Solution for Computation Problem~\cite{goldreich2010p}. 
+A decision in working hard or going home earlier, to buy cheaper goods or follow brands, to isolate ourselves or visit friends during the quarantine, to spend more time for planning trip or start it instantly. Each made decisions have it consequences.
 
-
-In this thesis we focus on the Optimization Problems — a special case of the Search Problems.
-
-
-A lot of conducted studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is almost impossible to exclude the application domain from the definition. The description of every possible Optimization Problem and all approaches for solving it are out of the scope of this thesis. However, a birds-eye view should be presented in order to make sure that reader is familiar with all notions used through this thesis. 
-
-
-In \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} authors distinguished OP characteristics that overlap through each of these works and those we would like to start from them.
-
-
-First, let us define the subject of the Optimization. In general, it could be imagined as the Target System (TS) displayed on picture \ref{bg:pic:Target System}. Analytically it could be represented as the function $Y = f(X)$. Informally it accepts the information with its \textit{inputs} \textbf{X} sometimes also called variables or parameters, performs a \textit{Task} and produces the result on its \textit{outputs} \textbf{Y}.
+Picture~\ref{bg:pic:Optimization tradeoff} outlines the trade-off between decision quality and amount of effort spent. Concretely, here you could spend a couple of days searching the interned, comparing routes to find the best suited one, or you could just go. While in former case you seem to waste a lot of time, in later, however, you could lose it in on the way.
 
 \svgpath{{graphics/Background/}}
 \begin{figure}
 	\centering
+	\includesvg[width=0.5\textwidth]{optimization_concept_tsp}
+	\caption{Optimization trade-off.}
+	\label{bg:pic:Optimization tradeoff}
+\end{figure}
+\todoy{refactor the image}
+
+\subsection{Optimization Problems}\label{BG: subsection OPs}
+While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the \emph{best possible} Solution for Computation Problem~\cite{goldreich2010p}.
+
+In this thesis we focus ourselves on the Optimization Problems.
+
+A lot of performed studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is hard to exclude the application domain from definition. The description of every possible Optimization Problem and all approaches for solving it are out of this thesis scope, but a coarse-grain review should be presented in order to make sure that everyone reading this thesis will be familiar with all used here terms and notions. 
+
+In works~\cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} dedicated to solving OPs, authors distinguished OP characteristics that overlap through each of these works and those we would like to start from them.
+
+
+First, let us define the Optimization \textit{subject}. Analytically it could be represented as the function $Y = f(X)$ that accepts some input $X$ and reacts on in providing an output $Y$. Informally it could be imagined as the Target System $f$ (TS) shown on picture~\ref{bg:pic:Target System}. It accepts the input information with its \textit{inputs} $X_n$ sometimes also called variables or parameters, processes them performing some \textit{Task} and produces the result on its \textit{outputs} $Y_m$.
+
+\begin{figure}
+	\centering
 	\includesvg[width=0.5\textwidth]{TargetSystem}
-	\caption{Target System}
+	\caption{Optimization Target System.}
 	\label{bg:pic:Target System}
 \end{figure}
 
-Pair of $X$ and respective $Y$ form a \textit{Solution} for Computation Problem.
-All possible inputs $X$ form a \textit{Search Space}, while all outcomes $Y$ form an \textit{Objective Space}.
-The Solution could also be characterized by the \textit{objective} value(s) — a quantitative measure of TS performance that we minimize or maximize. 
-We could obtain those value(s) directly by reading the $Y$, or indirectly for instance, noting the time TS took to produce the output $Y$ for given $X$. 
-The Solution objective value(s) form object(s) of Optimization. 
-For the sake of simplicity we here use $Y$, \textit{outputs}, \textit{objectives} and $X$, variables, \textbf{parameters(?)}% will decide later
- interchangeably.
+Each (unique) pair of sets $X_n^i$ and respective $Y_m^i$ form $Solution^i$ for Computational Problem.
+All possible inputs $X^i$, where $i=1...N$ form a \textit{Search Space} of size $N$, while all outcomes $Y^i$, where $i=1...M$ form an \textit{Objective Space} of size $M$. Note, that both $N$ and $M$ could be equal to $\infty$.
+
+The Solution characterized by the \textit{objective} value(s) — a quantitative measure of TS performance that we want to minimize or maximize in Optimization Problems. 
+We could obtain those value(s) directly by reading $Y_m$, or indirectly for instance, noting the wall clock time TS took to produce the output $Y^i$ for given $X^i$. 
+The Solution objective value(s) form \textit{object} of Optimization. 
+For the sake of simplicity we here use $Y_m$, \textit{outputs} or \textit{objectives} interchangeably as well as $X_n$, \textit{variables} or \textbf{parameters}.
 
 
 Next, let us highlight the Target System characteristics.
-Among mentioned in \cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} we found those the most important:
+Among all mentioned in \cite{biegler2004retrospective,figueira2014hybrid,deb2014multi,amaran2016simulation} we found those properties the most important:
 \begin{itemize}[itemsep=8pt]
-	\item \textbf{Input data types} of $X$ is a crucial characteristic. The variables could be either \textit{discrete} where representatives are binary strings, integer-ordered or categorical data, % One could apply mixed integer linear (nonlinear) programming here (MILP, MINLP) \cite{biegler2004retrospective}.
-	\textit{continuous} where variables are usually a range of real numbers, or \textit{mixed} as the mixture of previous two cases.
+	\item \textbf{Input data types} of $X_m$ is a crucial characteristic. The variables could be either \textit{discrete} where representatives are binary strings, integer-ordered or categorical data, \textit{continuous} where variables are usually a range of real numbers, or \textit{mixed} as the mixture of previous two cases.
 
-	\item \textbf{Constrains} are functional dependencies that describe the relationships among inputs and defile the allowable values for them.
+	\item \textbf{Constrains} are functional dependencies that describe the relationships among inputs and defile the allowable values for them. As an example, imagine that having $X_n$ equal to $value$ implies that $X_{n + k}$ should not appear at all, or could take only some subset of all possible values.
 
-	\item \textbf{Amount of knowledge} TS exposes about the dependencies between $X \rightarrow Y$ or objective values. With respect to this knowledge, the Optimization could be \textit{White Box} — the TS exposes it internals fully, so it is even possible to derive the algebraic model of TS.
-	%\textit{Gray Box} - the amount of exposed knowledge is significant, but not enough to build the algebraic model.
+	\item \textbf{Amount of knowledge} that TS exposes about its internals. In other words, exposed knowledge between the dependencies $X \rightarrow Y$. With respect to this, an Optimization could be: \textit{White Box} — TS exposes its internals fully, it is even possible to derive the algebraic model of TS.
+	\textit{Gray Box} — the amount of exposed knowledge is significant, but not enough to build the algebraic model.
 	\textit{Black Box} — the exposed knowledge is mostly negligible.
 	%In this case the Derivative Free Optimization approaches (such as Surrogate Optimization, different Meta-|Hybrid-|Hyper-Heuristics)  are applicable.
 
 	%\paragraph{Dependency types} could be  The inputs to outputs dependencies the of Target System could also be distinguished form perspective of linearity \cite{biegler2004retrospective,figueira2014hybrid}.
 	%\textit{Linear dependencies} reveal the Linear Programming Optimization approaches, while with \textbf{Nonlinear dependencies} one should consider Nonlinear Programming.
 
-	\item \textbf{Dependencies randomness} One of possible challenges, while obtaining the knowledge about TS is uncertainty of output. Ideal case is the \textit{deterministic} dependency between $X$ and $Y$, however in most of real-world challenges engineers tackle with the \textit{stochastic} systems whose output is affected by random processes. 
+	\item \textbf{Randomness} of TS is One of possible challenges, when the output is uncertain. Ideally TS is \textit{deterministic}, when for $X^i$ TS provides the same $Y^i$ all the time. However, in most real-life challenges engineers tackle \textit{stochastic} systems whose output is affected by random processes happened inside TS. 
 
-	\item \textbf{Cost of evaluation} is the amount of resources (computational, time, money, etc.) TS will spend to obtain the result for particular input. It varies from very cheap if the TS is a simple algebraic formula and Task is to evaluate it, to very expensive if the TS is a complex Neuron Network and the Task is to train it on data.
+	\item \textbf{Cost of evaluation} is the amount of resources (energy, time, money, etc.) TS should spend to produce the output for particular input. It varies from \textit{cheap} when TS could be an algebraic formula and evaluation Task is simple mathematic computation, to very expensive when the TS is a pharmaceutical company and the Task is to perform a whole bunch of tests for a new drug, which may last years. 
 
-	\item \textbf{Number of objectives} could be either \textit{Single}, or \textit{Multiple}. According to the number of objectives, the result of optimization will be either single Solution, or set of non-dominated (Pareto-optimal) Solutions \cite{deb2014multi}.
-
+	\item \textbf{Number of objectives} is the size of output vector $Y_m^i$. It could be either \textit{Single} ($m=1$), or \textit{Multiple} ($m=2...M$) objective. With respect to the number of objectives, the result of optimization will be either single Solution, or set of non-dominated (Pareto-optimal) Solutions respectively.
 \end{itemize}
 
+Most Optimization Problem types could be obtained by combining different types of each characteristic listed above.
 
-Combining different characteristic, one could obtain broad range of Optimization Problem types.
+In this thesis we tackle real life combinatorial problem where most prominent incumbents are Bin Packing~\cite{martello1990bin}, Job-shop Scheduling~\cite{blazewicz1996job} or Vehicle Routing~\cite{toth2002vehicle} Optimization Problems.
+All combinatorial problems are \textit{NP-Complete} meaning they are both \textit{NP} and \textit{NP-Hard}\cite{garey1979computers}.
 
-
-In this thesis we tackle such a real life problems as bin packing, job-shop scheduling or vehicle routing.
-The mentioned above problems has been shown to impose $NP-complete$ (meaning that they are both $NP$ and $NP-hard$) computational complexity \cite{garey1979computers}.
-
-
-As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP) \cite{applegate2006traveling} — an instance of vehicle routing problem and one of the most studied combinatorial OP, yet still remaining one of the most challenging (here we consider deterministic, symmetric TSP).
-The informal definition of TSP is as follows: 'Given a set of cities and the distances between each of them, what is the shortest path to visit each city once and return to the origin city?'.
-The input data (path) is a vector of city indexes, and those the type is a non-negative integers \textit{0, 1, 2...}.
-There are two constrains on path: it should contain only unique indexes (those, each city will be visited only once) and it should start and end from the same city. 
-The TSP distance (or cost) matrix here plays role of Target System, clearly that this TS exposes all internal knowledge and those it is the white box.
-Since the cost matrix is fixed and not changing, the TS is considered to be deterministic, cost for two identical paths are always the same (although there exist Dynamic TSP where the cost matrix changes while computing the path cost to reflect a real-time traffic information updates while traveling \cite{cheong2011dynamic}).
-It is extremely cheap to compute a cost for given path using cost matrix, those overall Solution evaluation in this TS is cheap.
-Since we are optimizing only the route distance, it is a Single objective OP.
+As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP)~\cite{applegate2006traveling} — an instance of vehicle routing and one of the most frequently studied combinatorial OP (here we consider deterministic and symmetric TSP).
+The informal definition of TSP is as follows: ``Given a set of $N$ cities and the distances between each of them, what is the shortest path that visit each city once and return to the origin city?''
+With respect to our previous definition of an Optimization Problem, Target System here is a function to evaluate the length of proposed path. The TSP distance (or cost) matrix used in this function for evaluation and it is clear that this TS exposes all internal knowledge and those it is a white box.
+The input $X_n$ is a vector of city indexes those type of input data is non-negative integers. There are two constrains on path: it should contain only unique indexes (those, each city will be visited only once) and it should start and end from the same city:~$[2 \rightarrow 1 \rightarrow ... \rightarrow 2]$.
+Since the cost matrix is fixed and not changing while during solving process, the TS is considered to be deterministic and cost for two identical paths are always the same (nevertheless, there exist Dynamic TSP where the cost matrix do changes in a runtime to reflect a more realistic real-time traffic updates\cite{cheong2011dynamic}).
+It is extremely cheap to compute a cost for given path using cost matrix, those overall Solution evaluation in this OP is cheap, but the overall number of Solutions is $N!$. Since we are optimizing only the route distance, this is a Single objective OP.
 
 
 \subsection{Optimization Problem Solvers}\label{BG: subsection OP Solvers}
-Any Optimization Problem could be solved by an exhaustive search. 
-But when the problem size significantly increase, the amount of time needed for an exhaustive search becomes infeasible and in most cases even relatively small problem instances could not be solved by an enumeration.
+Most Optimization Problems could be solved by an exhaustive search, though trying all possible combinations of input variables and choosing one providing the best objective value. But when the Search Space size significantly increase, the amount of time needed for brute-force search becomes infeasible and in many cases even relatively small problem instances could not be solved by an enumeration.
 
-Here different techniques come into play, but the provided by Target System characteristics of Optimization Problem could restrict and sometimes strictly define the applicable approach.
-For instance, imagine you have white box deterministic TS with discrete constrained input data and cheap evaluation. The OP in this case could be described using Integer Linear Programming \todoy{ref} approaches, or heuristics \todoy{ref}. If this TS turned out to be a black box, the ILP approaches are not applicable and one should consider using heuristics \cite{biegler2004retrospective}.
+% TODO: highlight that exchaustive search provides guaranteed optimality
 
+Here different optimization techniques come into play, and exposed by Target System characteristics could restrict and sometimes strictly define the applicable approach.
+For instance, imagine you have white box deterministic TS with discrete constrained input data and cheap evaluation. The OP in this case could be solved using Integer Linear Programming, or heuristics approaches. If this TS turned out to be a black box, the ILP approaches will not be applicable anymore and one should consider using heuristics~\cite{biegler2004retrospective}.
 
-Again, there exist a lot of different facets for OP Solvers classification, however they are a subject of surveying works. Here as the point of interest we decided to highlight two of them.
+Again, there exist a lot of different characteristics for Optimization Problem Solvers classification, but they are a subject of many surveying works for instance~\cite{biegler2004retrospective}. Here as the point of interest we decided to highlight only two of them.
 
-From the perspective of solution quality:
-\begin{itemize}
-	\item \textbf{Exact} Solvers are those algorithms that always provide an optimal Solution for OP.
-	\item \textbf{Approximate} Solvers produce a sub-optimal output with guarantee in quality (some order of distance to the optimal solution).
-	\item \textbf{Heuristics} Solvers do not give any worst-case guarantee for the final result quality.
+\begin{itemize}[itemsep=8pt]
+	\item \textbf{Final solution quality} perspective.
+	\begin{enumerate}
+		\item \textbf{Exact} Solvers are those algorithms that always provide an optimal Solution for OP.
+		\item \textbf{Approximate} Solvers produce a sub-optimal output with guarantee in quality (some order of distance to the optimal solution).
+		\item \textbf{Heuristics} Solvers do not give any worst-case guarantee for the final result quality.
+	\end{enumerate}
+	
+	\item \textbf{Solution availability} perspective.
+	\begin{enumerate}
+		\item \textbf{Finalizing} algorithms, that report the results only at the end of their run.
+		\item \textbf{Anytime} algorithms, designed for stepwise solution improvement, while solving the OP and those could expose intermediate results.
+	\end{enumerate}
+	
 \end{itemize}
 
-From the perspective of solution availability:
-\begin{itemize}
-	\item Algorithms that expose the Solution \textbf{at the end} of their run.
-	\item In opposite, \textbf{anytime} algorithms designed to improve the solution quality step-by-step while solving the OP and those, intermediate results are naturally accessible. 
-\end{itemize}
-
-Each if this algorithm families has own advantages and disadvantages in comparison to other, and if the property of solution availability is clear, the solution quality faced require more detailed description.
+Each of these algorithm characteristics provide their own advantages paying sacrificing other. As instance, if solution is not available at any time, one will not be able to control the optimization process, but if it does available, the overall performance may suffer. 
+If the former features are more or less self-explanatory, we explain the later ones in more details including examples.
 
 \subsubsection{Solution Quality Classes}
 \paragraph{Exact Solvers.}
-As we stated previously, the exact algorithms are those which always solve an OP to optimality.
+As stated previously, the exact algorithms are those, which always solve an OP to guaranteed optimality.
 
-For some OP it is possible to develop an algorithm that is much faster than exhaustive search — it runs in super-polynomial time providing an optimal solution. As it stated in \cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, those super-polynomial time algorithms are the best we can hope to get when dealing with an NP-complete problem.
+For some OP it is possible to develop an effective algorithm that is much faster than the exhaustive search — they run in super-polynomial time instead of exponential still providing an optimal solution. As authors claimed in~\cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, those super-polynomial time algorithms are the best we can hope to get when dealing with NP-complete (combinatorial) problems.
 
-By the definition in \cite{fomin2013exact}, the objective of an exact algorithm is to perform better (in terms of running time) than exhaustive search.
-In both works \cite{woeginger2003exact} author had enumerated the main techniques for exact algorithms designing each of which enhance this 'better' independently.
-A brief explanation of them will help to refresh the knowledge.
+By the definition in~\cite{fomin2013exact}, the objective of an \textit{exact algorithm} is to perform significantly better (in terms of running time) than exhaustive search. In both works~\cite{woeginger2003exact,fomin2013exact} authors enumerated the main techniques for designing exact algorithms, each contributing in this `better' independently, those later they could be combined.
 
-\begin{itemize}
-	\item \textbf{Branching and bounding} techniques when applied to origin problem, split the search space of all possible solutions (e.g. exhaustive search space) to a set of smaller sub-spaces (more formally, branching the search tree into subtrees). This is done with an intent to later prove that some sub-spaces never lead to an optimal solution and those could be ignored in order to speed-up the search.
+Here is a brief explanation of them:
+\begin{itemize}[itemsep=8pt]
+	\item \textbf{Branching and bounding} techniques when applied to original problem, split the search space of all possible solutions (e.g. exhaustive enumeration) to set of smaller sub-spaces. More formally this process called \textit{branching the search tree} into sub-trees. This is done with an intent to prove that some sub-spaces never lead to an optimal solution and those could be rejected.
 	
-	\item \textbf{Dynamic programming across the Subsets} techniques in some sort could be combined with the mentioned above branching techniques. After forming the Search Space subsets (branches), the dynamic programming attempts to derive solutions for smaller subsets and combine them into solutions for lager subsets unless finally derive a solution for original search space.
+	\item \textbf{Dynamic programming across the sub-sets} techniques in some sort could be combined with the mentioned above branching techniques. After forming sub-trees, the dynamic programming attempts to derive solutions for smaller subsets and later combine them into solutions for lager subsets unless finally original search space solution obtained.
 	
-	\item \textbf{Problem preprocessing} could be applied as an initial phase of the solving process. This technique is dependable upon the underlying OP, but when applied properly, significantly reduce the running time. A toy example from \cite{woeginger2003exact} elegantly illustrate this technique: imagine problem of finding a pair of two integers $x_i$ and $y_i$ that sum up to integer $S$ in $X_k$ and $Y_k$ sets of unique numbers ($k$ here denotes the size of a set). The exhaustive search will enumerate all $x-y$ pairs in $O(k^2)$ time. But one could first preprocess the data by sorting it, after that use bisection search repeatedly in this sorted array and search for $k$ values $S - y_i$, the overall time complexity becomes $O(k\log(k))$.
+	\item \textbf{Problem preprocessing} could be applied as an initial phase of the solving process. This technique is dependable upon the underlying OP, but when applied properly, significantly reduces the running time. A toy example from~\cite{woeginger2003exact} elegantly illustrate this technique: imagine problem of finding a pair of two integers $x_i$ and $y_i$ that sum up to integer $S$ in $X_k$ and $Y_k$ sets of unique numbers ($k$ here denotes the size of sets). The exhaustive search will enumerate all $x-y$ pairs in $O(k^2)$ time. But one could first preprocess the data sorting it, after that use bisection search repeatedly in this sorted array and search for $k$ values $S - y_i$. The overall time complexity reduces to $O(k\log(k))$.
 \end{itemize}
 
-
-\paragraph{Approximate Solvers.} When the OP cannot be solved to optimal in polynomial time, people start thinking in alternative solutions and mostly relax their requirements. Approximate algorithms are representatives of the theoretical computer science field that have been created in order to tackle the computationally difficult white box OP. %In words of Garey and Johnson it means "I can't find an efficient (polynomial time) algorithm, but neither can all of these famous people."
+\paragraph{Approximate Solvers.} When the OP cannot be solved to optimal in polynomial time, people start thinking in alternative ways to tackle it and commonly decide to relax their requirements to optimization.
+Approximate algorithms are representatives of the theoretical computer science field that have been created in order to tackle the \textit{computationally difficult white box OP} (not solvable in super-polynomial time). Words of Garey and Johnson (computer scientists, authors of \textit{Computers and intractability} book~\cite{garey1979computers}) could play a perfect description of such approaches, built on mathematical proofs: ``I can't find an efficient algorithm, but neither can all of these famous people.''
 %If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs (ILP) are $NP-hard$ and cannot be solved with exact solvers in polynomial time, those require relaxation either in efficiency or quality of optimization.
 
+In contradistinction to exact, approximate algorithms relax the quality requirements and solve an OP effectively with the provable assurances on the result distance from an optimal solution~\cite{williamson2011design}. The worst-case results quality guarantee is crucial in design of approximation algorithms and also involves mathematical proofs. 
 
-In contradistinction to exact, approximate algorithms relax the quality requirements and solve an OP effectively with the provable assurances on the result distance from an optimal solution \cite{williamson2011design}. The worst case results quality guarantee is crucial in design of approximation algorithms and involves mathematical proofs. 
+One may ask a reasonable question ``How do these algorithms guarantee on quality, if the optimal solution is unknown ahead?'' Certainly it sounds contradicting, since knowing the optimal solution cancels an optimization problem itself. The answer to this question highlights a key technique in the design of approximation algorithms that is out of this thesis scope.
 
-One may ask a question ``How do these algorithms guarantee on quality, if the optimal solution is unknown ahead?'' Certainly it sounds contradictive since knowing the optimal solution cancels an optimization problem itself. The answer to this question highlights a key technique in the design of approximation algorithms.
-
-In \cite{williamson2011design} authors stated several techniques of an approximate solvers design. The \textbf{Linear Programming} relaxation plays a central role in approximate solvers. It is well known that solving the ILP is $NP-hard$ problem, however it could be relaxed to polynomial-time solvable LP. %Those, one of techniques is relaxation of ILP to LP. An optimal solution for LP will have value $S_LP \le S_IP = OPT$ (for the minimization case). Here we could derive a lower bound for the original minimization or upper bound for maximization problem. 
-Later fractional solution for the LP should be rounded to obtain a feasible solution for the ILP. % that is within a cerain factor $f$ the value of the LP $S_LP$. Thus, the ILP solution will cost no more than $f * OPT$.
-Different rounding strategies define separate technique for approximate solvers \cite{williamson2011design}: 
-\begin{itemize}
-	\item \textbf{Deterministic rounding} follows predefined ahead strategy for rounding.
-	\item In \textbf{Randomized rounding} the algorithm will do a round-up of each fractional solution value to integer uniformly.
+In~\cite{williamson2011design} authors provided several techniques of an approximate solvers design. For instance, the \textbf{Linear Programming} relaxation plays a central role in approximate solvers. It is well known that solving the ILP is \textit{NP-hard} problem, however it could be relaxed to polynomial-time solvable Linear Programming. %Those, one of techniques is relaxation of ILP to LP. An optimal solution for LP will have value $S_LP \le S_IP = OPT$ (for the minimization case). Here we could derive a lower bound for the original minimization or upper bound for maximization problem. 
+Later fractional solution for the LP will be rounded to obtain a feasible solution for the ILP % that is within a cerain factor $f$ the value of the LP $S_LP$. Thus, the ILP solution will cost no more than $f * OPT$.
+and different rounding strategies define separate technique for approximate solvers~\cite{williamson2011design}: 
+\begin{itemize}[itemsep=8pt]
+	\item \textbf{Deterministic rounding} follows predefined ahead strategy, while
+	\item \textbf{Randomized rounding} will perform a round-up of each fractional solution value to integer uniformly.
 \end{itemize}
 
-Another technique in contrast to rounding requires building a \textit{dual linear program} for LP. This technique utilizes a \textit{weak} and \textit{strong duality} properties of dual linear program to derive the distance of approximate from an optimal solution. Other properties of dual linear program form a basis for \textbf{Primal-dual} algorithms. They start with a dual feasible solution and use dual information to derive a solution (possible infeasible) for primal linear program. If the \textit{primal} solution is infeasible, algorithm modifies dual solution to increase the values of the dual objective function \cite{williamson2011design}. 
-
-\paragraph{Heuristics.} In contradiction to approximate solvers, heuristics do not provide any guarantee on the Solution quality. They are applicable not only to white box TS, but also in black box cases. They are sufficient to quickly reach immediate, short-term goal for those problems, where finding an optimal solution is impossible or impractical because of the huge search space size.
-
-Heuristics could be defied as rules of thumb, or strategies to use available from TS and obtained solution information to control a problem-solving process \cite{pearl1984intelligent}. Scientists draw the inspiration for heuristics creation from all aspects of our being — from observations of how humans tackle problems using intuition to mechanisms discovered in nature.
+In contrast to rounding, another technique requires building a \textit{Dual Linear Program} (DLP) for given Linear Program. This approach utilizes a \textit{weak} and \textit{strong duality} properties of DLP to derive the distance of LP solution to an optimal solution of original ILP. Other properties of DLP form a basis for \textbf{Primal-dual} algorithms. They start with a dual feasible solution and use dual information to derive a solution (possibly infeasible) for primal linear program. If the \textit{primal} solution is infeasible, algorithm modifies dual solution to increase the values of the dual objective function. In any case, these approaches are far beyond thesis scope, but in case of interest, reader could start own investigation from~\cite{williamson2011design}. 
 
 
-As well as in previous approaches, there exists a lot of facets for heuristic approaches classification.
-However, from the \textit{level of generality} perspective exist:
-\begin{itemize}
-	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They use the domain knowledge from Optimization Problem to gain a performance. Simple heuristics do not provide any mechanisms to escape a local optimum and those could be easily trapped to it \cite{pearl1984intelligent}.
+\paragraph{Heuristics.} In contradiction to mentioned above solvers, heuristics do not provide any guarantee on the Solution quality. They are applicable not only to white box TS, but also to black box cases. These approaches are sufficient to quickly reach immediate, short-term goal in cases, where finding an optimal solution is impossible or impractical because of the huge search space size.
+
+As in previous approaches, here exist many facets for classification.
+We will start from the largest one, namely \textit{level of generality}:
+\begin{itemize}[itemsep=8pt]
+	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They fully rely on the domain knowledge, obtained from Optimization Problem. Simple heuristics do not provide any mechanisms to escape a local optimum and those could be easily trapped to it~\cite{pearl1984intelligent}.
 	
-	\item \textbf{Meta-heuristics} are high-level heuristics that do not require problem domain knowledge and those could be applied to broad range of OPs. Often they are nature-inspired and comprise mechanisms to escape local optima and also converge slower than simple heuristics \cite{bianchi2009survey}.
+	\item \textbf{Meta-heuristics} are high-level heuristics that not hardly rely on domain knowledge, but also provide some level of generality to control the search. Those, they could be applied to broader range of OPs. Often they are nature-inspired and comprise mechanisms to escape a local optima, but may converge slower than simple heuristics. For more detailed explanation we refer survey~\cite{bianchi2009survey}.
 	
-	\item \textbf{Hybrid-heuristics} arise combinations of two or more meta-heuristics. It could be imagined as a combination of recipes from the cook book to create something new and probably better, merging the best characteristics.
+	\item \textbf{Hybrid-heuristics} arise as combinations of two or more meta-heuristics. They could be imagined as recipes merge from the cook book, combining the best decisions to create something new and hopefully better.
 	
-	\item \textbf{Hyper-heuristics} is a heuristic that operates not on the Search Space constructed for the OP, but on a set of low-level heuristics, used to solve the Optimization Problem. The research and experiments have shown that some meta-heuristics perform better for some types of problems, but poorly for other. In addition, it could happen so that for different instances of the same problem, various meta-heuristics provide unexpected performance metrics. Even in different stages of the problem solving process the dominance of one heuristic over another could change. Here comes hyper-heuristics to intelligently pick suitable meta-heuristics to solve a problem \cite{burke2003hyper}.
+	\item \textbf{Hyper-heuristics} is a heuristic that operates on the search space of low-level heuristics choosing or constructing them to solve the OP in hand instead of directly tackling search space of original problem~\cite{burke2003hyper}. 
 \end{itemize}
 
-Later, in following section~\ref{bg: heuristics section}, dedicated to heuristics, we discuss each of aforementioned approaches in more details including examples.
+In upcoming section~\ref{bg: heuristics section}, dedicated to heuristics, we discuss each of aforementioned approaches in more details including examples.
 
 
-\subsubsection{Selecting Best Suited Solver}
-An old engineering slogan says, ``Fast, Cheap or Good? Choose two.''
+\subsubsection{The Best Suited Solver Type}
+\epigraph{``Fast, Cheap or Good? Choose two.''}{\textit{Old engineering slogan.}}
 
-And here we should make a decision, which way to follow.
-In one hand, we have an exact solver for the Optimization Problems. As we mentioned above, it guarantees to derive an optimal solution, always. Today, tomorrow or in next century, but an exact solver will find it. The only thing we need is simply (or not) construct an exact algorithm for our specific problem. This approach definitely provides us \textit{good}, say the best, quality of final solution, however it sacrifices simplicity and speed in building a solver and solving the problem.
+Now we have reached the crossroad and should make a decision, which way to follow.
+
+First, we have reviewed exact solvers for the Optimization Problems. As mentioned above, they always guarantee to derive an optimal solution. Today, tomorrow, maybe in next century, but eventually exact solver will find it. The only thing we need is to construct an exact algorithm for our problem in hand. This approach definitely provides the best quality of final solution, however it sacrifices simplicity in building a solver and speed in solving the problem.
+
+Next, we have an approximate solver. It does not guarantee to find exactly optimal solution, but instead suggest provably good one. From our perspective, the required effort for constructing an algorithm and proving its preciseness remains the same as for exact solvers however, this approach beats the previous one in speed of problem solving, sacrificing a reasonably small amount of the result quality. It sounds like a good deal.
+
+Finally, remain heuristic approaches. They are super-fast in comparison to previous two in problem solving, in addition they are much simpler to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in these approaches is absence of guarantee in solution quality those, one should consider them up to own risk.
 
 
-On the other hand we have an approximate solver. It does not guarantee to find an optimal solution, but instead reasonably good one. The required effort for constructing an algorithm and proving its preciseness remains the same as for exact solvers, from our perspective. Nevertheless, this approach beats the previous one in terms of speed in problem solving, sacrificing a reasonably small amount of the result quality. Sounds like a good deal.
+As we mentioned in~\ref{BG: subsection OPs}, in this thesis is dedicated to facing a real-life problems such as TSP. They showed to be \textit{NP-complete} that is why we are not allowed to apply exact solvers, only approximate and heuristics. In both cases we are sacrificing a solution quality, although in different quantities, but the heuristic algorithms repay in time-to develop and providing first results. Modern world is highly dynamic, in business survive those who faster and stronger. In most cases former plays the settle role for success. Great products are built iteratively, enhancing existing results step-by-step leaving unlucky decisions behind. It motivates us to stick the heuristic approach within the thesis.
 
-
-Last but not least, remains bright and shining heuristic. It is super-fast in comparison to previous two approaches in problem solving. It is much easier to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in this approach is that it does not guarantee to provide an optimal solution at all and those, one should consider use it up to own risk.
-
-
-Modern world is highly dynamic, in business survive those who faster and stronger. In most cases former plays settle role for success and great products build iteratively, enhancing existing solution step-by-step and throwing away unlucky decisions quickly. As we mentioned in \ref{BG: subsection OPs} this thesis is dedicated to facing a real-life problems such as TSP. The problems showed to be $NP-complete$ that is why we are not allowed to apply exact solvers, only approximate and heuristics left. In both cases we are sacrificing a solution optimallity, although in different quantities, but the heuristic algorithms repay in time-to develop and getting first results. It motivates us to follow the heuristic approach through the thesis.
-
-In following section \ref{bg: heuristics section} we shortly survey different types and examples of heuristics with their properties, weaknesses and ways to deal with them in order to select the best suited heuristics class.
+In following section~\ref{bg: heuristics section} we shortly survey different types and examples of heuristics with their properties, weaknesses and ways to deal with them. As the result, we select the best suited heuristics class for solving the problem in hand.
 
 
 \section{Heuristic Solvers for Optimization Problems}\label{bg: heuristics section}
-Before diving into description of heuristics and their concrete examples, it is worth to scratch a use-case. We base our descriptions on mentioned in section \ref{BG: subsection OPs} Traveling Salesman Problem (TSP) \cite{applegate2006traveling}, which informal definition sounds as: 'Given a set of cities and the distances between each of them, what is the shortest path to visit each city once and return to the origin city?'. 
-The input data $X$ to our heuristics will be the distance matrix (or coordinates to build this matrix) between cities, as an output from heuristics we expect to get the sequence of cities, describing the route plan.
+We base our descriptions of heuristics and their examples on mentioned in section \ref{BG: subsection OPs} Traveling Salesman Problem (TSP) \cite{applegate2006traveling}. The input data $X$ to our heuristics will be the Target System description in form of distance matrix (or coordinates to build this matrix), while as an output $Y$ from heuristics we expect to obtain the sequence of cities, depicting the route plan.
 
-In general, heuristics when applied to particular problem do not use the gradient or Hessian matrix of the objective function for optimizations \cite{boussaid2013survey}.
+% In general, when a heuristic applied to particular problem do not use the gradient or Hessian matrix of the objective function for optimizations \cite{boussaid2013survey}.
 
-Most heuristic approaches imply and use following concepts:
-\begin{itemize}
-	\item \textbf{Neighborhood} defines the set of Solutions, which could be derived performing one step of heuristic search.
-	\item \textbf{Iteration} could be defined as the action (or set of actions) done over Solution in order to derive a new, hopefully better Solution.
-	\item \textbf{Exploration} (diversification) is the process of discovering unvisited and high quality parts of the Search Space.
-	\item \textbf{Exploitation} (intensification) is the usage of already accumulated information about the Search Space to derive a new one, but similar to existing Solutions.
+Most heuristic approaches imply following concepts:
+\begin{itemize}[itemsep=8pt]
+	\item \textbf{Neighborhood} defines the set of Solutions, which could be derived performing single step of heuristic search.
+	\item \textbf{Iteration} could be defined as an action (or set of actions) performed over Solution in order to derive a new, hopefully better one.
+	\item \textbf{Exploration} (diversification) is the process of discovering previously unvisited and hopefully high quality parts of the search space.
+	\item \textbf{Exploitation} (intensification) is the usage of already accumulated knowledge (Solutions) to derive a new one, but similar to existing Solution.
 \end{itemize}
-
 
 %Naturally, there are lots of characteristics that could be used to classify heuristics starting from the use of memory, kind of neighborhood, way to derive a solution (construction or perturbation) or number of solutions carried from one iteration to following. 
 
+Now we review each mentioned in previous section heuristic type.
+\todoy{is it needed?..}
+
+
 \subsection{Simple Heuristics}
 As we mentioned above, the simple heuristics are domain dependent algorithms, designed to solve a particular problem.
-Since each application is highly defined by the concrete OP instance, it is hard to distinguish commonalities among simple heuristics except of only domain knowledge utilization.
+They could be defied as rules of thumb, or strategies to utilize exposed by Target System and obtained from previously found solutions information to control a problem-solving process~\cite{pearl1984intelligent}. 
 
+Scientists draw the inspiration for heuristics creation from all aspects of our being: starting from observations of how humans tackle daily problems using intuition to mechanisms discovered in nature.
+%Since each algorithm is tightly bound to the concrete OP instance, it is hard to distinguish commonalities among simple heuristics except of high domain knowledge utilization.
 
-Two main types of simple heuristics were distinguished in~\cite{burke2019classification}. The first is a \textit{perturbative}, or \textit{Local Search} heuristics which operates on completely created Solutions. The prominent example of Local Search is a \textit{Hill Climbing}. This approach plays a central role in many high-order heuristics. The second is a \textit{constructive} heuristic which step-by-step mature partial candidate Solution.
+Two main types of simple heuristics were outlined in~\cite{burke2019classification}: \textit{constructive} and \textit{perturbative}. 
 
-A concrete example of Local Search is \textit{Greedy Algorithm}, also known as \textit{Best Improvement Local Search}. When applied to Traveling Salesman Problem, it tackles the path construction by simply accepts the next closest city from currently discovered. In general, the Greedy Algorithm follows the logic of making a sequence of locally optimal decisions. 
+The first type implies heuristics which construct Solutions from its parts stepwise. 
+The prominent example of constructive approach is the \textit{Greedy Algorithm}, a.k.a. \textit{Best Improvement Local Search}. When applied to Traveling Salesman Problem, it tackles the path construction simply accepting the next closest city from currently discovered one. Generally, the Greedy Algorithm follows the logic of making a sequence of locally optimal decisions those ends up in a local optimum after constructing very first Solution. 
 
+The second type, also called \textit{Local Search}, implies heuristics which operates on completely created Solutions. The simple example of Local Search is the \textit{Hill Climbing Algorithm}: evaluate entire Neighborhood, move to the best found Solution and repeat. This approach plays a central role in many high-order algorithms, however could be very inefficient, since in some cases Neighborhood could be enormously huge. 
+Another instance of perturbative algorithm is \textit{First Improvement Local Search}~\cite{voudouris1999guided}. This heuristic accepts better Solution as soon as it finds it during Neighborhood evaluation. The advantage of this methodology over the vanilla Hill Climbing is the velocity of Search Space traversal.
 
-Other instance of Local Search is \textit{First Improvement} Local Search \cite{voudouris1999guided}. This algorithm accepts a better Solution as soon as it finds it. The advantage of this methodology over the Greedy Algorithm is the velocity of Search Space traversing, since to perform a move, Best Improvement first should evaluate entire Neighborhood, which in some cases could be enormously huge.
-
-Indeed, the use of simple local search heuristics might not lead to a globally optimal solution, since the optimization result is fully defined be the starting point, but the advantage is a simplicity in implementation \cite{williamson2011design}.
+Indeed, since the optimization result is fully defined be the starting point, the use of simple local search heuristics might not lead to a globally optimal solution, but the advantage here is the implementation simplicity~\cite{williamson2011design}.
 
  
-\todoy{need to add more info, probably structurize somehow}
-
-
 \subsection{Meta-Heuristics}
 A meta-heuristic is an algorithm created to solve wide range of hard optimization problems without need to deeply adapt to each problem. 
 
@@ -304,6 +308,11 @@ From our perspective, described approach of automatic algorithm generation is ve
 
 
 \subsection{No Free Lunch Theorem}
+% TODO: taken out from heursitcis enumeration
+The empirical research has shown that some meta-heuristics perform better for some types of problems, but poorly for other. In addition to that, for different instances of the same problem type, the same meta-heuristic could result in unexpected performance metrics. Moreover, even in different stages of the problem solving process the dominance of one heuristic over another could change. Here comes hyper-heuristics to intelligently pick suitable meta-heuristics to solve a problem .
+% ----
+
+
 A nature question could arise ``If we have all this fancy and well-performing heuristics, why should we spend effort and develop new algorithms, instead of using existing?'' And the answer to this question is quite simple — the perfect algorithm suited for all OP that will do not exist and can not exist. All algorithms that search for optimal parameters of a Target System perform exactly the same, when the results are averaged over all possible Target Systems. If an algorithm is gaining the performance in one problems class, it loses in another class. This is a consequence of so-called \textbf{No Free Lunch Theorem} (NFLT)~\cite{wolpert1997no}.
 
 In fact, one could not predict, how exactly will behave one or another algorithm with problem in hand. A possible and the most obvious way is to probe the specific approach, and analyze it behavior with respect to another in problem solving process. Here simple heuristics and meta-heuristics are out of competition, since if you solved the Optimization Problem once, you wouldn't optimize a second time.
@@ -403,7 +412,7 @@ Operating by the other Heuristics, HHs analyze how good former are and definitel
 Imposing such great abilities, Hyper-Heuristics are able to tackle not only the concrete optimization problem, but entire class of problems, although requiring more development effort.
 
 
-\section{Parameter Tuning as an Optimization Problem}\label{bg: parameter tuning}
+\section{Setting Heuristic Parameters}\label{bg: Setting Heuristic Parameters}
 Most of existing learning algorithms expose some parameter set, needed to be assigned before applying this algorithm to solve a problem. Modifying these parameters, one could change the system behavior and possible result.
 
 When we are talking about parameter tuning problem, the following terms should be refined explicitly:
@@ -613,7 +622,7 @@ The control in cooling rate is motivated by the fact, that if the temperature de
 The other example of adapting the acceptance criteria was proposed in~\cite{ghandeshtani2019entropy}, based on thermodynamics fundamentals such as \textit{entropy} and \textit{kinetic energy}. Authors suggest replacing the standard acceptance criteria (based on current temperature and found solution quality) with the criteria based on change in solutions entropy.
 
 
-\subsection{Beyond Parameters Settings} 
+\section{Beyond Parameters Settings} 
 
 CASH, Architecture Search, Hyper-Heuristics with parameter control (do they exist?)
 
