@@ -89,7 +89,7 @@ It is extremely cheap to compute a cost for given path using cost matrix, those 
 
 
 \subsection{Optimization Problem Solvers}\label{BG: subsection OP Solvers}
-Most Optimization Problems could be solved by an exhaustive search, though trying all possible combinations of input variables and choosing one providing the best objective value. But when the Search Space size significantly increase, the amount of time needed for brute-force search becomes infeasible and in many cases even relatively small problem instances could not be solved by an enumeration.
+Most Optimization Problems could be solved by an exhaustive search, though trying all possible combinations of input variables and choosing one providing the best objective value. This approach guarantees to find globally optimal solution to OP. But when the Search Space size significantly increase, the amount of time needed for brute-force search becomes infeasible and in many cases even relatively small problem instances could not be solved by an enumeration.
 
 % TODO: highlight that exchaustive search provides guaranteed optimality
 
@@ -225,46 +225,49 @@ Indeed, since the optimization result is fully defined be the starting point, th
 
  
 \subsection{Meta-Heuristics}
-A meta-heuristic is an algorithm created to solve wide range of hard optimization problems without need to deeply adapt to each problem. 
+The meta-heuristic is an algorithm, created to solve wider range of hard optimization problems without need to deeply adapt to each problem.
+
+The research in meta-heuristics field arise even before 1940s, when they have been used already, but not studied formally. In the period of between 1940s and 1980s first formal studies appeared and later till 2000s the field of meta-heuristics arises in wide when numbers of MHs were proposed. The period from 2000 and up until now in~\cite{sorensen2017history} authors refer as the time of framework growth. It is now a time, when meta-heuristics widely appear as frameworks, providing a reusable core and requiring only domain specific adaptation.
+
+The prefix \textit{meta} indicates these algorithms to be a \textit{higher level} when compared to simple problem dependent heuristics. A typical meta-heuristic structure could be imagined as $n-T--H$ (template-hook) framework variation pattern. The template part is problem independent and fixed from changes, it forms a core of an algorithm and usually exposes \textit{hyper-parameters} for tuning. The hook parts are domain dependent and those should be adapted for problem in hand. Later T operates by set of Hs to perform an optimization.
+Many MHs contain stochastic components, which provide abilities to escape from local optimum. However, it also means that the output of meta-heuristic is non-deterministic and it could not provide guarantee on the result preciseness~\cite{boussaid2013survey}.
+
+The success of meta-heuristic optimizer on a given OP depends on the \textit{exploration vs exploitation balance}. If there is a strong bias towards diversification, the solving process could naturally skip a good solution while performing huge steps over the search space, but when the intensification dominating, the process will quickly settle in local optima. Usually it is possible to decompose MH onto simple components and clarify, to which of competing processes contributes each component. Mentioned above simple heuristic approaches suffer from high exploitation dominance since they usually do not have components that contribute to exploration.
+
+In general, the difference among existing meta-heuristics lays in a particular way how they are trying to achieve this balance, but the common characteristic is that most all of them are inspired by real-world processes — physics, biology, ethology, evolution, etc.
 
 
-The prefix \textit{meta} indicates that these algorithms are heuristics of a \textit{higher level} when compared to a simple problem specific heuristics. A typical meta-heuristic structure could be imagined as $n-T--H$ (template-hook) framework variation pattern. The template part is problem independent and fixed from changes, it forms a core of an algorithm and usually exposes \textit{hyper-parameters} for tuning. The hook parts are domain dependent and those should be adapted for problem in hand.
-Also, the optimizer could contain stochastic components, what gives it an ability to escape from local optimum. However,it also means that the output is stochastic and could not guarantee the result preciseness \cite{boussaid2013survey}.
+\subsubsection{Meta-Heuristics Classification}
+The development process of novel methodologies has slowed down and the research community began to organize created algorithms and many classification facets were distinguished.
 
-
-The success of meta-heuristic on a given OP depends on the balance between exploration and exploitation. If there is a strong bias towards diversification, the solving process could naturally skip a good solution while performing a huge steps over the search space, but when the intensification dominating, the process will quickly converge to local optima. A simple heuristic approaches suffer from high exploitation dominance. 
-In general, the difference among existing meta-heuristics laid in a particular way how they try to achieve this balance, but the common property is that most of them are inspired by processes in nature — physics, biology, ethology or evolution.
-
-
-\subsubsection{Classification}
-The research of meta-heuristics field arise even before 1940s, when they had being used but not formally studied. In the period of between 1940 and 1980s appear first formal studies and later till 2000 the field of meta-heuristics appears in wide and numbers of methods were proposed. The period from 2000 and until now in \cite{sorensen2017history} authors refer as the time of framework growth. It is now a time, where meta-heuristics widely appear as frameworks, requiring a domain specific adaptation and providing a reusable core. 
-
-The development of novel methods has slowed down, the research community began to organize these algorithms and many classification facets were distinguished. As an example, the research conducted by \cite{birattari2001classification} highlights following characteristics:
-\begin{itemize}
-	\item The \textbf{method of walk-through} could be either trajectory based or discontinuous. The former one corresponds a closed walk on the neighborhood where Simulated Annealing, Tabu Search or Local Search are typical examples. The later one allows large jumps in the search space where examples are Variable Neighborhood Search, Lin-Kernighan Heuristic for the TSP \cite{lin1973effective}.
-	
-	\item By the \textbf{number of concurrent solutions} we distinguish \textit{single-point} and \textit{population-based} approaches with Tabu Search, Simulated Annealing, Iterated Local Search examples of former and Evolutionary Algorithms, Ant Colony Optimization, Particle Swarm Optimization are instances of later.
-	
-	\item From the \textbf{memory usage} perspective highlighted those which \textit{does utilize memory} and \textit{memory-less} approaches. The Tabu Search explicitly use memory in forms of tabu lists, but Simulated Annealing is memory-less.
-	
-	\item \textbf{Neighborhood structure} could be either \textit{static} or \textit{dynamic}. Most local search algorithms such as Simulated Annealing and Tabu Search are based on static neighborhood. The Variable Neighborhood Search is an opposite case, where various structures of neighborhood are defined and interchanged while solving an OP. 
-\end{itemize}
-
-Picture \ref{BG: MH classification} illustrates the summarized classification including some other characteristics and well-known meta-heuristic samples \cite{wiki_MH_classification}.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\textwidth]{graphics/Background/Metaheuristics_classification}
-	\caption{Meta-heuristics Classification}
+	\caption{Meta-heuristics Classification.}
 	\label{BG: MH classification}
 \end{figure}
 
+As an example, authors in~\cite{birattari2001classification} classification review highlight following characteristics:
+\begin{itemize}[itemsep=8pt]
+	\item The \textbf{walk-through search space method} could be either trajectory based or discontinuous. The former one corresponds a closed walk on the neighborhood where such prominent examples as \textit{Iterated Local Search}~\cite{lourencco2003iterated} or \textit{Tabu Search}~\cite{glover1989tabu} do exist. The later one allows large jumps in the search space with many MH exemplars such as \textit{Variable Neighborhood Search}~\cite{hansen2003variable} and \textit{Simulated Annealing}~\cite{kirkpatrick1983optimization}.
+	
+	\item The \textbf{number of concurrent solutions} could be either single or multiple (population). Such approaches as Tabu Search, Simulated Annealing or Iterated Local Search are examples of former and Evolutionary Algorithms~\cite{eiben2015evolutionary}, Ant Colony Optimization~\cite{dorigo2007ant}, Particle Swarm Optimization~\cite{kennedy1995particle} are instances of later.
+	
+	\item From the \textbf{memory usage} perspective, we distinguish those approaches which do and do not utilize memory. The Tabu Search explicitly use memory in forms of tabu lists to guide the search, but the Simulated Annealing is memory-less.
+	
+	\item \textbf{Neighborhood structure} could be either static or dynamic. Most local search algorithms such as Simulated Annealing and Tabu Search are based on static neighborhood. The Variable Neighborhood Search is an opposite case, where various structures of neighborhood are defined and interchanged while solving an OP. 
+\end{itemize}
 
-\subsubsection{Examples}\label{BG: MH Examples}
-We shortly describe some prominent and widely used meta-heuristics, since later we use them as the LLH in developed Hyper-Heuristic, described in section~\ref{Impl: LLH}.
+There are many more classification facets, with are out of this thesis scope. Picture~\ref{BG: MH classification} illustrates the summarized classification including some skipped characteristics and well-known meta-heuristic instances~\cite{wiki_MH_classification}.
 
 
-\paragraph{Evolutionary Algorithms (EAs).} Evolutionary Algorithms are directly inspired by the processes in nature, described in evolution theory. The common underlying idea in all these methods is as following. If we put a population of individuals (Solutions) into an environment with limited resources (population size limit), a competition processes cause natural selection, where only the best individuals survive (compared by the object of optimization for given subject TS )~\cite{eiben2015evolutionary}.
-Tree basic actions are defined as operators of EAs: the \textit{recombination} that is applied to selected candidates Solutions (parents) among available in population to produce new ones (children); \textit{mutation} occurs in one candidate to turn it into a new Solution. Applying both operators on the parents create a set of new Solutions — the offspring, whose results evaluated using TS. After that, the \textit{selection} operator applied among available Solutions (parents and offspring) to keep the population size within defined boundaries. This process is repeatedly iterated until some termination criteria fulfilled, for instance maximal number of iteration reached, amount of TS evaluations exceed, or Solution with required quality found. The work-flow of EA depicted on picture \ref{bg:pic:EAs}.
+\subsubsection{Meta-Heuristics Examples}\label{BG: MH Examples}
+Now we shortly describe some prominent and widely used meta-heuristics. The motivation for doing so comes from later usage of them as the LLH in Hyper-Heuristic, described in section~\ref{Impl: LLH}.
+
+\paragraph{Evolutionary Algorithms (EAs).} Evolutionary Algorithms are directly inspired by the processes in nature, described in evolution theory. The common underlying idea in all of these methods is as follows: if we put a population of individuals (Solutions) into an environment with limited resources (population size limit), a competition processes cause natural selection, where only the best individuals survive (compared by the optimization objective)~\cite{eiben2015evolutionary}.
+
+Tree basic actions are defined as operators of EAs: the \textit{recombination} operator that when applied to selected among available in population candidate Solutions (parents) produces new ones (offspring); \textit{mutation} operator applied to Solutions creates a new and very similar one. 
+Applying both operators will create a set of new Solutions — the offspring, whose fitness evaluated on TS. After that, the \textit{selection} operator applied to all available Solutions (parents and offspring) for keeping the population size within defined boundaries. This process is repeatedly iterated until some termination criteria fulfilled, for instance maximal iterations counter reached, number of TS evaluations exceed, or Solution with required quality found. The work-flow of EA depicted on picture~\ref{bg:pic:EAs}.
 
 \begin{figure}
 	\centering
@@ -273,167 +276,174 @@ Tree basic actions are defined as operators of EAs: the \textit{recombination} t
 	\label{bg:pic:EAs}
 \end{figure}
 
-\paragraph{Genetic Algorithm (GA).} It is the first association coming into mind when you hear words 'Evolutionary Algorithms'. GA traditionally has a fixed work-flow: with given initial population of $\mu$ usually randomly sampled individuals, the parent selection operator shuffles initial set to create a random pairs of parents, after that the crossover operator is applied to each pair with probability $p_c$ to produce children. Then newly created Solutions individually undergoes mutation operator with independent probability $p_m$. Resulting offspring perform tournament within selection operator and $\mu$ survivals replace current population~\cite{eiben2015popular}. Distinguishable characteristics of simple GA are following: Solution representation in form of bit-strings, one-point crossover and bit-flip usage as the recombination and mutation operators respectively and a generational selection operator (survive only children).
+Well-known examples of EAs include \textit{Genetic Algorithm}~\cite{sastry2005genetic}, \textit{Genetic/Evolutionary Programming}~\cite{koza1992evolution}, \textit{Evolution Strategies}~\cite{beyer2002evolution}, and many other algorithms.
 
-\paragraph{Evolution Strategy (ES).} In contradiction to GA, Evolution Strategy algorithms are working in a vector space of Solution representation and distinguish $\mu$ individuals population size and $\lambda$ offspring generated in one iteration. They induce a very useful feature of \textit{self-adaptation}: changing the mutation step sizes depending on control parameters. The self-adaptive information (which is related entirely to EA, but not to OP under consideration) is appended to the individual's chromosome. While the general work-flow for all EAs remains the same, underlying operators are changed. Here, parent selection operator take a whole population into consideration, the recombination scheme could involve more than two parents to create one child. To construct a child, recombination operator adds alleles from parents in two possible ways: with \textit{uniform} probability for each parent (discrete recombination), or averaging the values of alleles (intermediate recombination). There are two general selection schemes that are used is such algorithms: $(\mu,\lambda)$ which discards all parents and selecting only among offspring highly enriching exploration, and $(\mu+\lambda)$ which includes predecessor Solutions into selection which also known as \textit{elitist selection}~\cite{eiben2015popular}.
+\textbf{Genetic Algorithm} (GA) is the first association coming into mind when you hear words `Evolutionary Algorithms'. GA traditionally has a fixed work-flow: given initial population of \underline{$\mu$} (we underline hyper-parameters here and in other examples of algorithms) usually randomly sampled individuals, the parent selection operator creates pairs of parents where probability of each solution to become a parent depends on its fitness. After that, the crossover operator is applied to each pair with probability \underline{$p_c$} to produce children. Then newly created Solutions undergo mutation operator with independent probability \underline{$p_m$} (hyper-parameter). Resulting offspring perform tournament within selection operator and \underline{$\mu$} survivals replace current population~\cite{eiben2015popular}. Distinguishable characteristics of vanilla GA are usage of following operators: bit-strings Solution representation, one-point crossover recombination, bit-flip mutation and generational (only children survive) selection.
 
-\paragraph{Simulated Annealing (SA).} This meta-heuristic is inspired by the annealing technique used in the metallurgy to obtain 'well-ordered' solid state of metal, imposing a minimal internal energy and avoiding semi-stable structures, characterized by local energy minimums. The search process here treated as the metal with a high temperature at the beginning and lowering it to minimum while approaching the end. %SA algorithm handles the optimization objective as annealing threat the material energy. 
-SA starts with initial Solution $S$ creation (randomly or using some heuristic) and temperature parameter $T$ initialization. At each iteration, new solution candidate $S^*$ selected within the neighborhood $N(S)$ of current $S$ and the selection criteria evaluated based on $S^*$ quality and temperature parameter $T$. $S^*$ replaces $S$ if (1) optimization objective $f(S^*)$ dominates over $f(S)$ or (2) with a probability that depends on quality loose and current temperature: $p(T, f(S^*), f(S)) = \exp(-\frac{f(S^*) - f(S)}{T})$ for minimization OP and $p(T, f(S^*), f(S)) = \exp(-\frac{f(S) - f(S^*)}{T})$. At each iteration the temperature parameter $T$ is decreased following \textit{Annealing Schedule} also called as \textit{Cooling Rate}: linearly, inverse logarithmic, exponentially~\cite{boussaid2013survey}. The weak side here is that the Annealing Schedule is problem dependent and cannot be determined beforehand, however SA algorithms with parameter control do exist and address this problem by changing the Cooling Rate or temperature parameter $T$ during the search process, refer~\cite{ingber2000adaptive} and~\cite{de2003placement} respectively.
+\textbf{Evolution Strategy} (ES) algorithms, in contradiction to GA, are working in a vector space of Solution representation and distinguish \underline{$\mu$} individuals population size and \underline{$\lambda$} offspring generated in one iteration. Often, ES utilizes a very useful feature of \textit{self-adaptation}: changing the mutation step sizes in a runtime. The self-adaptive information is related only to ES, but not to OP under consideration and appended to the individual's chromosome. While the general work-flow for all EAs remains the same, some among underlying operators are changed. Here, parent selection operator take a whole population into consideration, the recombination scheme could involve more than two parents to create one child. To construct a child, \underline{recombination operator} adds alleles from parents in two possible ways: (1) with uniform probability for each parent (discrete recombination), (2) averaging the weights of alleles (intermediate recombination). There are two general \underline{selection schemes}, used in such algorithms: $(\mu,\lambda)$ — discard all parents and selecting only among offspring highly enriching exploration, and $(\mu+\lambda)$ — include predecessor Solutions into selection, a.k.a. \textit{elitist selection}~\cite{eiben2015popular}.
+
+\paragraph{Simulated Annealing (SA).} This is the other type of meta-heuristic, inspired by the technique used in metallurgy to obtain 'well-ordered' solid state of metal. Annealing technique imposes a globally minimal internal energy state and avoids local minimums semi-stable structures. 
+
+The search process in SA treated as the metal with a high temperature at the beginning and lowering it to minimum while approaching the end. %SA algorithm handles the optimization objective as annealing threat the material energy. 
+SA starts with initial Solution $S$ creation (randomly or using some heuristic) and temperature parameter \underline{$T$} initialization. At each iteration, new solution candidate $S^*$ sampled within a neighborhood $N(S)$ of current $S$ and the selection criteria evaluated based on $S^*$ quality and $T$ value. $S^*$ replaces $S$ if (1) optimization objective $f(S^*)$ dominates over $f(S)$ or (2) with a probability that depends on quality loose and current $T$ value: $p(T, f(S^*), f(S)) = \exp(-\frac{f(S^*) - f(S)}{T})$. %for minimization OP and $p(T, f(S^*), f(S)) = \exp(-\frac{f(S) - f(S^*)}{T})$. 
+At each iteration the temperature parameter $T$ value is decreased following some type of \underline{annealing schedule} also called as \textit{cooling rate}~\cite{boussaid2013survey}. The weak side here is that the quality of each annealing schedule is problem dependent and cannot be determined beforehand, however SA algorithms with parameter control do exist and address this problem by changing the Cooling Rate or temperature parameter $T$ during the search process. Later we shortly review these techniques in section~\ref{bg: parameter control: SA}.
+
 
 \subsection{Hybrid-Heuristics}
-The hybridization of different systems constantly provides a positive effect — you take advantages of one system and merge them with the strong sides from other those getting the best from both of them. The same could be applied for the heuristics. Imagine you have two algorithms biased towards exploration and exploitation respectively. If you use them separately, the expecting results in most cases may be way far from optimal as the outcome of disrupted diversification-intensification balance. But with merging them into say stages of hybrid heuristic, one will obtain both advantages of finding a good quality results and escaping local optima. Most of available hybridization are done exactly with this idea — \textit{staging combination} two heuristics, one exploration and second exploitation suited for getting outperforming hybrid.
+The hybridization of different systems often provides a positive effect — taking the advantages of one system you merge them with odds of other system those getting the best from both of them. The same idea applicable in case of meta-heuristics. Imagine you have two algorithms, biased towards exploration and exploitation respectively. Applying them separately, the expecting results in most cases may be far away from optimal as the outcome of disrupted diversification-intensification balance. But when merging them into, say, repeater stages of hybrid heuristic, one will obtain both advantages of escaping local optima and finding good quality results. 
 
+Most of available hybridization are done exactly with this idea — \textit{staging combination} of two heuristics, one exploration and second exploitation suited for getting outperforming hybrid.
 
-\subsubsection{Examples}
+The methods to construct hybrids are mostly defined by the underlying heuristics and those, to the best of our knowledge, could not be generalized and classified well. One common shared characteristic is usage of \textit{staging approach}, where the output of one algorithm is used as initial state of other. 
 
-The methods to construct hybrid mostly defined by the undertaken heuristics and those, to the best of our knowledge, could not be generalized and classified well, except a \textit{staging} approach, when the output of one algorithm is used as initial state of other, is broadly used. Instead, we will introduce some examples of performed hybridization in order to give you a better understanding of possible hook parts within algorithms and influence of aforementioned balance onto the search process.
+As for simple heuristics, we will introduce some examples of performed hybridization in order to give you a better understanding of possible hook parts within algorithms and influence of aforementioned balance onto the search process.
 
-\paragraph{Guided Local Search ($GLS$) + Fast Local Search ($FLS$) \cite{tsang1997fast}.}
-It is an example of repeatedly applying two heuristics in sequence (staging) and passing the output from one to second one.
-The main focus of $GLS$ here is on the Search Space exploration and process guidance using incubated information. In some sort, $GLS$ is closely related to the \textit{Frequency-based memory} used in Tabu Search. In runtime, $GLS$ modifies the cost function of the problem to include penalties and passes this modified cost function to local search procedure. The penalties form memory that describe a local optimum solution and guide the process out of it. A local search procedure then carried out by $FLS$ algorithm. The main feature of $FLS$ is the ability to quickly traverse a neighborhood. It is done by braking it into a number of small sub-neighborhoods, and ignoring those without an improving moves. By performing depth first search over these sub-neighborhoods. At some point of time $FLS$ appears in the local optimum, passes back control to $GLS$ and iteration repeats. 
+\subsubsection{Hybrid-Heuristics Examples}
+\paragraph{Guided Local Search + Fast Local Search~\cite{tsang1997fast}.}
+The main focus of \textit{GLS} here is on the Search Space exploration and guidance of process using incubated information. In some sort, \textit{GLS} is closely related to the \textit{Frequency-based memory} used in Tabu Search. During the runtime, \textit{GLS} modifies the cost function of the problem to include penalties and passes this modified cost function to local search procedure. These penalties form memory that characterize a local optimum and guide the process out of it. A local search procedure carried out by the \textit{FLS} algorithm, where the main advantage is quick neighborhood traversal. It is done by braking it up into a number of small sub-neighborhoods, and ignoring those without an improving moves by performing depth first search over these sub-neighborhoods. At some point of time \textit{FLS} reaches the local optimum and passes back the control in \textit{GLS} to repeat the iteration.
 
-\paragraph{Direct Global + Local Search \cite{syrjakow1999efficient}.}
-As stated in the name this hybridization combines global and local optimization strategies into two-stages: stochastic global pre-optimization and deterministic local fine-optimization. For global optimizations authors apply one of two well-known meta-heuristics — Genetic Algorithm, or Simulated Annealing described earlier in section~\ref{BG: MH Examples} with Meta-heuristics examples. The transition from Global to Local search happens when the predefined conditions are met, for instance when the number of Target System (goal function) evaluations exceeds a boundary or when no distinguishable improvement was done. The Pattern Search~\cite{hooke1961direct} algorithm also known as direct, derivative-free, or black-box search plays role of Local Search heuristic in this combination. Hybrid-heuristic terminates when Pattern Search converges.
+\paragraph{Direct Global + Local Search~\cite{syrjakow1999efficient}.}
+This hybridization combines mentioned in name optimization strategies into two stages: stochastic global coarse pre-optimization refined by deterministic local fine-optimization. In first stage authors apply one of two described earlier meta-heuristics — Genetic Algorithm, or Simulated Annealing. The transition from Global to Local search happens after reaching the predefined conditions, for instance, when the number of Target System (goal function) evaluations exceeds a boundary, or when no distinguishable improvement was done in the last few iterations. Then, the Pattern Search algorithm~\cite{hooke1961direct} also known as direct/, derivative-free/, or black-box search plays role of Local Search heuristic in this combination. The hybrid-heuristic terminates when Pattern Search converges to local optima.
 
-\paragraph{Simulated Annealing + Local Search \cite{martin1996combining}.}
-After brief explanation of previous two hybrids, an observant reader might make a guess what happens in this particular case, and he will be completely right!
-Authors named this method 'Chained Local Optimization', in other words it is yet another representative of staged hybridization. Iteration starts with the current Solution perturbation (authors called this action a 'kick', referring a dramatic change of current position within a Search Space). After this, the Local Search heuristic applies to intensify obtained Solution. When the local optimum reached, the control flow returned to the Simulated Annealing for acceptance criteria evaluation in order to accept or reject a new Solution, what concludes an iteration.
+\paragraph{Simulated Annealing + Local Search~\cite{martin1996combining}.}
+After brief explanation of previous two hybrids, an observant reader might make a guess what happens in this particular case, and he will be precisely correct!
+Authors named this method `Chained Local Optimization', in other words it is yet another representative of staged hybridization. 
+Iteration starts with the current Solution perturbation — 'kick', referring a dramatic change of current position within the search space. After this, some Local Search heuristic applied to intensify obtained Solution. Reaching the local optimum, Local Search pass the control flow back to the Simulated Annealing for acceptance criteria evaluation in order to accept or reject a new Solution, which finishes one iteration.
 
+\paragraph{EMILI~\cite{pagnozzi2019automatic}.}
+Easily Modifiable Iterated Local search Implementation (EMILI) is a framework-like system for automatic generation of new hybrid stochastic Local Search algorithms. \textit{EMILI} is a solver for Permutation Flow-Shop Problems (PFSP), also known as Flow Shop Scheduling problems in which performed a search of an optimal sequence of steps to create products within a workshop.
+Here authors have implemented both algorithmic- and problem-specific building blocks, defined grammar-based rules for those blocks composition and used an automatic parameter tuning tool \textit{IRACE}~\cite{lopez2016irace} to find a high performing algorithm configurations. The work-flow of \textit{EMILI} could be split onto three steps: (1) adaptation of grammar rules to specific PFSP objective representation type (Make-span, Sum completion times, Total tardiness), (2) generation of all possible hybrid heuristics for each of PFSP type and (3) appliance of iterated racing in \textit{IRACE} to select the best performing hybrid for specific problem type. 
 
-\paragraph{$EMILI$~\cite{pagnozzi2019automatic}} 
-Easily Modifiable Iterated Local search Implementation ($EMILI$) is a framework-like system for automatic generation of new (hybrid) stochastic Local Search algorithms. $EMILI$ is a solver for Permutation Flow-Shop Problems (PFSP), also known as Flow Shop Scheduling problems which define a search of an optimal sequence of steps for product creation within a workshop.
-Here authors have implemented algorithmic- and problem-specific building blocks, defined grammar-based rules for those building blocks composition and use an automatic algorithm configuration tool $IRACE$~\cite{lopez2016irace} to find a high performing algorithm configurations for problem solving. The work-flow of $EMILI$ could be described in three steps: (1) adaptation of rules to specific representations type of PFSP problem objectives (either Makespan, Sum completion times, Total tardiness), (2) generate a set of possible hybrid heuristics for each of PFSP type and (3) apply iterated racing algorithm implemented in $IRACE$ to select the best performing hybrid for specific problem type. 
-
-From our perspective, described approach of automatic algorithm generation is very close to construction Hyper-Heuristics strategies with off-line learning described in section~\ref{bg: hh}, however authorized to change the system class (from hybrid- to hyper-heuristic) defined by $EMILI$ authors.
+From our perspective, described approach of automatic algorithm generation is direct incumbent of construction Hyper-Heuristics strategies described in upcoming section~\ref{bg: hh}, however we are not authorized to change the system class (from hybrid- to hyper-heuristic) defined by \textit{EMILI} authors.
+\todoy{or we can do it?}
 
 
 \subsection{No Free Lunch Theorem}
-% TODO: taken out from heursitcis enumeration
-The empirical research has shown that some meta-heuristics perform better for some types of problems, but poorly for other. In addition to that, for different instances of the same problem type, the same meta-heuristic could result in unexpected performance metrics. Moreover, even in different stages of the problem solving process the dominance of one heuristic over another could change. Here comes hyper-heuristics to intelligently pick suitable meta-heuristics to solve a problem .
-% ----
+A nature question could arise ``If we have all this fancy and well-performing heuristics, why should we put an effort in developing new algorithms, instead of using the existing?'' And the answer to this question is quite simple — the perfect algorithm suited for all OP does not exist and can not exist. 
+The empirical research has shown that some meta-heuristics perform better with some types of problems, but poorly with others. In addition to that, for different instances of the same problem type, the same algorithm could result in unexpected performance metrics. Moreover, even in different stages of same problem solving process the dominance of one heuristic over another could change. 
 
+All search algorithms perform exactly the same, when the results are averaged over all possible Optimization Problems. If an algorithm is gaining the performance in one problems class, it loses in another class. This is a consequence of so-called \textbf{No Free Lunch Theorem for Optimization} (NFLT)~\cite{wolpert1997no}.
 
-A nature question could arise ``If we have all this fancy and well-performing heuristics, why should we spend effort and develop new algorithms, instead of using existing?'' And the answer to this question is quite simple — the perfect algorithm suited for all OP that will do not exist and can not exist. All algorithms that search for optimal parameters of a Target System perform exactly the same, when the results are averaged over all possible Target Systems. If an algorithm is gaining the performance in one problems class, it loses in another class. This is a consequence of so-called \textbf{No Free Lunch Theorem} (NFLT)~\cite{wolpert1997no}.
-
-In fact, one could not predict, how exactly will behave one or another algorithm with problem in hand. A possible and the most obvious way is to probe the specific approach, and analyze it behavior with respect to another in problem solving process. Here simple heuristics and meta-heuristics are out of competition, since if you solved the Optimization Problem once, you wouldn't optimize a second time.
-Here come \textbf{Hyper-Heuristics}. We will proceed with their description and how they deal with the NFLT consequences in following section, to not switch the thesis.
+In fact, one could not predict, how exactly will behave one or another algorithm with problem in hand. A possible and the most obvious way is to probe one algorithm and compare its performance to another one during problem solving process. In this case simple heuristics and meta-heuristics are out of competition, since once you solved the Optimization Problem you probably wouldn't optimize a second time.
+Here come \textbf{Hyper-Heuristics} to intelligently pick heuristics that is suitable to problem in hand. We will proceed with their description and how they deal with the NFLT consequences in following section.
 
 
 \subsection{Hyper-Heuristics}\label{bg: hh}
-Lots of state-of-art heuristics and meta-heuristics are developed in a very domain-dependent way, say they use the domain knowledge too intensively to be broadly reused. It motivated research community to raise the level of generality at which the optimization systems can operate and still provide good quality Solutions for various Optimization Problems. The term \textbf{Hyper-Heuristic} (HH) was defined to describe an approach of using some High-Level-(Meta-)Heuristics (HLH) to choose other Low-Level-(Meta-)Heuristics (LLH) and use it to solve the OP in hand. Indeed, a combination of different low-level heuristics produced better results than if hey were applied separately~\cite{drake2019recent}.
-It can be explained by the nature of search process and how it evolves in time. When you apply heuristic, it sooner or later converge to some extreme point, hopefully global optimum, since it is `blind' to those not visited regions in the Search Space. But changing the trajectory of investigation by (1) drastically varying the Neighborhood, (2) changing the strategy of Neighborhood exploration and exploitation could (1) bring you to those previously unreachable zones (2) rapidly. However, it is not possible to predict how one LLH will behave in every stage of the search process in comparison to another, here HLH comes to help. In \cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can be viewed as a form of Reinforcement Learning, which is sounds logically.
+A lot of state-of-the-art heuristics and meta-heuristics are developed in a complex and very domain-dependent way, which causes problems in an algorithm implementation reuse. It motivated research community to raise the level of generality at which the optimization systems can operate and still provide good quality Solutions for various Optimization Problems. 
+
+The term \textbf{Hyper-Heuristic} (HH) was defined to describe an approach of using some \textit{High-Level-Heuristics} (HLH) to select over other \textit{Low-Level-Heuristics} (LLH) and apply them to solve the \textit{class of Optimization Problems} rather than particular instance. Indeed, scientists report that the combination of different HLH produces better results than if hey were applied separately~\cite{drake2019recent} — note previously discussed hybrid-heuristics.
+This behavior can be explained by the nature of search process and how it evolves in time. When you apply a heuristic, it sooner or later converge to some extreme point, hopefully global optimum. But it is `blind' to other, not visited regions in the Search Space. Changing the trajectory of investigation by (1) drastically varying the Neighborhood, (2) changing the strategy of Neighborhood exploration and exploitation could (1) bring you to those previously unreachable zones (2) in more rapid ways. However, usually it is hard to predict how one LLH will behave in every stage of the search process in comparison to another. In Hyper-Heuristics, this job was encapsulated into the HLH and performed automatically. 
+
+In~\cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can be viewed as a form of Reinforcement Learning, which is a logical conclusion especially if we rephrase it to \textit{Hyper-Heuristics utilize Reinforcement Learning methodologies}.
 
 \begin{figure}
 	\centering
 	\includesvg{HH}
-	\caption[Hyper-Heuristics]{Hyper-Heuristics\protect\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}}
+	\caption[Hyper-Heuristics]{Hyper-Heuristics.}
 	\label{bg:pic:HH}
 \end{figure}
 
-%\footnotetext[1]{Icons from \href{https://thenounproject.com/}{thenounproject.com}}
+The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier}, see picture~\ref{bg:pic:HH}\footnotetext[1]{Icons from \href{https://thenounproject.com/}{thenounproject.com}}.
+As we told previously, HH do not tackle an OP directly, but use LLH instead. This means, that usually HH are minimally aware of the domain details such as what are data types, relationships, etc. within a domain. This information rather encapsulated in LLHs and those HHs could be used to broader range of Optimization Problems.
 
-
-The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier}.
-As we told previously, HH do not directly tackle an OP, they use LLH instead. This means, that HH are usually unaware of the domain details such as what are those data types, their relationship, etc. within a domain, but rather encapsulates this information in LLHs and those could be used to broader range of Optimization Problems as it is illustrated on picture~\ref{bg:pic:HH}.
+With this idea, many researchers started to create not only Hyper-Heuristics to tackle a concrete optimization problem class, but also frameworks with building blocks for their creation.
 
 
 \subsubsection{Classification}
-Although, the research in Hyper-Heuristics field actively ongoing, a lot of different instances were already created and some trials to organize approaches were conducted~\cite{ryser2014review,drake2019recent,burke2019classification}.
-Researchers in their surveys classify HHs by different characteristics, some of them overlap, but it also happens that intriguing parameters distinguished were not highlighted in other works. 
+Although, the research in Hyper-Heuristics field is actively ongoing, many algorithm instances were already created and some trials to organize approaches were conducted in~\cite{ryser2014review,drake2019recent,burke2019classification}.
 
-In this section we present some (but not all) facets of Hyper-Heuristics classification to better justify the goal of this thesis.
+Researchers in their surveys classify HHs by different characteristics, some of which overlap, but it also happens that important (from our perspective) features were not highlighted in all works. 
 
+In this section we present the union of those important Hyper-Heuristics classification facets to better justify the goal of this thesis.
 
-We begin with the two broadest classes, which differentiate HH \textit{routine} or also called as \textit{nature of High-Level-Heuristic Search Space}~\cite{burke2013hyper,burke2019classification,drake2019recent}.
-The first class is the Hyper-Heuristics to \textbf{select} Low-Level-Heuristic, in other words \textbf{Selection Hyper-Heuristic}. In previous sections we were implicitly referring to this class, while talking about Hyper-Heuristic approaches in general. These algorithms operate in the Search Space defined by simple Low-Level-Heuristics that solve Optimization Problem. The task of HLH is to pick the best suited LLH based on available prior knowledge and apply it to OP underway.
-The second class is the Hyper-Heuristics to \textbf{construct} or generate LLH by using the atomic components of other heuristics as Lego bricks and following some predefined receipt. These approaches could lead to creating new and unforeseen heuristics that are expected to reveal good performance~\cite{burke2019classification} while solving the problem in hand.
+We begin with the two broadest classes, which differentiate HH \textbf{routine}, also called as \textbf{nature of High-Level-Heuristic Search Space}~\cite{burke2013hyper,burke2019classification,drake2019recent}.
+The first class are Hyper-Heuristics to \textit{select} Low-Level-Heuristic, in other words \textit{Selection Hyper-Heuristic}. All our previous references to Hyper-Heuristics were made this concrete type. These algorithms operate in the Search Space, defined by complete and rather simple Low-Level-Heuristics that solve Optimization Problem. The task of HLH here is to pick the best suited LLH (or sequence of LLHs) based on available prior knowledge and apply it to OP underway. Note, that staging Hybrid-Heuristics could be viewed as Solutions of Selection HHs.
+Hyper-Heuristics of the second class seek to \textit{construct} LLH following some predefined receipt and using the atomic components of other heuristics as Lego bricks. The other commonly used name here is \textit{Construction Hyper-Heuristics}. These approaches often lead to creation of new and unforeseen heuristics that are expected to reveal good performance while solving the problem in hand.
 
+Next, the distinction in \textbf{nature of Low-Level-Heuristics Search Space} arises. 
+In other words: ``How does the LLH derive Solutions for the OP?'' Authors in~\cite{burke2013hyper,burke2019classification,drake2019recent} distinguished \textit{construction} LLHs where Solution creation happens each time from scratch and \textit{perturbation} LLHs where new Solutions created from parts of already existing ones.
 
-Next, the distinction in \textit{nature of Low-Level-Heuristics Search Space}, in other words how do the LLH derive Solutions for the OP in hand~\cite{burke2013hyper,burke2019classification,drake2019recent}, either by \textbf{constructing} a Solution each time from scratch, or by \textbf{perturbation} of already existing one.
+The other broadly used characteristic is the \textbf{memory usage method}. 
+From this perspective we distinguish Hyper-Heuristics in which the learning happens \textit{on-line}, \textit{off-line} or learning mechanisms are \textit{not present} at all~\cite{ryser2014review,burke2019classification}.
+\begin{itemize}[itemsep=8pt]
+	\item In \textbf{on-line} case, the HH derives an information, used to select among LLH, while those LLH are solving the problem.
 
+	\item In \textbf{off-line} case, the learning happens before solving concrete Optimization Problem. Here one should first train an HH solving other homogeneous problem instances by underlying LLHs (off-line learning phase). After that, the HLH will be able to choose among LLHs and those be applicable to problem in hand (on-line use phase). Note, that this approach also requires creation of meta-features extraction mechanism and its application to every Optimization Problem.
 
-The other broadly used characteristic is the \textit{use of memory}. From this perspective we distinguish Hyper-Heuristics in which the learning happens on-line, off-line or learning mechanisms are not present at all~\cite{ryser2014review,burke2019classification}.
-\begin{itemize}
-	\item In \textbf{on-line} case, the HH derives an information, used to select among LLH, while those LLH are solving a problem.
-
-	\item In \textbf{off-line} case, the learning happens before solving an Optimization Problem. Here one should first train an HH using other, but homogeneous to current problems. After this preparation step, the HH could be applied to problem in hand.
-
-	\item There exist also \textbf{mixed} cases, where learning happens both on-line and off-line. Definitely it is a promising research direction, despite high dependency on off-line phase.
+	\item There exist also \textbf{mixed} cases, where learning happens first in off-line and later also in on-line phase. Definitely it is a promising (in terms of results quality) research direction, despite it high complexity.
 	
-	\item The last case here is an approach \textbf{without learning} mechanisms involved. Usually, these Hyper-Heuristics perform some sort of Random Search selection of LLH.
+	\item In the last case \textbf{no learning} mechanisms present, therefore HLH here performs some sort of Random Search over LLH Search Space. At first sight, it may look like weak approach, but looking onto Variable Neighborhood Search Meta-Heuristic we would doubt it.
 \end{itemize}
 
 
-Yet another faced of Hyper-Heuristics classification is the way of assigning \textit{hyper-parameters} (here we use parameters and hyper-parameter concepts interchangeably) for LLHs, or their components~\cite{drake2019recent}. We analyzed surveys and find out that some researchers do not explicitly differentiate approches with respect to nature of parameter settings~\cite{ryser2014review,burke2013hyper,burke2019classification}, while other do~\cite{drake2019recent}:
-\begin{itemize}
-	\item In \textbf{static} assignment, the underlying heuristics use provided beforehand (usually default) hyper-parameters and do not change them while solving the problem in hand.
+%Yet another faced of Hyper-Heuristics classification is the way of assigning \textit{hyper-parameters} (here we use parameters and hyper-parameter concepts interchangeably) for LLHs, or their components~\cite{drake2019recent}. We analyzed surveys and find out that some researchers do not explicitly differentiate approches with respect to nature of parameter settings~\cite{ryser2014review,burke2013hyper,burke2019classification}, while other do~\cite{drake2019recent}:
+%\begin{itemize}
+%	\item In \textbf{static} assignment, the underlying heuristics use provided beforehand (usually default) hyper-parameters and do not change them while solving the problem in hand.
 
-	\item The \textbf{dynamic} case uses some kind of rule for parameters changing, specified in advance.
+%	\item The \textbf{dynamic} case uses some kind of rule for parameters changing, specified in advance.
 
-	\item There exist also an \textbf{adaptive} approach, in which HH assigns the parameters for LLH as the response to the learning process. In some sort, it is similar to the parameter control techniques used in Meta-heuristics.
+%	\item There exist also an \textbf{adaptive} approach, in which HH assigns the parameters for LLH as the response to the learning process. In some sort, it is similar to the parameter control techniques used in Meta-heuristics.
 	
-	\item And finally, a \textbf{self-adaptive} approach where underlying LLHs comprise \textit{parameter control} techniques and those search for the best solution for OP and own parameter settings simultaneously.
+%	\item And finally, a \textbf{self-adaptive} approach where underlying LLHs comprise \textit{parameter control} techniques and those search for the best solution for OP and own parameter settings simultaneously.
+%\end{itemize}
+
+
+For more detailed analysis, description, other classification facets and respective Hyper-Heuristic examples we encourage reader to look into resent classification and surveying researches~\cite{burke2003hyper,ryser2014review,drake2019recent,burke2019classification}.
+
+\subsubsection{Hyper-Heuristics Instance Examples}\label{bg: hh examples}
+\paragraph{Hyper-Heuristic for Integration and Test Order Problem~\cite{guizzo2015hyper}.} \textit{HITO} is an example of generational HH. LLHs in this case are presented as a composition of basic EAs operators — crossover and mutation forming multi objective evolutionary algorithms (MOEA). HH selects those components from $jMetal$ framework~\cite{durillo2011jmetal} using interchangeably Choice Function (in form of weighted linear equation) and Multi Armed Bandit based Heuristic to balance exploitation of good components and exploration of new promising ones.
+
+
+\paragraph{Markov Chain Hyper-Heuristic~\cite{mcclymont2011markov}.} \textit{MCHH} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive heuristic selection method. While solving an OP, \textit{MCHH} updates prior knowledge about the probability of producing Pareto dominating Solutions by each underlying LLH using Markov Chains those guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition of weights in the Markov Chains constructed from all available LLHs those updating prior knowledge for LLH selection.
+
+
+\subsubsection{Hyper-Heuristics Frameworks Examples}\label{bg: hh fw examples}
+\paragraph{Hyper-Heuristics Flexible Framework~\cite{ochoa2012hyflex}.} \textit{HyFlex} is a software skeleton, built specifically to help other researchers creating Hyper-Heuristics. It provides the implementation of components for 6 problem domains (Boolean Satisfiability, Bin Packing, Personnel Scheduling, Permutation Flow Shop, Traveling Salesman and Vehicle Routing problems) such as problem and solution descriptions, evaluation functions and adaptations for set of Low-Level-Heuristics. The set benchmarks and comparison techniques to other built HHs on top of \textit{HyFlex} are included to framework as well. 
+
+The intent of \textit{HyFlex} creators was to provide Low-Level features that enable others to focus directly on High-Level-Heuristics implementation without need to challenge other minor needs. It also brings a clear comparison among created HLH performance, since the other parts are mostly common. From the classification perspective, all derivatives from the \textit{HyFlex} framework are Selection Hyper-Heuristics, however they utilize different learning approaches. Algorithms, built on top of \textit{HyFlex} framework could be found in many reviews~\cite{misir2012intelligent,ryser2014review,drake2019recent} or on the CHeSC 2011 challenge website\footnote[1]{\href{http://www.asap.cs.nott.ac.uk/external/chesc2011/}{Cross Domain Heuristic Search Challenge website: asap.cs.nott.ac.uk/external/chesc2011/}} (dedicated to choosing the best HH built on top of \textit{HyFlex}).
+
+Along with \textit{HyFlex}, a number of hyper-heuristic-dedicated frameworks is growing, some of them are under active development while others are abandoned:
+\begin{itemize}[itemsep=8pt]
+	\item \textit{Hyperion}~\cite{swan2011hyperion} is a construction hyper-heuristic framework aiming to extract information from OP search domain for identification of promising components in form of object-oriented analysis.
+	
+	\item \textit{hMod}~\cite{urra2013hMod} framework allows not only to rapidly prototype an algorithm using provided components, but also to construct those components using predefined abstractions (such as $IterativeHeuristic$). In current development stage, developers of \textit{hMod} are focusing on creation of development mechanisms rather than providing a set pre-built heuristics. 
+	
+	\item \textit{EvoHyp}~\cite{pillay2017evohyp} framework focuses on hyper-heuristics created from evolutionary algorithms and their components. Here authors enable framework users to construct both selection and generation HHs for both construction and perturbation LLHs types.
 \end{itemize}
-
-
-For more detailed analysis, description, other classification facets and respective Hyper-Heuristic examples we encourage reader to look into~\cite{burke2003hyper,ryser2014review,drake2019recent,burke2019classification} researches.
-
-\subsubsection{Examples}\label{bg: hh examples}% should I present it in following sections?
-\paragraph{HyFlex~\cite{ochoa2012hyflex}}\textit{Hyper-Heuristics Flexible Framework}. It is a software skeleton, created specifically to encourage researchers creating Hyper-Heuristics. It provides the implementation of components for 6 problem domains (Boolean Satisfiability, Bin Packing, Personnel Scheduling, Permutation Flow Shop, Traveling Salesman and Vehicle Routing problems), evaluation functions and a set of Low-Level-Heuristics. The benchmark sets as well as comparison to other existing HH is included to framework. The intent of $HyFlex$ creators to provide these features was to enable others focus directly on High-Level-Heuristics implementation without need to challenge other minor needs and those bring clear comparison among HLH performance~\cite{ochoa2012hyflex}. From the classification perspective, all derivatives from the $HyFlex$ framework are Selection Hyper-Heuristics, however they utilize different learning approaches and hyper-parameter settings. Algorithms, built on top of $HyFlex$ framework could be found in~\cite{misir2012intelligent,ryser2014review,drake2019recent} or on the CHeSC 2011 challenge website\footnote[1]{\href{http://www.asap.cs.nott.ac.uk/external/chesc2011/}{Cross Domain Heuristic Search Challenge website: asap.cs.nott.ac.uk/external/chesc2011/}}.
-
-
-Along with $HyFlex$, a number of Hyper-Heuristic frameworks is growing, some of them are under active development while others are abandoned:
-\begin{itemize}
-	\item $Hyperion$~\cite{swan2011hyperion} is a $TH$ (recursive template and hook) framework aiming to extract information from OP search domain for identification of promising components.
-	
-	\item $hMod$~\cite{urra2013hMod} framework allows not only to construct algorithm components using predefined abstractions (such as $IterativeHeuristic$). In current development stage, developers of $hMod$ are focusing on creation of mechanisms rather than providing a set pre-built heuristics. 
-	
-	\item $EvoHyp$~\cite{pillay2017evohyp} focus on hyper-heuristics with evolutionary algorithms used as Low-Level-Heuritics. Here authors enable users of framework to construct both selection and generation HHs for both types construction and perturbation LLHs.
-	
-\end{itemize} 
-
-\paragraph{HITO~\cite{guizzo2015hyper}}\textit{Hyper-Heuristic for Integration and Test Order Problem}. It is an example of HH for selection of LLH. LLHs in this case are presented as a composition of basic EAs operators — crossover and mutation forming multi objective evolutionary algorithms (MOEA). HH  selects those components from $jMetal$ framework\cite{durillo2011jmetal} using interchangeably Choice Function (in form of weighted linear equation) and Multi Armed Bandit based logic to yet again balance exploitation of good LLHs and exploration of new LLHs.
-
-
-\paragraph{MCHH~\cite{mcclymont2011markov}}\textit{Markov Chain Hyper-Heuristic} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive Heuristic selection method. While solving an OP, $MCHH$ updates prior knowledge about the probability of producing Pareto dominating Solutions by each LLH using Markov Chains those guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition weights in the Markov Chains constructed from all available LLHs those updating prior knowledge for LLH selection.
 
 
 \subsection{Conclusion on Heuristic Solvers}
-To conclude our review on Heuristic approaches for Optimization Problems solving, we shortly remind you pros and cons of each heuristic level.
+To conclude our review on Heuristic approaches for solving Optimization Problems, we shortly remind you pros and cons of each heuristic level.
 
-On the basis remain Simple Heuristics with all their domain-specific knowledge usage and particular tricks for solving problem in hand. Usually, they are created to tackle a concrete problem in hand applying simple algorithmic approach. The simplicity of application and usually fast runtime is balanced by medium solution quality.
+On the basis remain Simple Heuristics with all their domain-specific knowledge usage and particular tricks for solving problems. Usually, they are created to tackle a concrete problem instance in hand applying simple algorithmic approach. The simplicity of application and usually fast runtime paid back by medium results quality.
 
-On the next level inhabit Meta-Heuristics. They could be compared with more sophisticated hunters which could not only charge directly, but also take a step back when stuck in a dead end. This additional skill enables them to survive in a new environment (Optimization Problem), however some adaptations should be performed to understand the problem and parameter tuning to perform well.
+On the next level inhabit Meta-Heuristics. They could be compared with more sophisticated Solutions hunters which could not only charge directly, but also take a step back when stuck in a dead end. This additional skill enables them to survive in new and complex environments (Optimization Problems), however some adaptations to understand a concrete problem and parameter tuning for better performance still should be performed.
 
-Among with MHs, Hybrid-Heuristics do exist. It is nothing special here, they just took some survival abilities from several Meta-Heuristics hoping to outperform, however still requiring adaptation. In some cases this hybridization provides it advantage, but as time shows, they did not kick out MHs and reside together with their parents. Those we can conclude that the exposed balance between development effort and providing results quality not always assure users to apply them.
+Among with MHs exit Hybrid-Heuristics. There is nothing special here, they just took some survival abilities from several Meta-Heuristics hoping to outperform and still requiring adaptation and tuning. In some cases this hybridization provides it advantage, but as the time shows, they did not force out MHs. Those we can conclude that the provided balance between development effort and exposed results quality not always assure users to use them.
 
-Finally, the chosen ones that lead the others, Hyper-Heuristics are inhabitants of the upper level generality. 
-Operating by the other Heuristics, HHs analyze how good former are and definitely make use of this knowledge by solving concrete problem using the best suited Heuristic.
-Imposing such great abilities, Hyper-Heuristics are able to tackle not only the concrete optimization problem, but entire class of problems, although requiring more development effort.
+Finally, the chosen ones that lead the others, Hyper-Heuristics are on the upper generality level. 
+Operating by the other Heuristics, HHs analyze how good former are and make use of this knowledge by solving the concrete problem using those best suited Heuristics. Imposing such great abilities, Hyper-Heuristics tackle not only the concrete optimization problem, but entire class of problems.
 
 
 \section{Setting Heuristic Parameters}\label{bg: Setting Heuristic Parameters}
-Most of existing learning algorithms expose some parameter set, needed to be assigned before applying this algorithm to solve a problem. Modifying these parameters, one could change the system behavior and possible result.
+The most of existing learning algorithms expose some parameter set, needed to be assigned before using this algorithm. Modifying these parameters, one could change the system behavior and possible result quality.
 
-When we are talking about parameter tuning problem, the following terms should be refined explicitly:
+When we are talking about the problem of settings the best parameters, following terms should be refined explicitly:
 \begin{enumerate}
-	\item \textbf{Target System (TS)} is the subject of parameter tuning optimization problem. Simply, it is the system which parameters are tuned.
-	\item \textbf{Parameter} a.k.a. Hyper-Parameter (HP) is one of exposed by TS hooks for tuning. Should be described in terms of type and possible values.
-	\item \textbf{Configuration} is formed by unique combination of parameter values, required to run TS.
-	\item \textbf{Search Space} is formed by all possible Configurations for defined HPs.
+	\item \textbf{Target System (TS)} is the subject which parameters are undergoing changes. Simply, it could be a heuristic, machine learning algorithm or other system.
+	\item \textbf{Parameter} is one of exposed by TS setting hooks. It should be described in terms of its type and possible values.
+	\item \textbf{Configuration} is the unique combination of parameter values, sufficient to run TS.
+	\item \textbf{Search Space} is the set of all possible Configurations for defined Parameters.
 \end{enumerate}
 
-In \textit{machine learning} these parameters are called \textbf{Hyper-Parameters}. Note, that we are referring both terms $Parameters$ and $Hyper-Parameters$ $(HPs)$ interchangeably through the thesis.
+In this thesis we use notions of \textit{Parameter} and \textit{Hyper-Parameter} (HP) interchangeably, since the approaches discussed in this section are generally applicable also in Machine Learning cases. For instance, consider Neuron Network (NN). Hyper-parameters in this case will specify the structure (number of hidden layers, units, etc.) and learning process (learning rate, regularization parameters values, etc.) of network and changing them dramatically affect performance and results.
 
+One frequent incumbent of Optimization Problems is \textbf{Parameter Settings Problem} (PSP) — searching of hyper-parameter values that optimize some characteristic of TS. When talking about NN example, we could solve PSP in order to maximize network accuracy in given dataset (Single Objective PSP). Taking into account a number of characteristics simultaneously such as running time and prediction accuracy results in Multi-Objective PSP.
 
-For instance, consider neuron network. Hyper-parameters in this case will specify the structure (number of hidden layers, units, etc.) and learning process (learning rate, regularization parameters, etc.) of network. Changing them will result in changes of system accuracy.
-
-
-One of the most frequent optimization applications is \textbf{Parameter Tuning} — searching of hyper-parameter values to optimize some characteristic of system. When talking about our example, we could apply Parameter Tuning to maximize network accuracy. Considering simultaneously number of characteristics such as running time + accuracy results in Multi-Objective Parameter Tuning.
-When talking about heuristics, proper assignment of hyper-parameters has a great impact on exploration-exploitation balance and those on algorithm performance.
-
+The same applies to heuristics: proper assignment of hyper-parameters has a great impact on exploration-exploitation balance and those on algorithm performance.
 
 % the motivation of using parameter tuning system as basis for hyper-heuristics
+% TODO: this block should be in conclution
 We believe, that a central role of off-line selective Hyper-Heuristics, namely solving the algorithm selection problem could be represented as the parameter tuning problem, where instead of parameter selection we select entire system according to reported performance. With this idea in mind, we investigate a possibility of turning parameter tuning system into a Hyper-Heuristic.
 For doing so, our next step is the review and comparison of existing parameter tuning approaches and systems. 
 
@@ -614,13 +624,14 @@ The motivation for huge number of performed studies tackling adaptive changes in
 Shortly, there exists strategies for controlling each EA parameter separately or together.  Most commonly implicated parameters are: \textit{population size}, \textit{selection strategies} and \textit{variation aspects} (namely crossover and mutation operators). For more detailed explanation and analysis of each approach we suggest reader to refer recently conducted reviews and researches if field of parameter control in Evolutionary Algorithms~\cite{karafotias2014parameter,aleti2016systematic,smith2020self}.
 The only common distinction here that listed previously mechanisms are extended by 3rd control type — \textit{self-adaptive} which implies encoding of mentioned parameter values in solution genomes those allowing them to co-evolve with solutions in the runtime. 
 
-\subsubsection{Parameter Control in Simulated Annealing}
+\subsubsection{Parameter Control in Simulated Annealing}\label{bg: parameter control: SA}
 In Simulated Annealing, however, one of the most frequently controlled parameters are the \textit{cooling schedule} (the velocity of decreasing temperature) and the \textit{acceptance criteria}.
 
 The control in cooling rate is motivated by the fact, that if the temperature decreasing too rapidly, an optimization process may stuck in local optima, while too slow cooling rate is usually computationally costly. Many researches were made to investigate which is the best \textit{deterministic} strategy among linear, exponential, proportional, non-linear, logarithmic or geometrical. In contrast, \cite{karabin2020simulated} propose the adaptive strategy based on statistical information evaluated on each optimization step.
 
 The other example of adapting the acceptance criteria was proposed in~\cite{ghandeshtani2019entropy}, based on thermodynamics fundamentals such as \textit{entropy} and \textit{kinetic energy}. Authors suggest replacing the standard acceptance criteria (based on current temperature and found solution quality) with the criteria based on change in solutions entropy.
 
+For other approaches of parameter control we suggest to check~\cite{ingber2000adaptive,de2003placement}.
 
 \section{Beyond Parameters Settings} 
 
