@@ -1,19 +1,17 @@
 \chapter{Background and Related Work Analysis}\label{bg}
-In this chapter we provide reader with a review of the base knowledge in fields of Optimization Problems and approaches for solving them.
-An experienced reader in field of Optimization and Search Problems could find this chapter as an obvious discussion of well-known facts. 
-If the notions of \textit{Parameter Tuning} and \textit{Parameter Control} are not familiar to you or seems like two different names for one thing, we highly encourage you to spend some time with reading this chapter carefully.
-In any case, it is worth for everyone to refresh the knowledge with coarse-grained description of sections topics and examine the examples of Hyper-Heuristics in \ref{bg: hh examples} and Systems for parameter tuning in \ref{bg: parameter tuning expamples} since we use them later in concept implementation.
+In this chapter we provide the reader with a review of the basic knowledge in fields of optimization problems and approaches for solving them.
+A reader, experienced in field of Optimization and Search Problems, may consider this chapter as an obvious discussion of well-known facts. 
+If such notions as \textit{Parameter Tuning} and \textit{Parameter Control} are not familiar to you or seems the same, we highly encourage you to spend some time reading this chapter carefully.
+In any case, it is worth for everyone to refresh the knowledge with coarse-grained description of topics, mentioned in this section and examine the examples of hyper-heuristics in Section~\ref{bg: hh examples} and systems for parameter tuning in Section~\ref{bg: parameter tuning expamples}.
 
-The structure of this chapter is defined as follows: first we give informal definition of Optimization Problem and enumerate possible solver types in section~\ref{bg:section problems and solvers}, afterwards we pay attention to the heuristic solvers, their weaknesses and No Free Lunch theorem in section~\ref{bg: section heuristics}. Later, in section~\ref{bg: section Parameters Setting} we discuss the influence of parameter setting and possible approaches for doing so as well. After section~\ref{bg: section cash} dedicated to CASH problem, we conclude the literature analysis outlining the thesis scope in section~\ref{bg: section conclusion}.
+The structure of this Chapter is defined as follows. Firstly, we give an informal definition of optimization problem and enumerate possible solver types in Section~\ref{bg:section problems and solvers}. Secondly, we pay attention to the heuristic solvers, their weak points and No Free Lunch Theorem in Section~\ref{bg: section heuristics}. Afterwards, in Section~\ref{bg: section Parameters Setting} we discuss the influence of parameter setting and possible approaches to set the parameters. Section~\ref{bg: section cash}, dedicated to \emph{Combined Algorithm Selection and Hyper-parameter Tuning} problem, is followed by conclusion on the literature analysis outlining the thesis' scope in Section~\ref{bg: section conclusion}.
 
 \section{Optimization Problems and their Solvers}\label{bg:section problems and solvers}
-Our life is full of different hard and sometimes contradicting choices. 
+Our life is full of different difficult and sometimes contradicting choices. Optimization is an art of making good decisions.
 
-But what is an Optimization? It is an art of making good decisions.
+A decision between working hard or going home earlier, to buy cheaper goods or to follow brands, to isolate ourselves or to visit friends during the quarantine, to spend more time for planning trip or to start it instantly. Each decision that we make, has its consequences.
 
-A decision in working hard or going home earlier, to buy cheaper goods or follow brands, to isolate ourselves or visit friends during the quarantine, to spend more time for planning trip or start it instantly. Each made decisions have it consequences.
-
-Picture~\ref{bg:pic:Optimization tradeoff} outlines the trade-off between decision quality and amount of effort spent. The underlying idea of research in optimization problems solving sphere is to squash this curve simultaneously down and to the left, thus deriving a better results with less cost when solving the optimization problem.
+Figure~\ref{bg:pic:Optimization tradeoff} outlines the trade-off between a decision quality and an amount of effort spent. The underlying idea of the research in optimization problems solving sphere is to squash this curve simultaneously down and to the left thus, deriving a better result with less cost when solving the optimization problem.
 
 \svgpath{{graphics/Background/}}
 \begin{figure}
@@ -22,68 +20,62 @@ Picture~\ref{bg:pic:Optimization tradeoff} outlines the trade-off between decisi
 	\caption{Optimization trade-off.}
 	\label{bg:pic:Optimization tradeoff}
 \end{figure}
+\todoy{axes labels should be distinguishable from axes values (Dima review)}
 
 \subsection{Optimization Problems}\label{BG: subsection OPs}
-While the Search Problem (SP) defines the process of finding a possible Solution for the Computation Problem, an Optimization Problem (OP) is the special case of the SP, focused on the process of finding the \emph{best possible} Solution for Computation Problem~\cite{goldreich2010p}.
+While the \emph{Search Problem} (SP) defines the process of finding a possible solution for the \emph{Computation Problem}, an \emph{Optimization Problem} (OP) is the special case of the SP, focused on the process of finding the \emph{best possible} solution for computation problem~\cite{goldreich2010p}.
 
-In this thesis we focus ourselves on the Optimization Problems.
+In this thesis we focus on the optimization problems.
 
-A lot of performed studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is hard to exclude the application domain from definition. The description of every possible Optimization Problem and all approaches for solving it are out of this thesis scope, but a coarse-grain review should be presented in order to make sure that everyone reading this thesis will be familiar with all used here terms and notions. 
+A lot of studies in this field have tried to formalize the concept of OP, but the underlying notion is so vast that it is hard to exclude the application domain from the definition. The description of every possible optimization problem and all approaches for solving it is out of this thesis scope, but a coarse-grained review should be presented in order to make sure that everyone reading this thesis is familiar with all used here terms and notions. 
 
-In works~\cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} dedicated to solving OPs, authors distinguished OP characteristics that overlap through each of these works and thus we would like to start from them.
+First, let us define the optimization \emph{subject}. Analytically, it could be represented as the function $Y = f(X)$ that accepts some input $X$ and reacts on it, providing an output $Y$. Informally, it could be imagined as the Target System $f$ (TS), shown on Figure~\ref{bg:pic:Target System}. It accepts the input information with its \emph{inputs}} $X_n$ sometimes also called variables or parameters, processes them performing some \emph{Task} and produces the result on its \emph{outputs} $Y_m$.
 
-
-First, let us define the Optimization \textit{subject}. Analytically it could be represented as the function $Y = f(X)$ that accepts some input $X$ and reacts on in providing an output $Y$. Informally it could be imagined as the Target System $f$ (TS) shown on picture~\ref{bg:pic:Target System}. It accepts the input information with its \textit{inputs} $X_n$ sometimes also called variables or parameters, processes them performing some \textit{Task} and produces the result on its \textit{outputs} $Y_m$.
-
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includesvg[width=0.5\textwidth]{TargetSystem}
 	\caption{Optimization Target System.}
 	\label{bg:pic:Target System}
 \end{figure}
 
-Each (unique) pair of sets $X_n^i$ and respective $Y_m^i$ form $Solution^i$ for Computational Problem.
-All possible inputs $X^i$, where $i=1...N$ form a \textit{Search Space} of size $N$, while all outcomes $Y^i$, where $i=1...M$ form an \textit{Objective Space} of size $M$. Note, that both $N$ and $M$ could be equal to $\infty$.
+Each (unique) pair of sets $X_n^i$ and respective $Y_m^i$ form $Solution^i$ for computational problem.
+All possible inputs $X^i$, where $i=1...N$ form a \emph{Search Space} of size $N$, while all outcomes $Y^i$, where $i=1...M$ form an \emph{Objective Space} of size $M$.
 
-The Solution characterized by the \textit{objective} value(s) — a quantitative measure of TS performance that we want to minimize or maximize in Optimization Problems. 
-We could obtain those value(s) directly by reading $Y_m$, or indirectly for instance, noting the wall clock time TS took to produce the output $Y^i$ for given $X^i$. 
-The Solution objective value(s) form \textit{object} of Optimization. 
+The solution characterized by the \emph{objective value(s)} — a quantitative measure of TS performance that we want to minimize or maximize in the optimization problems. We could obtain those value(s) directly, by reading the output on $Y_m$, or indirectly, for instance, noting the wall clock time TS took to produce the output $Y^i$ for given~$X^i$. The solution objective value(s) form an \emph{object} of Optimization. 
 For the sake of simplicity we here use $Y_m$, \textit{outputs} or \textit{objectives} interchangeably as well as $X_n$, \textit{variables} or \textbf{parameters}.
 
-
-Next, let us highlight the Target System characteristics.
-Among all mentioned in \cite{biegler2004retrospective,figueira2014hybrid,deb2014multi,amaran2016simulation} we found those properties the most important:
+\todoy{figure for classification}
+Next, let us highlight the Target System characteristics. In works~\cite{biegler2004retrospective,figueira2014hybrid,deb2014multi,amaran2016simulation} dedicated to solving OPs, the authors distinguished OP characteristics that overlap through each of these works. Among them, we found those properties the most important:
 \begin{itemize}[itemsep=8pt]
-	\item \textbf{Input data types} of $X_m$ is a crucial characteristic. The variables could be either \textit{discrete} where representatives are binary strings, integer-ordered or categorical data, \textit{continuous} where variables are usually a range of real numbers, or \textit{mixed} as the mixture of previous two cases.
+	\item \textbf{Input data type} of $X_m$ is a crucial characteristic. All input variables could be (1) \emph{discrete}, where representatives are binary strings, integer-ordered, or categorical data, (2) \emph{continuous}, where variables are usually a range of real numbers, or (3) \emph{mixed}, as the mixture of the previous two cases.
 
-	\item \textbf{Constrains} are functional dependencies that describe the relationships among inputs and defile the allowable values for them. As an example, imagine that having $X_n$ equal to $value$ implies that $X_{n + k}$ should not appear at all, or could take only some subset of all possible values.
-
-	\item \textbf{Amount of knowledge} that TS exposes about its internals. In other words, exposed knowledge between the dependencies $X \rightarrow Y$. With respect to this, an Optimization could be: \textit{White Box} — TS exposes its internals fully, it is even possible to derive the algebraic model of TS.
-	\textit{Gray Box} — the amount of exposed knowledge is significant, but not enough to build the algebraic model.
-	\textit{Black Box} — the exposed knowledge is mostly negligible.
+	\item \textbf{Constraints} describe the relationships among inputs and explain the dependencies in allowable values for them. As an example, imagine that having $X_n$ equal to $value$ implies that $X_{n + k}$ should not appear at all, or could take only some subset of all possible values.
+	
+	\item \textbf{Type of target system} is an amount of exposed knowledge about the dependencies $X \rightarrow Y$ before the optimization process starts. With respect to this, an Optimization could be: \emph{white box} — it is possible to derive the algebraic model of TS,\emph{Grey Box} — the amount of exposed knowledge is significant, but not enough to build the algebraic model and \emph{Black Box} — the exposed knowledge is mostly negligible.
 	%In this case the Derivative Free Optimization approaches (such as Surrogate Optimization, different Meta-|Hybrid-|Hyper-Heuristics)  are applicable.
+	% http://downloads.hindawi.com/journals/mpe/2015/647234.pdf
 
 	%\paragraph{Dependency types} could be  The inputs to outputs dependencies the of Target System could also be distinguished form perspective of linearity \cite{biegler2004retrospective,figueira2014hybrid}.
 	%\textit{Linear dependencies} reveal the Linear Programming Optimization approaches, while with \textbf{Nonlinear dependencies} one should consider Nonlinear Programming.
 
-	\item \textbf{Randomness} of TS is One of possible challenges, when the output is uncertain. Ideally TS is \textit{deterministic}, when for $X^i$ TS provides the same $Y^i$ all the time. However, in most real-life challenges engineers tackle \textit{stochastic} systems whose output is affected by random processes happened inside TS. 
+	\item \textbf{Determinism} of TS is one of possible challenges, when the output is uncertain. TS is \emph{deterministic}, when it each time provides an equal output for the same input. However, in most real-life challenges engineers tackle \emph{stochastic} systems, whose output is affected by random processes happened inside TS. 
 
-	\item \textbf{Cost of evaluation} is the amount of resources (energy, time, money, etc.) TS should spend to produce the output for particular input. It varies from \textit{cheap} when TS could be an algebraic formula and evaluation Task is simple mathematic computation, to very expensive when the TS is a pharmaceutical company and the Task is to perform a whole bunch of tests for a new drug, which may last years. 
+	\item \textbf{Cost of evaluation} is an amount of resources (energy, time, money, etc.) TS should spend to produce the output for particular input. It varies from \emph{cheap}, when TS could be an algebraic formula and Task evaluation is a simple mathematic computation, to very expensive, when the TS is a pharmaceutical company, and the Task is to perform a whole bunch of tests for a new drug, which may last years. 
 
-	\item \textbf{Number of objectives} is the size of output vector $Y_m^i$. It could be either \textit{Single} ($m=1$), or \textit{Multiple} ($m=2...M$) objective. With respect to the number of objectives, the result of optimization will be either single Solution, or set of non-dominated (Pareto-optimal) Solutions respectively.
+	\item \textbf{Number of objectives} is a size of output vector $Y_m^i$. With regard to this, the optimization could be either Single- ($m=1$), or Multi- ($m=2...M$) objective, where the result is either single solution, or a set of non-dominated (Pareto-optimal) solutions respectively.
 \end{itemize}
 
-Most Optimization Problem types could be obtained by combining different types of each characteristic listed above.
+Most optimization problem types could be obtained by combining different types of each characteristic listed above.
 
-In this thesis we tackle real life combinatorial problem where most prominent incumbents are Bin Packing~\cite{martello1990bin}, Job-shop Scheduling~\cite{blazewicz1996job} or Vehicle Routing~\cite{toth2002vehicle} Optimization Problems.
-All combinatorial problems are \textit{NP-Complete} meaning they are both \textit{NP} and \textit{NP-Hard}\cite{garey1979computers}.
+In this thesis we tackle practical combinatorial problems where the most prominent examples are Bin Packing~\cite{martello1990bin}, Job-shop Scheduling~\cite{blazewicz1996job} or Vehicle Routing~\cite{toth2002vehicle} Optimization Problems.
+All combinatorial problems are \emph{NP-Complete} meaning they are in both \emph{NP} (solution is verifiable in polynomial time) and \emph{NP-Hard} (problem can be transformed to other NP-Complete problem in polynomial time, allowing using different solving algorithm) complexity classes\cite{garey1979computers}.
 
-As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP)~\cite{applegate2006traveling} — an instance of vehicle routing and one of the most frequently studied combinatorial OP (here we consider deterministic and symmetric TSP).
-The informal definition of TSP is as follows: ``Given a set of $N$ cities and the distances between each of them, what is the shortest path that visit each city once and return to the origin city?''
-With respect to our previous definition of an Optimization Problem, Target System here is a function to evaluate the length of proposed path. The TSP distance (or cost) matrix used in this function for evaluation and it is clear that this TS exposes all internal knowledge and thus it is a white box.
-The input $X_n$ is a vector of city indexes, thus the type of input data is non-negative integers. There are two constraints on path: it should contain only unique indexes (visit each city only once) and it should start and end from the same city:~$[2 \rightarrow 1 \rightarrow ... \rightarrow 2]$.
-Since the cost matrix is fixed and not changing while during solving process, the TS is considered to be deterministic and cost for two identical paths are always the same (nevertheless, there exist Dynamic TSP where the cost matrix do changes in a runtime to reflect a more realistic real-time traffic updates\cite{cheong2011dynamic}).
-It is extremely cheap to compute a cost for given path using cost matrix, thus overall Solution evaluation in this OP is cheap, but the overall number of Solutions is $N!$. Since we are optimizing only the route distance, this is a Single objective OP.
+As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP)~\cite{applegate2006traveling} — an instance of the Vehicle Routing Problem~\cite{laporte1992vehicle} and one of the most frequently studied combinatorial OP (here we consider deterministic and symmetric TSP).
+The informal definition of TSP is as follows: ``Given a set of $N$ cities and the distances between each of them, what is the shortest path that visits each city once and returns to the origin city?''
+With respect to our previous definition of the optimization problem, the target system here is a function that evaluates the length of proposed path. The TSP distance (or cost) matrix is used in this function for the evaluation and it is clear that this TS exposes all internal knowledge thus, it is a white box.
+The input $X_n$ is a vector of city indexes thus, the type of input data is non-negative integers. There are two constraints for the path: it should contain only unique indexes (visit each city only once) and it should start and end from the same city:~$[2 \rightarrow 1 \rightarrow ... \rightarrow 2]$.
+Since the cost matrix is fixed and not changing during the solving process, the TS is considered to be deterministic and cost for two identical paths are always the same (nevertheless, there exist Dynamic TSP where the cost matrix changes at runtime to reflect a more realistic real-time traffic updates\cite{cheong2011dynamic}).
+It is cheap to compute a cost for a given path using the cost matrix thus, overall Solution evaluation in this OP is cheap, but the overall number of Solutions is $N!$. Since we are optimizing only the route distance, this is a single-objective OP.
 
 
 \subsection{Optimization Problem Solvers}\label{BG: subsection OP Solvers}
@@ -107,7 +99,7 @@ Again, there exist a lot of different characteristics for Optimization Problem S
 	\item \textbf{Solution availability} perspective.
 	\begin{enumerate}
 		\item \textbf{Finalizing} algorithms, that report the results only at the end of their run.
-		\item \textbf{Anytime} algorithms, designed for stepwise solution improvement, while solving the OP and thus could expose intermediate results.
+		\item \textbf{Anytime} algorithms, designed for stepwise solution improvement, while solving the OP thus, could expose intermediate results.
 	\end{enumerate}
 	
 \end{itemize}
@@ -119,9 +111,9 @@ If the former features are more or less self-explanatory, we explain the later o
 \paragraph{Exact Solvers.}
 As stated previously, the exact algorithms are those, which always solve an OP to guaranteed optimality.
 
-For some OP it is possible to develop an effective algorithm that is much faster than the exhaustive search — they run in super-polynomial time instead of exponential still providing an optimal solution. As authors claimed in~\cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, thus super-polynomial time algorithms are the best we can hope to get when dealing with NP-complete (combinatorial) problems.
+For some OP it is possible to develop an effective algorithm that is much faster than the exhaustive search — they run in super-polynomial time instead of exponential still providing an optimal solution. As authors claimed in~\cite{woeginger2003exact}, if the common belief $P \ne NP$ is true thus, super-polynomial time algorithms are the best we can hope to get when dealing with NP-complete (combinatorial) problems.
 
-By the definition in~\cite{fomin2013exact}, the objective of an \textit{exact algorithm} is to perform much better (in terms of running time) than exhaustive search. In both works~\cite{woeginger2003exact,fomin2013exact} authors enumerated the main techniques for designing exact algorithms, each contributing in this `better' independently, thus later they could be combined.
+By the definition in~\cite{fomin2013exact}, the objective of an \textit{exact algorithm} is to perform much better (in terms of running time) than exhaustive search. In both works~\cite{woeginger2003exact,fomin2013exact} authors enumerated the main techniques for designing exact algorithms, each contributing in this `better' independently thus later they could be combined.
 
 Here is a brief explanation of them:
 \begin{itemize}[itemsep=8pt]
@@ -251,7 +243,7 @@ As an example, authors in~\cite{birattari2001classification} classification revi
 	\item \textbf{Neighborhood structure} could be either static or dynamic. Most local search algorithms, such as Simulated Annealing and Tabu Search are based on static neighborhood. The Variable Neighborhood Search is an opposite case, where various structures of neighborhood are defined and interchanged while solving an OP. 
 \end{itemize}
 
-There are many more classification facets, with are out of this thesis scope. Picture~\ref{BG: MH classification} illustrates the summarized classification including some skipped characteristics and well-known meta-heuristic instances~\cite{wiki_MH_classification}.
+There are many more classification facets, with are out of this thesis scope. Figure~\ref{BG: MH classification} illustrates the summarized classification including some skipped characteristics and well-known meta-heuristic instances~\cite{wiki_MH_classification}.
 
 
 \subsubsection{Meta-Heuristics Examples}\label{BG: MH Examples}
@@ -260,7 +252,7 @@ Now we shortly describe some prominent and widely used meta-heuristics. The moti
 \paragraph{Evolutionary Algorithms (EAs).} Evolutionary Algorithms are directly inspired by the processes in nature, described in evolution theory. The common underlying idea in all of these methods is as follows: if we put a population of individuals (Solutions) into an environment with limited resources (population size limit), a competition processes cause natural selection, where only the best individuals survive (compared by the optimization objective)~\cite{eiben2015evolutionary}.
 
 Tree basic actions are defined as operators of EAs: the \textit{recombination} operator that when applied to selected among available in population candidate Solutions (parents) produces new ones (offspring); \textit{mutation} operator applied to Solutions creates a new and very similar one. 
-Applying both operators will create a set of new Solutions — the offspring, whose fitness evaluated on TS. After that, the \textit{selection} operator applied to all available Solutions (parents and offspring) for keeping the population size within defined boundaries. This process is repeatedly iterated until some termination criteria fulfilled, for instance maximal iterations counter reached, number of TS evaluations exceed, or Solution with required quality found. The work-flow of EA depicted on picture~\ref{bg:pic:EAs}.
+Applying both operators will create a set of new Solutions — the offspring, whose fitness evaluated on TS. After that, the \textit{selection} operator applied to all available Solutions (parents and offspring) for keeping the population size within defined boundaries. This process is repeatedly iterated until some termination criteria fulfilled, for instance maximal iterations counter reached, number of TS evaluations exceed, or Solution with required quality found. The work-flow of EA depicted on Figure~\ref{bg:pic:EAs}.
 
 \begin{figure}
 	\centering
@@ -336,7 +328,7 @@ In~\cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can 
 	\label{bg:pic:HH}
 \end{figure}
 
-The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier}, see picture~\ref{bg:pic:HH}\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}.
+The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier} (Figure~\ref{bg:pic:HH}\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}).
 As we told previously, HH do not tackle an OP directly, but use LLH instead. This means, that usually HH are minimally aware of the domain details, such as what are data types, relationships, etc. within a domain. This information rather encapsulated in LLHs, thus HHs could be used to broader range of Optimization Problems.
 
 With this idea, many researchers started to create not only Hyper-Heuristics to tackle a concrete optimization problem class, but also frameworks with building blocks for their creation.
@@ -442,7 +434,7 @@ One of the simplest and error-prone ways is just trusting your (or someones else
 \subsection{Parameter Tuning}
 Roughly speaking, the off-line approach is a process of traversing the search space of hyper-parameters and evaluating TS with these parameters on some set of toy problems. After finishing this process, the best found HPs are later used to solve new, unforeseen problem instance.
 
-In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on a picture~\ref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
+In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on a figure~\ref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
 
 \begin{figure}
 	\centering
@@ -465,11 +457,11 @@ In this part of thesis we briefly outline existing automated approaches for para
 	\label{bg: fig:automated parameter tuning approaches}
 \end{figure}
 
-\paragraph{Grid Search Parameter Tuning.} It is a rather simple approach for searching parameters. Here the original search problem is relaxed and later solved by brute-force algorithm. The set of all possible configurations (parameter sets) for relaxed problem is derived by specifying a finite number of possible values for each hyper-parameter under consideration. After evaluating all configurations on TS, the best found solution is reported. As you can see, this approach could skip promising parts of search space as shown on picture~\ref{bg: fig:automated parameter tuning approaches: grid}.
+\paragraph{Grid Search Parameter Tuning.} It is a rather simple approach for searching parameters. Here the original search problem is relaxed and later solved by brute-force algorithm. The set of all possible configurations (parameter sets) for relaxed problem is derived by specifying a finite number of possible values for each hyper-parameter under consideration. After evaluating all configurations on TS, the best found solution is reported. As you can see, this approach could skip promising parts of search space (Figure~\ref{bg: fig:automated parameter tuning approaches: grid}).
 
-\paragraph{Random Search Parameter Tuning.} This methodology relies on random (often uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}: compare the best configurations (highlighted in pink) found by grid (picture~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (picture~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
+\paragraph{Random Search Parameter Tuning.} This methodology relies on random (often uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}: compare the best configurations (highlighted in pink) found by grid (Figure~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (Figure~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
 
-\paragraph{Model Based Search Parameter Tuning.} In the most cases, the dependencies between tuned parameter values and optimization objective do exist and can be utilized for hyper-parameter tuning. By predicting which parameter combinations lead to better results, model-based tuning could make precise guesses. As it showed on picture~\ref{bg: fig:automated parameter tuning approaches: learning}, at the beginning, this approach behaves as random search, but after accumulating enough information, learning algorithm starts making more precise guesses, which in contrast to previously described model-free approaches is desirable and more robust.
+\paragraph{Model Based Search Parameter Tuning.} In the most cases, the dependencies between tuned parameter values and optimization objective do exist and can be utilized for hyper-parameter tuning. By predicting which parameter combinations lead to better results, model-based tuning could make precise guesses. As it showed on Figure~\ref{bg: fig:automated parameter tuning approaches: learning}, at the beginning, this approach behaves as random search, but after accumulating enough information, learning algorithm starts making more precise guesses, which in contrast to previously described model-free approaches is desirable and more robust.
 
 Naturally, this optimization problem could be tackled by almost every discussed here approach, however taking into account the facts that (1) TS here in most cases is a \textit{black-box} we eliminate exact and approximate solvers, (2) the evaluation cost is huge, thus it is not desirable to apply any of described above heuristics directly.
 
