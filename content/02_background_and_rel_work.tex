@@ -30,7 +30,7 @@ In this thesis we focus ourselves on the Optimization Problems.
 
 A lot of performed studies in this field have tried to formalize the concept of OP, but the underlying notion such a vast that it is hard to exclude the application domain from definition. The description of every possible Optimization Problem and all approaches for solving it are out of this thesis scope, but a coarse-grain review should be presented in order to make sure that everyone reading this thesis will be familiar with all used here terms and notions. 
 
-In works~\cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} dedicated to solving OPs, authors distinguished OP characteristics that overlap through each of these works and those we would like to start from them.
+In works~\cite{biegler2004retrospective,figueira2014hybrid,amaran2016simulation} dedicated to solving OPs, authors distinguished OP characteristics that overlap through each of these works and thus we would like to start from them.
 
 
 First, let us define the Optimization \textit{subject}. Analytically it could be represented as the function $Y = f(X)$ that accepts some input $X$ and reacts on in providing an output $Y$. Informally it could be imagined as the Target System $f$ (TS) shown on picture~\ref{bg:pic:Target System}. It accepts the input information with its \textit{inputs} $X_n$ sometimes also called variables or parameters, processes them performing some \textit{Task} and produces the result on its \textit{outputs} $Y_m$.
@@ -80,14 +80,14 @@ All combinatorial problems are \textit{NP-Complete} meaning they are both \texti
 
 As an example, let's grasp these characteristics for Traveling Salesman Problem (TSP)~\cite{applegate2006traveling} — an instance of vehicle routing and one of the most frequently studied combinatorial OP (here we consider deterministic and symmetric TSP).
 The informal definition of TSP is as follows: ``Given a set of $N$ cities and the distances between each of them, what is the shortest path that visit each city once and return to the origin city?''
-With respect to our previous definition of an Optimization Problem, Target System here is a function to evaluate the length of proposed path. The TSP distance (or cost) matrix used in this function for evaluation and it is clear that this TS exposes all internal knowledge and those it is a white box.
-The input $X_n$ is a vector of city indexes those type of input data is non-negative integers. There are two constrains on path: it should contain only unique indexes (those, each city will be visited only once) and it should start and end from the same city:~$[2 \rightarrow 1 \rightarrow ... \rightarrow 2]$.
+With respect to our previous definition of an Optimization Problem, Target System here is a function to evaluate the length of proposed path. The TSP distance (or cost) matrix used in this function for evaluation and it is clear that this TS exposes all internal knowledge and thus it is a white box.
+The input $X_n$ is a vector of city indexes, thus the type of input data is non-negative integers. There are two constraints on path: it should contain only unique indexes (visit each city only once) and it should start and end from the same city:~$[2 \rightarrow 1 \rightarrow ... \rightarrow 2]$.
 Since the cost matrix is fixed and not changing while during solving process, the TS is considered to be deterministic and cost for two identical paths are always the same (nevertheless, there exist Dynamic TSP where the cost matrix do changes in a runtime to reflect a more realistic real-time traffic updates\cite{cheong2011dynamic}).
-It is extremely cheap to compute a cost for given path using cost matrix, those overall Solution evaluation in this OP is cheap, but the overall number of Solutions is $N!$. Since we are optimizing only the route distance, this is a Single objective OP.
+It is extremely cheap to compute a cost for given path using cost matrix, thus overall Solution evaluation in this OP is cheap, but the overall number of Solutions is $N!$. Since we are optimizing only the route distance, this is a Single objective OP.
 
 
 \subsection{Optimization Problem Solvers}\label{BG: subsection OP Solvers}
-Most Optimization Problems could be solved by an exhaustive search, though trying all possible combinations of input variables and choosing one providing the best objective value. This approach guarantees to find globally optimal solution to OP. But when the Search Space size significantly increase, the amount of time needed for brute-force search becomes infeasible and in many cases even relatively small problem instances could not be solved by an enumeration.
+Most Optimization Problems could be solved by an exhaustive search, though trying all possible combinations of input variables and choosing one providing the best objective value. This approach guarantees to find globally optimal solution to OP. But when the Search Space size significantly increases, the amount of time needed for brute-force search becomes infeasible and in many cases even relatively small problem instances could not be solved by an enumeration.
 
 % TODO: highlight that exchaustive search provides guaranteed optimality
 
@@ -107,7 +107,7 @@ Again, there exist a lot of different characteristics for Optimization Problem S
 	\item \textbf{Solution availability} perspective.
 	\begin{enumerate}
 		\item \textbf{Finalizing} algorithms, that report the results only at the end of their run.
-		\item \textbf{Anytime} algorithms, designed for stepwise solution improvement, while solving the OP and those could expose intermediate results.
+		\item \textbf{Anytime} algorithms, designed for stepwise solution improvement, while solving the OP and thus could expose intermediate results.
 	\end{enumerate}
 	
 \end{itemize}
@@ -119,13 +119,13 @@ If the former features are more or less self-explanatory, we explain the later o
 \paragraph{Exact Solvers.}
 As stated previously, the exact algorithms are those, which always solve an OP to guaranteed optimality.
 
-For some OP it is possible to develop an effective algorithm that is much faster than the exhaustive search — they run in super-polynomial time instead of exponential still providing an optimal solution. As authors claimed in~\cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, those super-polynomial time algorithms are the best we can hope to get when dealing with NP-complete (combinatorial) problems.
+For some OP it is possible to develop an effective algorithm that is much faster than the exhaustive search — they run in super-polynomial time instead of exponential still providing an optimal solution. As authors claimed in~\cite{woeginger2003exact}, if the common belief $P \ne NP$ is true, thus super-polynomial time algorithms are the best we can hope to get when dealing with NP-complete (combinatorial) problems.
 
-By the definition in~\cite{fomin2013exact}, the objective of an \textit{exact algorithm} is to perform significantly better (in terms of running time) than exhaustive search. In both works~\cite{woeginger2003exact,fomin2013exact} authors enumerated the main techniques for designing exact algorithms, each contributing in this `better' independently, those later they could be combined.
+By the definition in~\cite{fomin2013exact}, the objective of an \textit{exact algorithm} is to perform much better (in terms of running time) than exhaustive search. In both works~\cite{woeginger2003exact,fomin2013exact} authors enumerated the main techniques for designing exact algorithms, each contributing in this `better' independently, thus later they could be combined.
 
 Here is a brief explanation of them:
 \begin{itemize}[itemsep=8pt]
-	\item \textbf{Branching and bounding} techniques when applied to original problem, split the search space of all possible solutions (e.g. exhaustive enumeration) to set of smaller sub-spaces. More formally this process called \textit{branching the search tree} into sub-trees. This is done with an intent to prove that some sub-spaces never lead to an optimal solution and those could be rejected.
+	\item \textbf{Branching and bounding} techniques when applied to original problem, split the search space of all possible solutions (e.g. exhaustive enumeration) to set of smaller sub-spaces. More formally this process called \textit{branching the search tree} into sub-trees. This is done with an intent to prove that some sub-spaces never lead to an optimal solution and thus could be rejected.
 	
 	\item \textbf{Dynamic programming across the sub-sets} techniques in some sort could be combined with the mentioned above branching techniques. After forming sub-trees, the dynamic programming attempts to derive solutions for smaller subsets and later combine them into solutions for lager subsets unless finally original search space solution obtained.
 	
@@ -134,7 +134,7 @@ Here is a brief explanation of them:
 
 \paragraph{Approximate Solvers.} When the OP cannot be solved to optimal in polynomial time, people start thinking in alternative ways to tackle it and commonly decide to relax their requirements to optimization.
 Approximate algorithms are representatives of the theoretical computer science field that have been created in order to tackle the \textit{computationally difficult white box OP} (not solvable in super-polynomial time). Words of Garey and Johnson (computer scientists, authors of \textit{Computers and intractability} book~\cite{garey1979computers}) could play a perfect description of such approaches, built on mathematical proofs: ``I can't find an efficient algorithm, but neither can all of these famous people.''
-%If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs (ILP) are $NP-hard$ and cannot be solved with exact solvers in polynomial time, those require relaxation either in efficiency or quality of optimization.
+%If the widely believed conjecture $P \ne NP$ is true, a wide range of OPs (ILP) are $NP-hard$ and cannot be solved with exact solvers in polynomial time, thus require relaxation either in efficiency or quality of optimization.
 
 In contradistinction to exact, approximate algorithms relax the quality requirements and solve an OP effectively with the provable assurances on the result distance from an optimal solution~\cite{williamson2011design}. The worst-case results quality guarantee is crucial in design of approximation algorithms and also involves mathematical proofs. 
 
@@ -156,7 +156,7 @@ In contrast to rounding, another technique requires building a \textit{Dual Line
 As in previous approaches, here exist many facets for classification.
 We will start from the largest one, namely \textit{level of generality}:
 \begin{itemize}[itemsep=8pt]
-	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They fully rely on the domain knowledge, obtained from Optimization Problem. Simple heuristics do not provide any mechanisms to escape a local optimum and those could be easily trapped to it~\cite{pearl1984intelligent}.
+	\item \textbf{Simple heuristics} are algorithms, specifically designed to tackle concrete problem. They fully rely on the domain knowledge, obtained from Optimization Problem. Simple heuristics do not provide any mechanisms to escape a local optimum and thus could be easily trapped to it~\cite{pearl1984intelligent}.
 	
 	\item \textbf{Meta-heuristics} are high-level heuristics that not hardly rely on domain knowledge, but also provide some level of generality to control the search. Those, they could be applied to broader range of OPs. Often they are nature-inspired and comprise mechanisms to escape a local optima, but may converge slower than simple heuristics. For more detailed explanation we refer survey~\cite{bianchi2009survey}.
 	
@@ -177,7 +177,7 @@ First, we have reviewed exact solvers for the Optimization Problems. As mentione
 
 Next, we have an approximate solver. It does not guarantee to find exactly optimal solution, but instead suggest provably good one. From our perspective, the required effort for constructing an algorithm and proving its preciseness remains the same as for exact solvers however, this approach beats the previous one in speed of problem solving, sacrificing a reasonably small amount of the result quality. It sounds like a good deal.
 
-Finally, remain heuristic approaches. They are super-fast in comparison to previous two in problem solving, in addition they are much simpler to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in these approaches is absence of guarantee in solution quality those, one should consider them up to own risk.
+Finally, remain heuristic approaches. They quickly produce the solution, in comparison to previous two in problem solving, in addition they are much simpler to apply for your specific problem — no need to build complex mathematical models or prove theorems. However, the biggest flaw in these approaches is absence of guarantee in solution quality, thus one should consider them up to own risk.
 
 As we mentioned in~\ref{BG: subsection OPs}, in this thesis is dedicated to facing a real-life problems, such as TSP. They showed to be \textit{NP-complete} that is why we are not allowed to apply exact solvers, only approximate and heuristics. In both cases we are sacrificing a solution quality, although in different quantities, but the heuristic algorithms repay in time-to develop and providing first results. Modern world is highly dynamic, in business survive those who faster and stronger. In most cases former plays the settle role for success. Great products are built iteratively, enhancing existing results step-by-step leaving unlucky decisions behind. It motivates us to stick the heuristic approach within the thesis.
 
@@ -209,7 +209,7 @@ Scientists draw the inspiration for heuristics creation from all aspects of our 
 Two main types of simple heuristics were outlined in~\cite{burke2019classification}: \textit{constructive} and \textit{perturbative}. 
 
 The first type implies heuristics which construct Solutions from its parts stepwise. 
-The prominent example of constructive approach is the \textit{Greedy Algorithm}, a.k.a. \textit{Best Improvement Local Search}. When applied to Traveling Salesman Problem, it tackles the path construction simply accepting the next closest city from currently discovered one. Generally, the Greedy Algorithm follows the logic of making a sequence of locally optimal decisions those ends up in a local optimum after constructing very first Solution. 
+The prominent example of constructive approach is the \textit{Greedy Algorithm}, a.k.a. \textit{Best Improvement Local Search}. When applied to Traveling Salesman Problem, it tackles the path construction simply accepting the next closest city from currently discovered one. Generally, the Greedy Algorithm follows the logic of making a sequence of locally optimal decisions, thus ends up in a local optimum after constructing very first Solution. 
 
 The second type, also called \textit{Local Search}, implies heuristics which operates on completely created Solutions. The simple example of Local Search is the \textit{Hill Climbing Algorithm}: evaluate entire Neighborhood, move to the best found Solution and repeat. This approach plays a central role in many high-order algorithms, however could be very inefficient, since in some cases Neighborhood could be enormously huge. 
 Another instance of perturbative algorithm is \textit{First Improvement Local Search}~\cite{voudouris1999guided}. This heuristic accepts better Solution as soon as it finds it during Neighborhood evaluation. The advantage of this methodology over the vanilla Hill Climbing is the velocity of Search Space traversal.
@@ -222,7 +222,7 @@ The meta-heuristic is an algorithm, created to solve wider range of hard optimiz
 
 The research in meta-heuristics field arise even before 1940s, when they have been used already, but not studied formally. In the period of between 1940s and 1980s first formal studies appeared and later till 2000s the field of meta-heuristics arises in wide when numbers of MHs were proposed. The period from 2000 and up until now in~\cite{sorensen2017history} authors refer as the time of framework growth. It is now a time, when meta-heuristics widely appear as frameworks, providing a reusable core and requiring only domain specific adaptation.
 
-The prefix \textit{meta} indicates these algorithms to be a \textit{higher level} when compared to simple problem dependent heuristics. A typical meta-heuristic structure could be imagined as $n-T--H$ (template-hook) framework variation pattern. The template part is problem independent and fixed from changes, it forms a core of an algorithm and usually exposes \textit{hyper-parameters} for tuning. The hook parts are domain dependent and those should be adapted for problem in hand. Later T operates by set of Hs to perform an optimization.
+The prefix \textit{meta} indicates these algorithms to be a \textit{higher level} when compared to simple problem dependent heuristics. A typical meta-heuristic structure could be imagined as $n-T--H$ (template-hook) framework variation pattern. The template part is problem independent and fixed from changes, it forms a core of an algorithm and usually exposes \textit{hyper-parameters} for tuning. The hook parts are domain dependent and thus should be adapted for problem in hand. Later T operates by set of Hs to perform an optimization.
 Many MHs contain stochastic components, which provide abilities to escape from local optimum. However, it also means that the output of meta-heuristic is non-deterministic and it could not provide guarantee on the result preciseness~\cite{boussaid2013survey}.
 
 The success of meta-heuristic optimizer on a given OP depends on the \textit{exploration vs exploitation balance}. If there is a strong bias towards diversification, the solving process could naturally skip a good solution while performing huge steps over the search space, but when the intensification dominating, the process will quickly settle in local optima. Usually it is possible to decompose MH onto simple components and clarify, to which of competing processes contributes each component. Mentioned above simple heuristic approaches suffer from high exploitation dominance since they usually do not have components that contribute to exploration.
@@ -246,7 +246,7 @@ As an example, authors in~\cite{birattari2001classification} classification revi
 	
 	\item The \textbf{number of concurrent solutions} could be either single or multiple (population). Such approaches as Tabu Search, Simulated Annealing or Iterated Local Search are examples of former and Evolutionary Algorithms~\cite{eiben2015evolutionary}, Ant Colony Optimization~\cite{dorigo2007ant}, Particle Swarm Optimization~\cite{kennedy1995particle} are instances of later.
 	
-	\item From the \textbf{memory usage} perspective, we distinguish those approaches which do and do not utilize memory. The Tabu Search explicitly use memory in forms of tabu lists to guide the search, but the Simulated Annealing is memory-less.
+	\item From the \textbf{memory usage} perspective, we distinguish those approaches which do and don't utilize memory. The Tabu Search explicitly use memory in forms of tabu lists to guide the search, but the Simulated Annealing is memory-less.
 	
 	\item \textbf{Neighborhood structure} could be either static or dynamic. Most local search algorithms, such as Simulated Annealing and Tabu Search are based on static neighborhood. The Variable Neighborhood Search is an opposite case, where various structures of neighborhood are defined and interchanged while solving an OP. 
 \end{itemize}
@@ -283,11 +283,11 @@ At each iteration the temperature parameter $T$ value is decreased following som
 
 
 \subsection{Hybrid-Heuristics}
-The hybridization of different systems often provides a positive effect — taking the advantages of one system you merge them with odds of other system those getting the best from both of them. The same idea applicable in case of meta-heuristics. Imagine you have two algorithms, biased towards exploration and exploitation respectively. Applying them separately, the expecting results in most cases may be far away from optimal as the outcome of disrupted diversification-intensification balance. But when merging them into, say, repeater stages of hybrid heuristic, one will obtain both advantages of escaping local optima and finding good quality results. 
+The hybridization of different systems often provides a positive effect — taking the advantages of one system you merge them with odds of other system, thereby getting the best from both of them. The same idea applicable in case of meta-heuristics. Imagine you have two algorithms, biased towards exploration and exploitation respectively. Applying them separately, the expecting results in most cases may be far away from optimal as the outcome of disrupted diversification-intensification balance. But when merging them into, say, repeater stages of hybrid heuristic, one will obtain both advantages of escaping local optima and finding good quality results. 
 
 Most of available hybridization are done exactly with this idea — \textit{staging combination} of two heuristics, one exploration and second exploitation suited for getting outperforming hybrid.
 
-The methods to construct hybrids are mostly defined by the underlying heuristics and those, to the best of our knowledge, could not be generalized and classified well. One common shared characteristic is usage of \textit{staging approach}, where the output of one algorithm is used as initial state of other. 
+The methods to construct hybrids are mostly defined by the underlying heuristics, thus, to the best of our knowledge, could not be generalized and classified well. One common shared characteristic is usage of \textit{staging approach}, where the output of one algorithm is used as initial state of other. 
 
 As for simple heuristics, we will introduce some examples of performed hybridization in order to give you a better understanding of possible hook parts within algorithms and influence of aforementioned balance onto the search process.
 
@@ -337,7 +337,7 @@ In~\cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can 
 \end{figure}
 
 The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier}, see picture~\ref{bg:pic:HH}\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}.
-As we told previously, HH do not tackle an OP directly, but use LLH instead. This means, that usually HH are minimally aware of the domain details, such as what are data types, relationships, etc. within a domain. This information rather encapsulated in LLHs and those HHs could be used to broader range of Optimization Problems.
+As we told previously, HH do not tackle an OP directly, but use LLH instead. This means, that usually HH are minimally aware of the domain details, such as what are data types, relationships, etc. within a domain. This information rather encapsulated in LLHs, thus HHs could be used to broader range of Optimization Problems.
 
 With this idea, many researchers started to create not only Hyper-Heuristics to tackle a concrete optimization problem class, but also frameworks with building blocks for their creation.
 
@@ -361,7 +361,7 @@ From this perspective we distinguish Hyper-Heuristics in which the learning happ
 \begin{itemize}[itemsep=8pt]
 	\item In \textbf{on-line} case, the HH derives an information, used to select among LLH, while those LLH are solving the problem.
 
-	\item In \textbf{off-line} case, the learning happens before solving concrete Optimization Problem. Here one should first train an HH solving other homogeneous problem instances by underlying LLHs (off-line learning phase). After that, the HLH will be able to choose among LLHs and those be applicable to problem in hand (on-line use phase). Note, that this approach also requires creation of meta-features extraction mechanism and its application to every Optimization Problem.
+	\item In \textbf{off-line} case, the learning happens before solving concrete Optimization Problem. Here one should first train an HH solving other homogeneous problem instances by underlying LLHs (off-line learning phase). After that, the HLH will be able to choose among LLHs, thus be applicable to problem in hand (on-line use phase). Note, that this approach also requires creation of meta-features extraction mechanism and its application to every Optimization Problem.
 
 	\item There exist also \textbf{mixed} cases, where learning happens first in off-line and later also in on-line phase. Definitely it is a promising (in terms of results quality) research direction, despite it high complexity.
 	
@@ -377,7 +377,7 @@ From this perspective we distinguish Hyper-Heuristics in which the learning happ
 
 %	\item There exist also an \textbf{adaptive} approach, in which HH assigns the parameters for LLH as the response to the learning process. In some sort, it is similar to the parameter control techniques used in Meta-heuristics.
 	
-%	\item And finally, a \textbf{self-adaptive} approach where underlying LLHs comprise \textit{parameter control} techniques and those search for the best solution for OP and own parameter settings simultaneously.
+%	\item And finally, a \textbf{self-adaptive} approach where underlying LLHs comprise \textit{parameter control} techniques, thus search for the best solution for OP and own parameter settings simultaneously.
 %\end{itemize}
 
 
@@ -387,7 +387,7 @@ For more detailed analysis, description, other classification facets and respect
 \paragraph{Hyper-Heuristic for Integration and Test Order Problem~\cite{guizzo2015hyper}.} \textit{HITO} is an example of generational HH. LLHs in this case are presented as a composition of basic EAs operators — crossover and mutation forming multi objective evolutionary algorithms (MOEA). HH selects those components from $jMetal$ framework~\cite{durillo2011jmetal} using interchangeably Choice Function (in form of weighted linear equation) and Multi Armed Bandit based Heuristic to balance exploitation of good components and exploration of new promising ones.
 
 
-\paragraph{Markov Chain Hyper-Heuristic~\cite{mcclymont2011markov}.} \textit{MCHH} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive heuristic selection method. While solving an OP, \textit{MCHH} updates prior knowledge about the probability of producing Pareto dominating Solutions by each underlying LLH using Markov Chains those guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition of weights in the Markov Chains constructed from all available LLHs those updating prior knowledge for LLH selection.
+\paragraph{Markov Chain Hyper-Heuristic~\cite{mcclymont2011markov}.} \textit{MCHH} is an on-line selective Hyper-Heuristic for multi-objective continuous problems. It utilizes reinforcement learning techniques and Markov Chain approximations to provide adaptive heuristic selection method. While solving an OP, \textit{MCHH} updates prior knowledge about the probability of producing Pareto dominating Solutions by each underlying LLH using Markov Chains, thus guiding an LLH selection process. Applying on-line reinforcement learning techniques, this HH adapts transition of weights in the Markov Chains constructed from all available LLHs, thus updating prior knowledge for LLH selection.
 
 
 \subsubsection{Hyper-Heuristics Frameworks Examples}\label{bg: hh fw examples}
@@ -433,7 +433,7 @@ In this thesis we use notions of \textit{Parameter} and \textit{Hyper-Parameter}
 
 One frequent incumbent of Optimization Problems is \textbf{Parameter Settings Problem} (PSP) — searching of hyper-parameter values that optimize some characteristic of TS. When talking about NN example, PSP could be defined as task of maximization network accuracy in given dataset (Single Objective PSP). Taking into account a number of TS characteristics simultaneously, such as training time and prediction accuracy PSP transforms into Multi-Objective PSP.
 
-The same applies to heuristics: proper assignment of hyper-parameters has a great impact on exploration-exploitation balance and those on algorithm performance.
+The same applies to heuristics: proper assignment of hyper-parameters has a great impact on exploration-exploitation balance and thus on overall algorithm performance.
 
 Up until now there were formalized many approaches for solving task of settings hyper-parameters. 
 One of the simplest and error-prone ways is just trusting your (or someones else) intuition and using those parameters that seems more or less logical for particular system under the problem instance. People quickly abandoned it in favor of automatic approaches, fortunately novel computational capacities easily provide a possibility for it. These automatic methods later could be split onto \textit{off-line or parameter tuning} and \textit{on-line or parameter control} techniques.
@@ -481,7 +481,7 @@ The later is some sort of enhancement used in combination with former enabling y
 The parameter tuning is an obligatory task when the maximum system performance is a mast-have requirement and should be performed at the design time.
 Novel tuning approaches are usually built in form of frameworks with exposed hooks for attaching the system under estimation.
 
-Since, the Target System evaluations here supposed to be extremely costly parameter tuning algorithms in those frameworks are trying to utilize every single bit of information from evaluations those building surrogate models and using Bayesian optimization approaches is obligatory.
+Since, the Target System evaluations here supposed to be extremely costly, thus parameter tuning frameworks are trying to utilize every single bit of information from evaluations by building surrogate models and using Bayesian optimization approaches is obligatory.
 
 In this section we review some among existing open-source parameter tuning systems from following perspectives:
 \begin{itemize}[itemsep=8pt]
@@ -491,7 +491,7 @@ In this section we review some among existing open-source parameter tuning syste
 	
 	\item \textbf{Extensibility} is crucial when someone would like to try a new promising and intriguing learning algorithm for guiding a search, that was not available in parameter tuning system yet. Practically, one may need not only new learning algorithm, but some other features like non-trivial stopping criterion, tools for handling stochastic behaviors, or different strategies for random sampling (which are utilized while tuning system is learning before making a prediction).
 	
-	\item \textbf{Parallel Evaluations} required for utilizing available computing resources that could scale horizontally, those providing simultaneous evaluation of multiple Configurations which speeds-up the learning process.
+	\item \textbf{Parallel Evaluations} required for utilizing available computing resources that could scale horizontally, thus providing simultaneous evaluation of multiple Configurations which speeds-up the learning process.
 \end{itemize}
 
 Among reviewed systems we could distinguish ones that were created directly to face the parameter tuning problem and the others that are more generic optimizers but still applicable in parameter tuning cases.
@@ -501,7 +501,7 @@ A concrete optimizer will be usable for searching the parameters, if it exposes 
 Sequential Model-based Algorithm Configuration is a system for parameters tuning, developed by the AutoML research group (here we review \textit{SMACv3}). 
 
 In their researches, scientists generalized the process of parameter tuning under the term \textit{Sequential Model-Based Optimization} as iterations between steps of (1) fitting models and (2) using them to choice next Configurations for evaluation. 
-We found that this term greatly formalizes all existing (to the best of our knowledge) parameter tuning approaches and those should be used as a distinguishing characteristic of tuning algorithms (since they naturally could be applied not only to parameter tuning problems).
+We found that this term greatly formalizes all existing (to the best of our knowledge) parameter tuning approaches and should be used as a distinguishing characteristic of tuning algorithms (since they naturally could be applied not only to parameter tuning problems).
 
 \textit{SMAC} is an extension introducing learning models and sampling mechanisms based on them to previously existing Random Online Aggressive Racing (\textit{ROAR}) mechanism. Authors showed that the machine learning mechanisms and regression models in particular are applicable not only for tuning parameters, but also for optimizing any expensive black-box functions in general (playing the role of surrogate model). 
 
@@ -509,7 +509,7 @@ The development of this system was motivated to tackle existing limitations of a
 
 A routine in \textit{SMAC} could be imagined as iterated application two tree steps: (1) building learning model, (2) using it for making choices which Configurations to investigate next and (3) actual evaluation of sampled Configurations.
 
-The evaluation (3) here carried out by original ROAR mechanism in which evaluation of each new candidate Solution continues until enough data (from benchmark set of problem instances) obtained to either replace current Solution or reject candidate. In contrary to original, model-less ROAR, \textit{SMAC} at step (1) builds regression random forest — an instance of machine learning algorithm~\cite{breiman2001random}. The usage of regression decision trees (which form the forest) motivated by known fact that they fit well to categorical data and complex dependencies in general. Later, at step (2) the Iterative Local Search (ILS) heuristic applies in combination with \textit{Expected Improvement} (EI) evaluation (form of Bayesian optimization)~\cite{shahriari2015taking}. ILS starts on the best previously found Configuration and traverses its Neighborhood distinguishing between neighboring Configurations using EI and regression model built at step (1). EI is large for those Configurations, which has low predicted cost and for those, with high uncertainty in results those naturally providing exploration-exploitation balance~\cite{jones1998efficient}.
+The evaluation (3) here carried out by original ROAR mechanism in which evaluation of each new candidate Solution continues until enough data (from benchmark set of problem instances) obtained to either replace current Solution or reject candidate. In contrary to original, model-less ROAR, \textit{SMAC} at step (1) builds regression random forest — an instance of machine learning algorithm~\cite{breiman2001random}. The usage of regression decision trees (which form the forest) motivated by known fact that they fit well to categorical data and complex dependencies in general. Later, at step (2) the Iterative Local Search (ILS) heuristic applies in combination with \textit{Expected Improvement} (EI) evaluation (form of Bayesian optimization)~\cite{shahriari2015taking}. ILS starts on the best previously found Configuration and traverses its Neighborhood distinguishing between neighboring Configurations using EI and regression model built at step (1). EI is large for those Configurations, which has low predicted cost and for those, with high uncertainty in results, thus naturally providing exploration-exploitation balance~\cite{jones1998efficient}.
 
 Exposing such a great learning capabilities and using Expected Improvement technique that guarantees converging to global optimum given enough time, the major drawback in this system is lack of flexibility to include conditional dependencies between parameters into sampling process. 
 
@@ -529,7 +529,7 @@ Iterated racing step (2) here is a process of running Target System using sample
 \textit{IRACE} supports various data types, such as numerical or categorical and the possibility of conditions description as well. While the problem of data types solved by different underlying distributions, the conditional relationships are handled by the dependency graphs. During sampling (1), first are sampled non-conditional and only afterwards, if respective conditions are satisfied, sampled dependent parameters. 
 
 % TODO: probably, move to implementation part.
-The framework highly relies on racing algorithm for parallel evaluations and on \textit{Friedman test}~\cite{conover1980practical} or alternatively \textit{paired t-test} for statistical analysis of Configurations, those it is static in terms of variability and extensibility of learning mechanisms. 
+The framework highly relies on racing algorithm for parallel evaluations and on \textit{Friedman test}~\cite{conover1980practical} or alternatively \textit{paired t-test} for statistical analysis of Configurations, thus it is static in terms of variability and extensibility of learning mechanisms. 
 In terms of parallel evaluations, the algorithm utilizes all available resources at the beginning of each racing step, however as the process continues, fewer evaluations are executed in parallel those available resources are idling and not utilized optimally at all steps of algorithm.
 
 
@@ -546,16 +546,16 @@ Running examples of budget could be the number of iterations in iterative algori
 
 As the result, requirements arise for TS to expose and support budget usage as expected in \textit{BOHB}.
 
-At each iteration, HB randomly samples a number of Configurations which, in fact, decreases for later iterations while the amount of budget remains the same. As the outcome, first iterations of HB are full of coarse-grain evaluated Configurations, while later iterations produce higher number of more accurate measurements. Each iteration of HB is split to number of Successful Halving (SH) procedure executions which drop (usually $\frac{2}{3}$) badly performing Configurations. As one could expect, since the number of measuring Configurations in each iteration decreases, the amount of SHs execution drops too and those the remaining Configurations are evaluated more precisely.
+At each iteration, HB randomly samples a number of Configurations which, in fact, decreases for later iterations while the amount of budget remains the same. As the outcome, first iterations of HB are full of coarse-grain evaluated Configurations, while later iterations produce higher number of more accurate measurements. Each iteration of HB is split to number of Successful Halving (SH) procedure executions which drop (usually $\frac{2}{3}$) badly performing Configurations. As one could expect, since the number of measured Configurations in each iteration decreases, the amount of SHs execution drops too, thus the remaining Configurations are evaluated more precisely.
 
 The binding of HyperBand and Bayesian Tree Parzen Estimator made is several places. Firstly, the learning models are updated each time when new results are available for every budget value. Next, at each iteration of HB, TPE model is used for sampling new Configurations. Note that \textit{BOHB} uses models, built on results obtained with the largest budget only. This decision leads in more precise predictions in the later stages of parameter tuning process.
 
-The drawback of this system lays in the way of handling conditions between hyper-parameters. Distributed HyperBand implementation on Steroids (HpBandSter)~\footnote{GitHub repository: \url{https://github.com/automl/HpBandSter}} is a \textit{BOHB} particular implementation uses \textit{ConfigSpace} framework (as \textit{SMACv3}) for Configuration Space definition. As we discussed in \textit{SMACv3} description (section~\ref{bg: smac}), \textit{ConfigSpace} naturally allows to encode the dependencies and conditions among parameters. As authors stated, the TPE learning models are also able to learn these dependencies implicitly by shrinking the densities for forbidden parameters (actually those parameter values are still added to models by \textit{imputation} mechanism where default values are used for forbidden parameters). However, consider a case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$, which will break the densities and as a consequence, the prediction performed using such distributions will often result in Configurations with violated parameter dependencies within `sparse' search spaces, hurting the performance and accuracy of sampling. The actual number of such cases could vary dramatically in `sparse' Search Spaces those distributions estimated by KDEs will not reflect the reality.
+The drawback of this system lays in the way of handling conditions between hyper-parameters. Distributed HyperBand implementation on Steroids (HpBandSter)~\footnote{GitHub repository: \url{https://github.com/automl/HpBandSter}} is a \textit{BOHB} particular implementation uses \textit{ConfigSpace} framework (as \textit{SMACv3}) for Configuration Space definition. As we discussed in \textit{SMACv3} description (section~\ref{bg: smac}), \textit{ConfigSpace} naturally allows to encode the dependencies and conditions among parameters. As authors stated, the TPE learning models are also able to learn these dependencies implicitly by shrinking the densities for forbidden parameters (actually those parameter values are still added to models by \textit{imputation} mechanism where default values are used for forbidden parameters). However, consider a case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$, which will break the densities and as a consequence, the prediction performed using such distributions will often result in Configurations with violated parameter dependencies within `sparse' search spaces, hurting the performance and accuracy of sampling. The actual number of such cases could vary dramatically in `sparse' Search Spaces, thus probability distributions estimated by KDEs will not reflect the reality.
 
 
 \subsubsection{BRISEv2~\cite{brise2spl}}
 The great part of software potential lays not only in its ability to tackle a problem in hand, but also on the general usability and adaptivity to unforeseen tasks.
-Here we review BRISE of version 2\footnote{GitHub repository: \url{https://github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}, since the very early BRISE versions (major 1~\cite{brise1monolite}) were more monolithic and those hard to apply for parameter tuning problem in hand.
+Here we review BRISE of version 2\footnote{GitHub repository: \url{https://github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}, since the very early BRISE versions (major 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
 
 While designing this system, authors were focused on learning mechanisms for parameter prediction and overall system modularity as well.
 Being a Software Product Line, BRISE was designed as a set of interacting components (nodes) each acting according to its own specific role. 
@@ -563,15 +563,15 @@ The system could be viewed from two perspectives. One is general outline of all 
 
 Before reviewing each part, it is worth to justify formalized in system terms. Note, that they are pretty the same as we defined above, but here most of them also have been implemented in form of classes.
 \begin{enumerate}
-	\item \textit{Experiment} denotes a complete run of BRISE, for instance parameter tuning session. Handles such information as BRISE Experiment Description (JSON-like specification of parameter tuning procedure), all evaluated during session configurations and derived from description search space.
+	\item \emph{Experiment} denotes a complete run of BRISE, for instance parameter tuning session. Handles such information as BRISE Experiment Description (JSON-like specification of parameter tuning procedure), all evaluated during session configurations and derived from description search space.
 
-	\item \textit{Configuration} is a combination of input Parameter values for target system (or algorithm) under evaluation. Could be evaluated several times (to obtain statistical data) those contain number of Tasks and compared against other Configurations.
+	\item \emph{Configuration} is a combination of input Parameter values for target system (or algorithm) under evaluation. It could be evaluated several times (to obtain statistical data), thus contain number of \emph{Tasks} and compared against other Configurations.
 
-	\item \textit{Parameter} is a meta-description of concrete Configuration part and a building block for Search Space, defines a set or range of possible values. 
+	\item \emph{Parameter} is a meta-description of concrete Configuration part and a building block for Search Space, defines a set or range of possible values. 
 
-	\item \textit{Search Space} comprises all Parameters and their dependencies, could verify the validity of Configuration.
+	\item \emph{Search Space} comprises all Parameters and their dependencies, could verify the validity of Configuration.
 
-	\item \textit{Task} is an evaluation of TS under provided Configuration for statically specified in Description scenario.
+	\item \emph{Task} is an evaluation of TS under provided Configuration for statically specified in Description scenario.
 \end{enumerate}
 
 From a birds eye view perspective, BRISE consists of \textit{main-node} as the system backbone, several \textit{worker-nodes} as target algorithm runners under provided Configurations, \textit{worker-service} to distribute tasks load between set of worker-nodes, \textit{front-end-node} to control and report optimization process on a web-page, and non-obligatory \textit{benchmark-node} that could be handy for executing and analyzing number of Experiments.
@@ -595,7 +595,7 @@ It could happen, that tuned algorithm performs well in early beginning of new pr
 In contrast to parameter tuning, where optimal parameters first were searched and only later applied to problem in hand, the parameter control is an approach of searching the best system configuration, while solving the problem in hand. It also could be expressed as the ability of system to react on changes in the solving process, in other words it is known as \textit{on-line} version of parameter tuning. The drawback of this approach lays in lack of generality, since  often the parameter control technique is algorithm dependent.
 
 Searching the examples of parameter control for heuristics, one definitely will find himself exhausted to enumerate all proposed methodologies for evolutionary algorithms, since the origins of this idea lay in EAs~\cite{karafotias2014parameter}. However, techniques for other meta-heuristics do exist too.
-As far as we know, the approach to adapt parameters mostly dependent onto concrete algorithm instance, those it is hard to present a general classification of approaches for all algorithms, but it could be done for each particular family.
+As far as we know, the approach to adapt parameters mostly depends on concrete algorithm instance, thus it is hard to present a general classification of approaches for all algorithms, but it could be done for each particular family.
 
 The only one brute classification facet we able to distinguish is the type of control mechanism, where \textit{deterministic} (following a predefined schedule) and \textit{adaptive} (assign parameter values upon received feedback) types are distinguishable.
 
@@ -606,7 +606,7 @@ Generally speaking, authors reported significant improvements in optimization pe
 The motivation for vast amount of performed studies tackling adaptive changes in Evolutionary Algorithms is that the performance of later greatly depends not only on (1) parameter values, which were found by tuning approaches but also on (2) changing them during the run, to help the algorithm converge.
 Shortly, there exist strategies to control each EA parameter separately or in groups. The most commonly implicated parameters are: \textit{population size}, \textit{selection strategies} and \textit{variation aspects} (namely crossover and mutation operators). For more detailed explanation and analysis of each approach we suggest reader to refer recently conducted reviews and researches dedicated to parameter control in Evolutionary Algorithms~\cite{karafotias2014parameter,aleti2016systematic,smith2020self}.
 
-The only common distinction we found here is that listed previously mechanisms are extended by 3rd control type — \textit{self-adaptive}, which implies encoding of mentioned parameter values in solution genomes those allowing them to co-evolve with solutions in the runtime.
+The only common distinction we found here is that listed previously mechanisms are extended by 3rd control type — \textit{self-adaptive}, which implies encoding of mentioned parameter values in solution genomes, thus allowing them to co-evolve with solutions in the runtime.
 
 \subsubsection{Parameter Control in Simulated Annealing}\label{bg: parameter control: SA}
 In Simulated Annealing, however, the most frequently controlled parameters are the \textit{cooling schedule} (the velocity of temperature decrease) and the \textit{acceptance criteria} (decide whether to accept proposed solution, or not).
@@ -647,7 +647,7 @@ However, the potential of off-line phase is derived entirely from the existence 
 In general, the empirical investigation of proposed approach universality would be rather intriguing, since the only cases of Auto-sklearn application we found are the classification tasks, but not a regression problems~\cite{feurer2015efficient,biedenkapp-ecai20}.
 
 
-The field of automated machine learning is one of trending research directions those there exist dozens open-source systems, such as \textit{Auto-Weka}~\cite{thornton2013auto}, \textit{Hyperopt-Sklearn}~\cite{komer2014hyperopt}, \textit{Auto-Sklearn}~\cite{feurer2015efficient}, \textit{TPOT}~\cite{olson2019tpot}, \textit{Auto-Keras}~\cite{jin2019auto}, etc. Among open-source, there are many commercial auto-ml systems, such as \textit{RappidMiner.com}, \textit{DataRobot.com}, Microsoft’s \textit{Azure Machine Learning}, Google’s \textit{Cloud AutoML}, and Amazon's \textit{Machine Learning on AWS}.
+The field of automated machine learning is one of trending research directions, that is why there exist dozens open-source systems, such as \textit{Auto-Weka}~\cite{thornton2013auto}, \textit{Hyperopt-Sklearn}~\cite{komer2014hyperopt}, \textit{Auto-Sklearn}~\cite{feurer2015efficient}, \textit{TPOT}~\cite{olson2019tpot}, \textit{Auto-Keras}~\cite{jin2019auto}, etc. Among open-source, there are many commercial auto-ml systems, such as \textit{RappidMiner.com}, \textit{DataRobot.com}, Microsoft’s \textit{Azure Machine Learning}, Google’s \textit{Cloud AutoML}, and Amazon's \textit{Machine Learning on AWS}.
 
 
 \section{Conclusion on Background and Related Work Analysis}\label{bg: section conclusion}
@@ -665,7 +665,7 @@ Among all strategies, parameter control seems like the golden middle, since tuni
 
 The outcome of No Free Lunch theorem~\cite{wolpert1997no} can not be ignored, according to which no single algorithm can tolerate broad range of problems equally outperforming other solvers. That is why we can not set aside hyper-heuristics, which are designed to select the best suited, in particular case, problem solving algorithm.
 
-The research in automatic machine learning made step further and are tended to combine both algorithm selection and parameter tuning problems into single Combined Algorithm Selection and Hyper-parameter tuning problem (CASH), formalized in~\cite{thornton2013auto}. The search space in CASH problem is formed of algorithm variants and their respective hyper-parameters. However, one solver can not use the parameters of another, those the resulting search space happen to be `sparse'. In general, the structure of CASH problem is almost the same as regular parameter tuning case. That is why the commonly used solver for CASH problem are systems for parameter tuning: SMAC in Auto-sklearn and Auto-Weka, Hyperopt in Hyperopt-Sklearn and so forth.
+The research in automatic machine learning made step further and are tended to combine both algorithm selection and parameter tuning problems into single Combined Algorithm Selection and Hyper-parameter tuning problem (CASH), formalized in~\cite{thornton2013auto}. The search space in CASH problem is formed of algorithm variants and their respective hyper-parameters. However, one solver can not use the parameters of another, thus the resulting search space happen to be `sparse'. In general, the structure of CASH problem is almost the same as regular parameter tuning case. That is why the commonly used solver for CASH problem are systems for parameter tuning: SMAC in Auto-sklearn and Auto-Weka, Hyperopt in Hyperopt-Sklearn and so forth.
 Not many surrogate models are able to handle such search spaces: random forest machine learning model and Bayesian Optimization approaches with exotic kernel density estimators~\cite{levesque2017bayesian}. Even fewer optimizers are able to perform well in such `sparse' spaces.
 %However, none of reviewed parameter tuning systems uses optimizer that is able to perform an efficient search in such `sparse' spaces.
 The other drawback, is that the CASH problem definition is limited to searching the algorithm and its parameters in the off-line manner.
