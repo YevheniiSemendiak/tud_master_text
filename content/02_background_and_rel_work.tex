@@ -168,7 +168,7 @@ Finally, the remaining heuristic approaches. They quickly produce the solution, 
 As we mentioned in the Section~\ref{BG: subsection OPs}, this thesis is dedicated to facing the practical combinatorial problems, such as the TSP. They are NP-complete, that is why we are not allowed to apply the exact solvers. In both approximate and heuristic solvers we are sacrificing the solution quality, although in the different quantities. But, the heuristic algorithms repay in the development time and provide the first results faster. The modern world is a highly dynamic, in the business survive those, who are faster and stronger. In the most cases, former plays the settle role for success. The great products are built iteratively, enhancing existing the results step-by-step and leaving the unlucky decisions behind. It motivates us to stick the heuristic approach within the thesis.
 
 In the following Section~\ref{bg: section heuristics} we shortly survey a different heuristic types and examples. We analyze their properties, weaknesses and ways to deal with them. As the result, we select the best suited class of heuristics for solving the problem in hand.
-
+\todor{continue proofreading here}
 
 \section{Heuristic Solvers for Optimization Problems}\label{bg: section heuristics}
 We base our descriptions of heuristics and their examples on mentioned in section \ref{BG: subsection OPs} Traveling Salesman Problem (TSP) \cite{applegate2006traveling}. The input data $X$ to our heuristics will be the Target System description in form of distance matrix (or coordinates to build this matrix), while as an output $Y$ from heuristics we expect to obtain the sequence of cities, depicting the route plan.
@@ -424,6 +424,7 @@ The same applies to heuristics: proper assignment of hyper-parameters has a grea
 Up until now there were formalized many approaches for solving task of settings hyper-parameters. 
 One of the simplest and error-prone ways is just trusting your (or someones else) intuition and using those parameters that seems more or less logical for particular system under the problem instance. People quickly abandoned it in favor of automatic approaches, fortunately novel computational capacities easily provide a possibility for it. These automatic methods later could be split onto \textit{off-line or parameter tuning} and \textit{on-line or parameter control} techniques.
 
+% TODO interesting visualization scheme on page 366 https://link.springer.com/chapter/10.1007/978-3-642-29178-4_37
 
 \subsection{Parameter Tuning}
 Roughly speaking, the off-line approach is a process of traversing the search space of hyper-parameters and evaluating TS with these parameters on some set of toy problems. After finishing this process, the best found HPs are later used to solve new, unforeseen problem instance.
@@ -587,6 +588,8 @@ The only one brute classification facet we able to distinguish is the type of co
 
 We provide an insight of parameter control by reviewing some examples among existing adaptation strategies in meta-heuristics.
 Generally speaking, authors reported significant improvements in optimization performance for all mentioned control mechanisms in every heuristic. For more comprehensive review of recently published parameter control strategies in meta-heuristics we encourage reader to examine~\cite{huang2019survey}.
+
+\todoy{need to add a review of existing generic approaches for parameter control, such as~\cite{karafotias2014generic}}
 
 \subsubsection{Parameter Control in Evolutionary Algorithms} 
 The motivation for vast amount of performed studies tackling adaptive changes in Evolutionary Algorithms is that the performance of later greatly depends not only on (1) parameter values, which were found by tuning approaches but also on (2) changing them during the run, to help the algorithm converge.

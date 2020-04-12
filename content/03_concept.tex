@@ -1,19 +1,22 @@
 \chapter{Concept Description}
-\paragraph{In this chapter} we describe the concept of developed selection Hyper-Heuristic with parameter control, not diving deep into the implementation details.
+Here we present our approach for dealing with the highlighted previously problems, excluding the implementation details.
 
-The structure of this chapter is as follows.
-\todoy{maybe we should not highlight the structure of such a small chapter}
-First, in in section \ref{concept:search space} we define the Search Space entity requirements and structure. 
-It should bound the world of Low Level Heuristics and the world of Hyper-parameters of those heuristics.
+%Let us briefly outline the structure of this Chapter.
 
+As we concluded in Section~\ref{bg: section conclusion}, the main weaknesses of the previously reviewed approaches are the inability of learning mechanisms to fit and predict in such `sparse' search spaces. In our work we propose an approach to tackle the algorithm selection and parameter control problems simultaneously.
+% TODO: find out what are the other approaches for generic parameter control. by current time I am not able to findout anything generic, except proposed approaches for EAs. but they are for EAs..
+First, in Section~\ref{concept:parameter control} we define the generic approach for parameter control in algorithms. To the best of our knowledge, there exist no universal approach to control the parameters of algorithms (Section~\ref{bg: parameter control})
+That is why, we firstly present the joint search space of both the algorithm selection and parameter control problems in the Section~\ref{concept:search space}. It outlines the functional requirements for such space, followed by our method to provide them.
 
-Next, we describe the Prediction process within the previously defined Search Space in section \ref{concept:prediction}.
+Next, we describe the prediction process within the previously defined search space in section~\ref{concept:prediction}.
 Here we highlight an importance of a prediction model decoupling from the previously defined Search Space structure.
 Doing so, we provide certain level of flexibility for user in the usage of different prediction models or developing his own.
 
 
 Finally, in section \ref{concept:llh} we gather our attention onto the Low Level Heuristics - a working horse of the hyper-heuristic.
 Here we highlight the requirements for LLH in terms of features that will be used by HH.
+
+\section{Generic Parameter Control}\label{concept:parameter control}
 
 
 \section{Search Space}\label{concept:search space}
@@ -27,6 +30,8 @@ Here we highlight the requirements for LLH in terms of features that will be use
 \paragraph{Requirements} generality, top-down approach of optimization
 -- different views of same Configuration (level-dependent) - filtering, transformation
 -- consider problem features? while selecting meta-heuristic \cite{kerschke2019automated} page 6
+-- learning metrics (relative improvement), we postpone adding other metrics in future work.
+-- learning window
 
 
 \section{Low Level Heuristics}\label{concept:llh}
