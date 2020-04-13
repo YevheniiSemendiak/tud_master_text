@@ -4,7 +4,7 @@ A reader, experienced in field of Optimization and Search Problems, may consider
 If such notions as \textit{Parameter Tuning} and \textit{Parameter Control} are not familiar to you or seems the same, we highly encourage you to spend some time reading this chapter carefully.
 In any case, it is worth for everyone to refresh the knowledge with coarse-grained description of topics, mentioned in this section and examine the examples of hyper-heuristics in Section~\ref{bg: hh examples} and systems for parameter tuning in Section~\ref{bg: parameter tuning expamples}.
 
-The structure of this Chapter is defined as follows. Firstly, we give an informal definition of optimization problem and enumerate possible solver types in Section~\ref{bg:section problems and solvers}. Secondly, we pay attention to the heuristic solvers, their weak points and No Free Lunch Theorem in Section~\ref{bg: section heuristics}. Afterwards, in Section~\ref{bg: section Parameters Setting} we discuss the influence of parameter setting and possible approaches to set the parameters. Section~\ref{bg: section cash}, dedicated to \emph{Combined Algorithm Selection and Hyper-parameter Tuning} problem, is followed by conclusion on the literature analysis outlining the thesis' scope in Section~\ref{bg: section conclusion}.
+The structure of this Chapter is defined as follows. Firstly, we give an informal definition of optimization problem and enumerate possible solver types in Section~\ref{bg:section problems and solvers}. Secondly, we pay attention to the heuristic solvers, their weak points and No Free Lunch Theorem in Section~\ref{bg: section heuristics}. Afterwards, in Section~\ref{bg: section Parameters Setting} we discuss the influence of parameter setting and possible approaches to set the parameters. Section~\ref{bg: section cash}, dedicated to \emph{Combined Algorithm Selection and Hyper-parameter Tuning} problem, is followed by conclusion on the literature analysis outlining the thesis' scope in Section~\ref{bg: conclusion}.
 
 \section{Optimization Problems and their Solvers}\label{bg:section problems and solvers}
 Our life is full of different difficult and sometimes contradicting choices. Optimization is an art of making good decisions.
@@ -426,7 +426,7 @@ One of the simplest and error-prone ways is just trusting your (or someones else
 
 % TODO interesting visualization scheme on page 366 https://link.springer.com/chapter/10.1007/978-3-642-29178-4_37
 
-\subsection{Parameter Tuning}
+\subsection{Parameter Tuning}\label{bg: parameter tuning}
 Roughly speaking, the off-line approach is a process of traversing the search space of hyper-parameters and evaluating TS with these parameters on some set of toy problems. After finishing this process, the best found HPs are later used to solve new, unforeseen problem instance.
 
 In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on a figure~\ref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
@@ -579,23 +579,22 @@ On opposite site, the parameter control approaches are solving this issue but th
 One advantageous characteristic of the system is its ability to adapt in runtime.
 It could happen, that tuned algorithm performs well in early beginning of new problem solving, but later could struggle hard while the other configuration may result in opposite behavior. It could be caused by various reasons, and it is usually hard to tell, which of them you are facing at concrete moment. 
 
-In contrast to parameter tuning, where optimal parameters first were searched and only later applied to problem in hand, the parameter control is an approach of searching the best system configuration, while solving the problem in hand. It also could be expressed as the ability of system to react on changes in the solving process, in other words it is known as \textit{on-line} version of parameter tuning. The drawback of this approach lays in lack of generality, since  often the parameter control technique is algorithm dependent.
+In contrast to parameter tuning, where optimal parameters first were searched and only later applied to problem in hand, the parameter control is an approach of searching the best system configuration, while solving the problem in hand. It also could be expressed as the ability of system to react on changes in the solving process, in other words it is known as \textit{on-line} version of parameter tuning. The drawback of this approach lays in lack of generality, since often the parameter control technique is algorithm dependent.
 
-Searching the examples of parameter control for heuristics, one definitely will find himself exhausted to enumerate all proposed methodologies for evolutionary algorithms, since the origins of this idea lay in EAs~\cite{karafotias2014parameter}. However, techniques for other meta-heuristics do exist too.
-As far as we know, the approach to adapt parameters mostly depends on concrete algorithm instance, thus it is hard to present a general classification of approaches for all algorithms, but it could be done for each particular family.
+Searching the examples of parameter control for heuristics, one definitely will find himself exhausted to enumerate all proposed methodologies for evolutionary algorithms, since the origins of this idea lay in EAs~\cite{karafotias2014parameter}. However, these techniques exist also for other meta-heuristics.
 
-The only one brute classification facet we able to distinguish is the type of control mechanism, where \textit{deterministic} (following a predefined schedule) and \textit{adaptive} (assign parameter values upon received feedback) types are distinguishable.
+The only one broad classification facet we able to distinguish is the \emph{type of control mechanism}, where the \emph{deterministic} (following a predefined schedule) and \emph{adaptive} (assign the parameter values upon received feedback) types are distinguishable. As far as we know, the parameter adaptation approach mostly depends on the concrete algorithm instance thus, it is hard to present a generic classification of approaches for all algorithms. However, this could be done for each particular family.
 
-We provide an insight of parameter control by reviewing some examples among existing adaptation strategies in meta-heuristics.
-Generally speaking, authors reported significant improvements in optimization performance for all mentioned control mechanisms in every heuristic. For more comprehensive review of recently published parameter control strategies in meta-heuristics we encourage reader to examine~\cite{huang2019survey}.
+We provide an insight of the parameter control by reviewing the examples among existing adaptation strategies in meta-heuristics.
+Generally speaking, authors reported a significant improvement in the optimization performance for all mentioned control mechanisms. For the more comprehensive review of the recently published parameter control strategies we encourage the reader to examine~\cite{huang2019survey}.
 
 \todoy{need to add a review of existing generic approaches for parameter control, such as~\cite{karafotias2014generic}}
 
 \subsubsection{Parameter Control in Evolutionary Algorithms} 
-The motivation for vast amount of performed studies tackling adaptive changes in Evolutionary Algorithms is that the performance of later greatly depends not only on (1) parameter values, which were found by tuning approaches but also on (2) changing them during the run, to help the algorithm converge.
-Shortly, there exist strategies to control each EA parameter separately or in groups. The most commonly implicated parameters are: \textit{population size}, \textit{selection strategies} and \textit{variation aspects} (namely crossover and mutation operators). For more detailed explanation and analysis of each approach we suggest reader to refer recently conducted reviews and researches dedicated to parameter control in Evolutionary Algorithms~\cite{karafotias2014parameter,aleti2016systematic,smith2020self}.
+The motivation for a vast amount of performed studies, tackling the adaptive changes in Evolutionary Algorithms is that the performance of later is greatly depends not only on (1) the parameter values, which are usually found by the tuning approaches but also on (2) the changing them during the run.
+Shortly, there exist the strategies to control each EA parameter separately or in groups. The most commonly implicated parameters are: \textit{population size}, \textit{selection strategies} and \textit{variation aspects} (namely the crossover and mutation operators). For the more detailed explanation and analysis of each approach we suggest reader to refer the recently conducted reviews and researches dedicated to the parameter control in Evolutionary Algorithms~\cite{karafotias2014parameter,aleti2016systematic,smith2020self}.
 
-The only common distinction we found here is that listed previously mechanisms are extended by 3rd control type — \textit{self-adaptive}, which implies encoding of mentioned parameter values in solution genomes, thus allowing them to co-evolve with solutions in the runtime.
+The only common distinction we found here is that listed previously mechanisms are extended by 3rd control type — \textit{self-adaptive}, which implies encoding of mentioned parameter values in solution genomes, thus allowing them to co-evolve with solutions in the runtime~\cite{doerr2020theory}.
 
 \subsubsection{Parameter Control in Simulated Annealing}\label{bg: parameter control: SA}
 In Simulated Annealing, however, the most frequently controlled parameters are the \textit{cooling schedule} (the velocity of temperature decrease) and the \textit{acceptance criteria} (decide whether to accept proposed solution, or not).
@@ -639,7 +638,7 @@ In general, the empirical investigation of proposed approach universality would 
 The field of automated machine learning is one of trending research directions, that is why there exist dozens open-source systems, such as \textit{Auto-Weka}~\cite{thornton2013auto}, \textit{Hyperopt-Sklearn}~\cite{komer2014hyperopt}, \textit{Auto-Sklearn}~\cite{feurer2015efficient}, \textit{TPOT}~\cite{olson2019tpot}, \textit{Auto-Keras}~\cite{jin2019auto}, etc. Among open-source, there are many commercial auto-ml systems, such as \textit{RappidMiner.com}, \textit{DataRobot.com}, Microsoft’s \textit{Azure Machine Learning}, Google’s \textit{Cloud AutoML}, and Amazon's \textit{Machine Learning on AWS}.
 
 
-\section{Conclusion on Background and Related Work Analysis}\label{bg: section conclusion}
+\section{Conclusion on Background and Related Work Analysis}\label{bg: conclusion}
 In this chapter we have presented the review of Optimization Problems, their concrete instances and existing solver types.
 Ruffly speaking, there exist several levels of generality in heuristic solvers: simple heuristics, meta-heuristics and hyper-heuristics.
 

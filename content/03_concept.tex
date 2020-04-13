@@ -1,25 +1,48 @@
 \chapter{Concept Description}
-Here we present our approach for dealing with the highlighted previously problems, excluding the implementation details.
 
-%Let us briefly outline the structure of this Chapter.
-
-As we concluded in Section~\ref{bg: section conclusion}, the main weaknesses of the previously reviewed approaches are the inability of learning mechanisms to fit and predict in such `sparse' search spaces. In our work we propose an approach to tackle the algorithm selection and parameter control problems simultaneously.
 % TODO: find out what are the other approaches for generic parameter control. by current time I am not able to findout anything generic, except proposed approaches for EAs. but they are for EAs..
-First, in Section~\ref{concept:parameter control} we define the generic approach for parameter control in algorithms. To the best of our knowledge, there exist no universal approach to control the parameters of algorithms (Section~\ref{bg: parameter control})
-That is why, we firstly present the joint search space of both the algorithm selection and parameter control problems in the Section~\ref{concept:search space}. It outlines the functional requirements for such space, followed by our method to provide them.
 
-Next, we describe the prediction process within the previously defined search space in section~\ref{concept:prediction}.
-Here we highlight an importance of a prediction model decoupling from the previously defined Search Space structure.
-Doing so, we provide certain level of flexibility for user in the usage of different prediction models or developing his own.
+Since there exist no universal approach to control the algorithms parameters (Subsection~\ref{bg: parameter control}), our conclusion on the literature analysis was the absence of existing approaches to combine the on-line algorithm selection and the parameter control techniques (Section~\ref{bg: conclusion}). In this Chapter we suggest our methodology to resolve this problem, excluding the implementation details.
 
+In Section~\ref{concept:parameter control}, we suggest the generic parameter control technique and expand the use-case of our solution with algorithm selection. As concluded in the Section~\ref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in such `sparse' search spaces. The same issue arises in our case, and we resolve it on two levels: (1) in the search space structure and (2) in the prediction process. Firstly, in Section~\ref{concept:search space} we present the joint search space of both algorithm selection and parameter control problems. We outline the functional requirements for such space, followed by the methodology to provide them. Next, we describe the prediction process in Section~\ref{concept:prediction}. Here we highlight an importance of decoupling the learning models from the search space structure. In this way we provide the certain level of flexibility in different learning models usage.
 
-Finally, in section \ref{concept:llh} we gather our attention onto the Low Level Heuristics - a working horse of the hyper-heuristic.
-Here we highlight the requirements for LLH in terms of features that will be used by HH.
+% TODO: check if needed in this chapter
+Finally, in Section~\ref{concept: llh} we pay attention onto the low level heuristics (LLH) — a working horses of the hyper-heuristic. Here we highlight the requirements to LLH that are crucial in our case.
+
 
 \section{Generic Parameter Control}\label{concept:parameter control}
+The base idea of the parameter control approaches lays in adapting the solver behavior in the runtime as the response to changes in the solving process (Subsection~\ref{bg: parameter control}). As we mentioned during the heuristics review, the algorithm performance is highly dependent on the provided exploration-exploitation balance (Section~\ref{bg: section heuristics}) which in turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to optimize the later for gaining the best performance. 
+
+In our work, we tend solve the parameter control problem using the \emph{Reinforcement Learning} (RL) approaches (what is similar to used approaches in EAs~\cite{karafotias2014generic}). % TODO: put it into BG and refer?
+The underlying idea of RL could be described as a process of performing actions in some environment with order to maximize the reward obtained after each performed action. To apply this technique onto the parameter control problem, we define what are those \emph{actions} and how to estimate the \emph{reward}. 
+
+Thus, for making the parameter control applicable to broad range of algorithms, we analyze not the solver state itself, but the solution process (in contrast to EAs, where population diversity metrics, etc. are analyzed). To do it, we interrupt~$I$ the solver, analyze~$A$ the intermediate results, set~$S$ the most promising parameters and continue~$C$ solving. The number $i$ of $I \rightarrow A \rightarrow S \rightarrow C$ iterations define the granularity of learning, where one should carefully balance between \emph{time to control} (TTC) the parameters vs \emph{time to solve} (TTS) the problem. Naturally, the limitation of proposed approach is the use-cases, where $TTS >> TTC$.
+
+\todoy{Should I highlight the limitation(s) here or in conclusion and refer from here?}
+
+To evaluate the gained in iteration $i$ reward, instead of using straight solution quality value, we calculate the quality improvement, obtained with the provided configuration $C_i$. Naturally, when the search process converges towards the global optimum, the improvement value tends to decrease, since the amount of significantly better solutions drops. Using the improvement values directly or could confuse the learning models and thus, cause the RL to struggle. To resolve this trouble, the relative improvement (RI) of solution quality is calculated using Formula~\ref{concept: RI formula}, where $S_{i-1}$ and $S_i$ are the solution qualities before and after $i^{th})$ iteration respectively.
+
+The evaluated $C_i \rightarrow RI$ pairs in previous iterations are then used to predict the configuration for next iteration $C_{i+1}$. At this point, we split the sampling process in two steps: (1) hide the search space shape and (2) use the surrogate models for finding configurations that lead to the highest reward.
+
+\todoy{I did not investigate decoupling the surrogate models from the search algorithm to optimize those surrogates (done in Sasha's thesis). Should I mention it somehow, or just postpone and raise the discussion in future work?}
+
+
+\begin{equation}
+RI = \frac{S_{i-1} - S_{i}}{S_{i-1}}
+\label{concept: RI formula}
+\end{equation}
+
+After obtaining the $C_{i+1}$ configuration, we set it as the solver parameters. To proceed with the solving process, we seed the solver with the solutions from $i-1$ iteration as well.
+
+When it comes to the algorithm selection problem (discussed in the Subsection~\ref{bg: hh}), it turns out that the proposed reinforcement learning approach is also applicable here. We treat the solver type itself as the subject of parameter control and use the proposed RL approach to estimate and use the best performing algorithm, while solving the problem. However, when we add the algorithm type parameter, the resulting search space of become `sparse' and requires special treatment. Two common approaches for tacking such a problem exist. The first requires special kinds of learning-prediction models usage, while the second suggests transforming the problem in a way of excluding undesired characteristics.
+
+As the outcome of the model-based parameter tuning review (Section~\ref{bg: parameter tuning}), we conclude that all broadly used system follows strictly the first approach. For instance, as the surrogate models, SMAC~\cite{hutter2011sequential} uses the random forest, IRACE\cite{lopez2016irace}, BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} — Bayesian approaches. While those surrogates naturally could fit to the search space shape, none among proposed approaches is able to make the predictions effectively meaning, the most of predicted configurations will violate the dependencies. As an instance, imagine after $i^{th}$ iteration, the surrogate models learn two superior parameters: one indicates a well-performing heuristic type (Genetic Algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for Simulated Annealing). In such case, the sampling methods of the reviewed systems will tend to predict the configurations with those two parameter values, which turn to be invalid.
+
+Here we follow the second approach namely, the transformation of the problem to sample the valid configurations only. The following section depicts a required preparation step, made in the search space, while the later is dedicated to the prediction process.
 
 
 \section{Search Space}\label{concept:search space}
+When the time comes to selecting not only the solver parameters, but also solver itself, 
 \paragraph{Importance explanation}
 \paragraph{Required structure} feature-tree structured
 
@@ -34,7 +57,9 @@ Here we highlight the requirements for LLH in terms of features that will be use
 -- learning window
 
 
-\section{Low Level Heuristics}\label{concept:llh}
+\section{Hyper-Heuristic}
+
+\section{Low Level Heuristics}\label{concept: llh}
 \paragraph{Importance explanation}
 \paragraph{Requirements}
 
