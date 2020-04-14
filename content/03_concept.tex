@@ -10,7 +10,7 @@ In Section~\ref{concept:parameter control}, we suggest the generic parameter con
 Finally, in Section~\ref{concept: llh} we pay attention onto the low level heuristics (LLH) — a working horses of the hyper-heuristic. Here we highlight the requirements to LLH that are crucial in our case.
 
 
-\section{Generic Parameter Control}\label{concept:parameter control}
+\section{Generic Parameter Control and Algorithm Selection}\label{concept:parameter control}
 The base idea of the parameter control approaches lays in adapting the solver behavior in the runtime as the response to changes in the solving process (Subsection~\ref{bg: parameter control}). As we mentioned during the heuristics review, the algorithm performance is highly dependent on the provided exploration-exploitation balance (Section~\ref{bg: section heuristics}) which in turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to optimize the later for gaining the best performance. 
 
 In our work, we tend solve the parameter control problem using the \emph{Reinforcement Learning} (RL) approaches (what is similar to used approaches in EAs~\cite{karafotias2014generic}). % TODO: put it into BG and refer?
@@ -36,13 +36,35 @@ After obtaining the $C_{i+1}$ configuration, we set it as the solver parameters.
 
 When it comes to the algorithm selection problem (discussed in the Subsection~\ref{bg: hh}), it turns out that the proposed reinforcement learning approach is also applicable here. We treat the solver type itself as the subject of parameter control and use the proposed RL approach to estimate and use the best performing algorithm, while solving the problem. However, when we add the algorithm type parameter, the resulting search space of become `sparse' and requires special treatment. Two common approaches for tacking such a problem exist. The first requires special kinds of learning-prediction models usage, while the second suggests transforming the problem in a way of excluding undesired characteristics.
 
-As the outcome of the model-based parameter tuning review (Section~\ref{bg: parameter tuning}), we conclude that all broadly used system follows strictly the first approach. For instance, as the surrogate models, SMAC~\cite{hutter2011sequential} uses the random forest, IRACE\cite{lopez2016irace}, BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} — Bayesian approaches. While those surrogates naturally could fit to the search space shape, none among proposed approaches is able to make the predictions effectively meaning, the most of predicted configurations will violate the dependencies. As an instance, imagine after $i^{th}$ iteration, the surrogate models learn two superior parameters: one indicates a well-performing heuristic type (Genetic Algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for Simulated Annealing). In such case, the sampling methods of the reviewed systems will tend to predict the configurations with those two parameter values, which turn to be invalid.
+During the review of model-based parameter tuning approaches (Section~\ref{bg: parameter tuning}), we concluded that all broadly used system follows strictly the first approach. For instance, as the surrogate models, SMAC~\cite{hutter2011sequential} uses the random forest, BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} — Bayesian probability models. While those surrogates could naturally fit to the described search space shape, none among proposed approaches is able to make the predictions effectively since, the most of predicted configurations will violate the dependencies. As an instance, imagine after $i^{th}$ iteration, the surrogate models learn about two superior parameters: one indicates a well-performing heuristic type (the Genetic Algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for the Simulated Annealing). In such a case, the reviewed systems sampling methods will tend to predict the configurations with those two parameter values, which turns to be invalid.
 
-Here we follow the second approach namely, the transformation of the problem to sample the valid configurations only. The following section depicts a required preparation step, made in the search space, while the later is dedicated to the prediction process.
+Here we follow the second approach namely, the transformation of the problem in order to sample the valid configurations only. The following section depicts a required preparation step, made in the search space, while the later is dedicated to the prediction process.
 
 
 \section{Search Space}\label{concept:search space}
-When the time comes to selecting not only the solver parameters, but also solver itself, 
+When the time comes to selecting not only the solver parameters, but also the solver itself, the united search space no longer could be presented as `flat' set of parameters since it tends to appearance vast amount of invalid parameter combinations.
+
+Let us estimate the number of all possible configurations vs the amount of meaningful ones in rather simple example.
+Suppose, we have $N_s$ solver types, each exposing the same number $N_{s,p}$ categorical parameters with $N_{s,p,v}$ possible values. The aggregated number of configurations $N_c$ in the disjoint search spaces equals to Formula~\ref{c: disjoint search space size}.
+
+\begin{equation}
+$N_c \equiv N_s \cdot \prod_{1}^{N_{s,p}} N_{s,p,v}$
+\label{c: disjoint search space size}
+\end{equation}
+
+However, if we decide to tune (or rather to control) the solver type itself, the resulting number of possible configurations then is calculated using Formula~\ref{c: joint search space size}.
+
+\begin{equation}
+$N_c \equiv  \prod_{1}^{N_{s}} \prod_{1}^{N_{s,p}} N_{s,p,v}$
+\label{c: joint search space size}
+\end{equation}
+
+For better intuition, lets try a real numbers. By setting all $N_s = N_{s,p} = N_{s,p,v} = 3$ (which is rather small example), the number of configurations estimated separately for every solver equals to $N_c = 81$ (Formula~\ref{c: disjoint search space size}). However, if we join the solver parameter spaces, Formula~\ref{c: joint search space size} shows the significant growth in the search space size: $N_c = 19683$. Note, the amount of unique configurations remains the same thus, in the joint space it is only $\approx 0.4\%$. When setting $N_s = N_{s,p} = N_{s,p,v} = 4$, this number drops to $\approx 9 \cdot 10^{-8}\%$. It could drop even further if the dependencies among parameters exist. In such case, the predictive abilities of the parameter control approaches may straggle.
+
+To overcome this, we utilize similar to the proposed in IRACE~\cite{lopez2016irace} framework idea: \emph{explicitly indicate dependencies as the parent-child relationship among the search space entities (parameters), first predict the parent parameter, afterwards — children.}
+
+
+
 \paragraph{Importance explanation}
 \paragraph{Required structure} feature-tree structured
 
@@ -55,7 +77,7 @@ When the time comes to selecting not only the solver parameters, but also solver
 -- consider problem features? while selecting meta-heuristic \cite{kerschke2019automated} page 6
 -- learning metrics (relative improvement), we postpone adding other metrics in future work.
 -- learning window
-
+IRACE\cite{lopez2016irace}
 
 \section{Hyper-Heuristic}
 
