@@ -48,14 +48,14 @@ Let us estimate the number of all possible configurations vs the amount of meani
 Suppose, we have $N_s$ solver types, each exposing the same number $N_{s,p}$ categorical parameters with $N_{s,p,v}$ possible values. The aggregated number of configurations $N_c$ in the disjoint search spaces equals to Formula~\ref{c: disjoint search space size}.
 
 \begin{equation}
-$N_c \equiv N_s \cdot \prod_{1}^{N_{s,p}} N_{s,p,v}$
+N_c = N_s \cdot \prod_{1}^{N_{s,p}} N_{s,p,v}
 \label{c: disjoint search space size}
 \end{equation}
 
 However, if we decide to tune (or rather to control) the solver type itself, the resulting number of possible configurations then is calculated using Formula~\ref{c: joint search space size}.
 
 \begin{equation}
-$N_c \equiv  \prod_{1}^{N_{s}} \prod_{1}^{N_{s,p}} N_{s,p,v}$
+N_c = \prod_{1}^{N_{s}} \prod_{1}^{N_{s,p}} N_{s,p,v}
 \label{c: joint search space size}
 \end{equation}
 
