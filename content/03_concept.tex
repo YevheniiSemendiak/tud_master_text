@@ -10,7 +10,7 @@ In Section~\ref{concept:parameter control}, we suggest the generic parameter con
 Finally, in Section~\ref{concept: llh} we pay attention onto the low level heuristics (LLH) — a working horses of the hyper-heuristic. Here we highlight the requirements to LLH that are crucial in our case.
 
 
-\section{Generic Parameter Control and Algorithm Selection}\label{concept:parameter control}
+\section{Combined Parameter Control and Algorithm Selection Problem}\label{concept:parameter control}
 The base idea of the parameter control approaches lays in adapting the solver behavior in the runtime as the response to changes in the solving process (Subsection~\ref{bg: parameter control}). As we mentioned during the heuristics review, the algorithm performance is highly dependent on the provided exploration-exploitation balance (Section~\ref{bg: section heuristics}) which in turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to optimize the later for gaining the best performance. 
 
 In our work, we tend solve the parameter control problem using the \emph{Reinforcement Learning} (RL) approaches (what is similar to used approaches in EAs~\cite{karafotias2014generic}). % TODO: put it into BG and refer?
@@ -36,7 +36,7 @@ After obtaining the $C_{i+1}$ configuration, we set it as the solver parameters.
 
 When it comes to the algorithm selection problem (discussed in the Subsection~\ref{bg: hh}), it turns out that the proposed reinforcement learning approach is also applicable here. We treat the solver type itself as the subject of parameter control and use the proposed RL approach to estimate and use the best performing algorithm, while solving the problem. However, when we add the algorithm type parameter, the resulting search space of become `sparse' and requires special treatment. Two common approaches for tacking such a problem exist. The first requires special kinds of learning-prediction models usage, while the second suggests transforming the problem in a way of excluding undesired characteristics.
 
-During the review of model-based parameter tuning approaches (Section~\ref{bg: parameter tuning}), we concluded that all broadly used system follows strictly the first approach. For instance, as the surrogate models, SMAC~\cite{hutter2011sequential} uses the random forest, BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} — Bayesian probability models. While those surrogates could naturally fit to the described search space shape, none among proposed approaches is able to make the predictions effectively since, the most of predicted configurations will violate the dependencies. As an instance, imagine after $i^{th}$ iteration, the surrogate models learn about two superior parameters: one indicates a well-performing heuristic type (the Genetic Algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for the Simulated Annealing). In such a case, the reviewed systems sampling methods will tend to predict the configurations with those two parameter values, which turns to be invalid.
+During the review of model-based parameter tuning approaches (Section~\ref{bg: parameter tuning}), we concluded that all broadly used system follows strictly the first approach. For instance, as the surrogate models, SMAC~\cite{hutter2011sequential} uses the random forest, BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} — Bayesian probability models. While those surrogates could naturally fit to the described search space shape, none among proposed approaches is able to make the predictions effectively since the most of predicted configurations will violate the dependencies. As an instance, imagine after $i^{th}$ iteration, the surrogate models learn about two superior parameters: one indicates a well-performing heuristic type (the Genetic Algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for the Simulated Annealing). In such a case, the reviewed systems sampling methods will tend to predict the configurations with those two parameter values, which turns to be invalid.
 
 Here we follow the second approach namely, the transformation of the problem in order to sample the valid configurations only. The following section depicts a required preparation step, made in the search space, while the later is dedicated to the prediction process.
 
@@ -45,38 +45,76 @@ Here we follow the second approach namely, the transformation of the problem in 
 When the time comes to selecting not only the solver parameters, but also the solver itself, the united search space no longer could be presented as `flat' set of parameters since it tends to appearance vast amount of invalid parameter combinations.
 
 Let us estimate the number of all possible configurations vs the amount of meaningful ones in rather simple example.
-Suppose, we have $N_s$ solver types, each exposing the same number $N_{s,p}$ categorical parameters with $N_{s,p,v}$ possible values. The aggregated number of configurations $N_c$ in the disjoint search spaces equals to Formula~\ref{c: disjoint search space size}.
+Suppose, we have $N_s$ solver types, each exposing the $N_{s,p}$ number of hyper-parameters with $N_{s,p,v}$ possible values. The aggregated quantity of configurations $N_c$ in the disjoint search spaces is calculated as the number of possible combinations using Formula~\ref{c: disjoint search space size}.
 
 \begin{equation}
 N_c = N_s \cdot \prod_{1}^{N_{s,p}} N_{s,p,v}
 \label{c: disjoint search space size}
 \end{equation}
 
-However, if we decide to tune (or rather to control) the solver type itself, the resulting number of possible configurations then is calculated using Formula~\ref{c: joint search space size}.
+However, if we decide to tune (or rather to control) the solver type itself, the resulting quantity of possible configurations is calculated using Formula~\ref{c: joint search space size}.
 
 \begin{equation}
 N_c = \prod_{1}^{N_{s}} \prod_{1}^{N_{s,p}} N_{s,p,v}
 \label{c: joint search space size}
 \end{equation}
 
-For better intuition, lets try a real numbers. By setting all $N_s = N_{s,p} = N_{s,p,v} = 3$ (which is rather small example), the number of configurations estimated separately for every solver equals to $N_c = 81$ (Formula~\ref{c: disjoint search space size}). However, if we join the solver parameter spaces, Formula~\ref{c: joint search space size} shows the significant growth in the search space size: $N_c = 19683$. Note, the amount of unique configurations remains the same thus, in the joint space it is only $\approx 0.4\%$. When setting $N_s = N_{s,p} = N_{s,p,v} = 4$, this number drops to $\approx 9 \cdot 10^{-8}\%$. It could drop even further if the dependencies among parameters exist. In such case, the predictive abilities of the parameter control approaches may straggle.
+For better intuition, lets try some numbers. By setting all $N_s = N_{s,p} = N_{s,p,v} = 3$ (the rather small example), the amount of configurations estimated separately for each solver equals to $N_c = 81$ (Formula~\ref{c: disjoint search space size}). However, if we join the solver parameter spaces, Formula~\ref{c: joint search space size} shows the significant growth in the search space size: $N_c = 19683$. Note, the number of different configurations remains the same thus, in the joint space it is only $\approx 0.4\%$. When setting $N_s = N_{s,p} = N_{s,p,v} = 4$, this number drops to $\approx 9 \cdot 10^{-8}\%$. It could decrease even further if the dependencies among $p$ exist. In such case, the predictive abilities of the parameter control approaches may straggle.
 
-To overcome this, we utilize similar to the proposed in IRACE~\cite{lopez2016irace} framework idea: \emph{explicitly indicate dependencies as the parent-child relationship among the search space entities (parameters), first predict the parent parameter, afterwards — children.}
+To overcome this, we utilize similar to the proposed in IRACE~\cite{lopez2016irace} framework idea: \emph{explicitly indicate the dependencies as a parent-child relationship among the search space entities $p$, firstly predict the parent parameter, afterwards — the children.} This give us an opportunity to threat the algorithm type as the regular categorical parameter and simplifies the structure of search space and makes the prediction process uniform.
 
+This decision raises the following search space \emph{structural requirements}:
+\begin{enumerate}[itemsep=8pt]
+	\item[S.R.1] \textbf{Parent-child relationship} describe the dependencies between different parameter types. For instance, appearance of one requires another, but eliminates the other.
 
+	\item[S.R.2] \textbf{Uniform parameter types} simplifies the structure and hides the domain-specific intent of each parameter thus, algorithm type and its configuration are treated in the same way.
 
-\paragraph{Importance explanation}
-\paragraph{Required structure} feature-tree structured
+	\item[S.R.3] \textbf{Value-specific dependencies} describe a concrete parent value(s), when the child (children) should be exposed. For instance, the entity \textit{algorithm type} has a number of possible values, each of them requires own set of hyper-parameters, which should remain hidden for the other solver types.
+\end{enumerate}
 
+\svgpath{{graphics/Concept/}}
+\begin{figure}
+	\centering
+	\includesvg[width=1.0\textwidth]{feature tree}
+	\caption{Search space representation.}
+	\label{concept:pict:Search Space Representation}
+\end{figure}
 
+Figure~\ref{concept:pict:Search Space Representation} shows an example of such the search space with $s$ algorithm types, each having $p$ parameters with $v$ possible values. The entities with triangles $\bigtriangledown$, namely the parameter concrete values, form the joint-points to which the other parameters could be linked. 
+
+\todoy{Should I mention that it is similar to SPL Feature Models? Only single sentence comes in my mind, but I am not sure if it is needed here: "This structure is similar to \emph{Feature Models}, used in Software Product Lines~\cite{bibid}."}
 
 \section{Prediction Process}\label{concept:prediction}
+
+After formalizing the structural requirements, let us switch to the prediction process and define the search space \emph{functional requirements}, which should be fulfilled to decouple the learning models from the complex search space shape.
+
+The idea of this decoupling lays in resolving the value-specific dependencies among the parameters in a step-wise prediction process. To do so, we firstly predict the parent value, which in case of hyper-heuristic is the type of low-level heuristic (Level 0 on Figure~\ref{concept:pict:Level-wise prediction process}). Afterwards, the search space must expose the child parameters of this solver only, ignoring the others (Level 1 on Figure~\ref{concept:pict:Level-wise prediction process}). The dependencies among exposed parameters, are handled in the same way (Level 2 and further on Figure~\ref{concept:pict:Level-wise prediction process}).
+
+While building the surrogates and making the prediction on each level, we need to ignore the data on the other levels. Making the prediction on parent level, we do not change it on levels below thus, we do not need to operate useless information. If the backward ignorance is painless, the forward omission puts the restriction on the surrogate models. Cutting off the deeper level parameter values, we may get the data points with the same parameters values, but different results. Thus, on this level(s) only those models should be used, which will not be confused. During the implementation description we will clarify, which models are the better choice in such cases and implement one of the promising.
+
+Certainly, during the problem solving, the quality trends among parameter values change. For instance, at later stages the domination of one solver could be declined in comparison to other. Or, the previously good-performing parameter values are not that good anymore. It may be caused by the various reasons, but the old-trends should be definitely left out introducing some forgetting mechanism.
+
+At this point, let us shortly clarify the resulting functional requirements, derived from the previous discussions:
+\begin{enumerate}[itemsep=8pt]
+	\item[F.R.1]
+	
+	\item[F.R.2]
+	
+	\item[F.R.3]
+\end{enumerate}
+
+\begin{figure}
+	\centering
+	\includesvg[width=1.0\textwidth]{feature tree pred}
+	\caption{Level-wise prediction process.}
+	\label{concept:pict:Level-wise prediction process}
+\end{figure}
+
 \paragraph{Importance explanation}
 \paragraph{Requirements} generality, top-down approach of optimization
 -- different views of same Configuration (level-dependent) - filtering, transformation
 -- consider problem features? while selecting meta-heuristic \cite{kerschke2019automated} page 6
 -- learning metrics (relative improvement), we postpone adding other metrics in future work.
--- learning window
 IRACE\cite{lopez2016irace}
 
 \section{Hyper-Heuristic}
