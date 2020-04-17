@@ -2,16 +2,16 @@
 In this chapter we provide the reader with a review of the basic knowledge in fields of optimization problems and approaches for solving them.
 A reader, experienced in field of Optimization and Search Problems, may consider this chapter as an obvious discussion of well-known facts. 
 If such notions as \textit{Parameter Tuning} and \textit{Parameter Control} are not familiar to you or seems the same, we highly encourage you to spend some time reading this chapter carefully.
-In any case, it is worth for everyone to refresh the knowledge with coarse-grained description of topics, mentioned in this section and examine the examples of hyper-heuristics in Section~\ref{bg: hh examples} and systems for parameter tuning in Section~\ref{bg: parameter tuning expamples}.
+In any case, it is worth for everyone to refresh the knowledge with coarse-grained description of topics, mentioned in this section and examine the examples of hyper-heuristics in \cref{bg: hh examples} and systems for parameter tuning in \cref{bg: parameter tuning expamples}.
 
-The structure of this Chapter is defined as follows. Firstly, we give an informal definition of optimization problem and enumerate possible solver types in Section~\ref{bg:section problems and solvers}. Secondly, we pay attention to the heuristic solvers, their weak points and No Free Lunch Theorem in Section~\ref{bg: section heuristics}. Afterwards, in Section~\ref{bg: section Parameters Setting} we discuss the influence of parameter setting and possible approaches to set the parameters. Section~\ref{bg: section cash}, dedicated to \emph{Combined Algorithm Selection and Hyper-parameter Tuning} problem, is followed by conclusion on the literature analysis outlining the thesis' scope in Section~\ref{bg: conclusion}.
+The structure of this Chapter is defined as follows. Firstly, we give an informal definition of optimization problem and enumerate possible solver types in \cref{bg:section problems and solvers}. Secondly, we pay attention to the heuristic solvers, their weak points and No Free Lunch Theorem in \cref{bg: section heuristics}. Afterwards, in \cref{bg: section Parameters Setting} we discuss the influence of parameter setting and possible approaches to set the parameters. \cref{bg: section cash}, dedicated to \emph{Combined Algorithm Selection and Hyper-parameter Tuning} problem, is followed by conclusion on the literature analysis outlining the thesis' scope in \cref{bg: conclusion}.
 
 \section{Optimization Problems and their Solvers}\label{bg:section problems and solvers}
 Our life is full of different difficult and sometimes contradicting choices. Optimization is an art of making good decisions.
 
 A decision between working hard or going home earlier, to buy cheaper goods or to follow brands, to isolate ourselves or to visit friends during the quarantine, to spend more time for planning trip or to start it instantly. Each decision that we make, has its consequences.
 
-Figure~\ref{bg:pic:Optimization tradeoff} outlines the trade-off between a decision quality and an amount of effort spent. The underlying idea of the research in optimization problems solving sphere is to squash this curve simultaneously down and to the left thus, deriving a better result with less cost when solving the optimization problem.
+\cref{bg:pic:Optimization tradeoff} outlines the trade-off between a decision quality and an amount of effort spent. The underlying idea of the research in optimization problems solving sphere is to squash this curve simultaneously down and to the left thus, deriving a better result with less cost when solving the optimization problem.
 
 \svgpath{{graphics/Background/}}
 \begin{figure}
@@ -29,7 +29,7 @@ The focus of this Thesis is the optimization problems.
 
 Most studies conducted in this field have tried to formalize the OP concept, but the underlying notion is so vast that it is hard to exclude the application domain from the definition. The description of every possible optimization problem and all approaches to its solving are not in the scope of this Thesis, while we consider it necessary to present a coarse-grained review in order to make sure that readers are familiar with all the terms and notions mentioned in the Thesis. 
 
-To begin with, let us define the optimization \emph{subject}. Analytically, it could be represented as the function $Y = f(X)$ that accepts some input $X$ and reacts to it, providing an output $Y$. Informally, it could be imagined as the \emph{Target System} $f$ (TS), shown on Figure~\ref{bg:pic:Target System}. It accepts the input information with its \emph{inputs} $X_n$, which are sometimes called variables or parameters, processes them performing some \emph{Task} and produces the result on its \emph{outputs} $Y_m$.
+To begin with, let us define the optimization \emph{subject}. Analytically, it could be represented as the function $Y = f(X)$ that accepts some input $X$ and reacts to it, providing an output $Y$. Informally, it could be imagined as the \emph{Target System} $f$ (TS), shown on \cref{bg:pic:Target System}. It accepts the input information with its \emph{inputs} $X_n$, which are sometimes called variables or parameters, processes them performing some \emph{Task} and produces the result on its \emph{outputs} $Y_m$.
 
 \begin{figure}[!h]
 	\centering
@@ -46,7 +46,7 @@ For the sake of simplicity we here use $Y_m$, \textit{outputs} or \textit{object
 
 \todoy{figure for classification}
 Next, let us highlight the Target System characteristics. In works~\cite{biegler2004retrospective,figueira2014hybrid,deb2014multi,amaran2016simulation} dedicated to solving the OPs, the authors distinguished OP characteristics that overlap through each of these works. Among them, we found the following properties to be the most important ones:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Input data type} of $X_m$, which is a crucial characteristic. All input variables could be (1) \emph{discrete}, where representatives are binary strings, integer-ordered, or categorical data, (2) \emph{continuous}, where variables are usually a range of real numbers, or (3) \emph{mixed}, as the mixture of the previous two cases.
 
 	\item \textbf{Constraints}, which describe the relationships among inputs and explain the dependencies in allowable values for them. As an example, imagine that having $X_n$ equal to $value$ implies that $X_{n + k}$ should not appear at all, or could take only some subset of all possible values.
@@ -86,7 +86,7 @@ For instance, imagine you have a white-box deterministic TS with a discrete cons
 
 Evidently, there exist a lot of different facets for optimization problem solvers classification, but they are a subject of many surveying works~\cite{junger2003combinatorial,biegler2004retrospective,festa2014brief}. In this Thesis, as the point of interest we highlight only two of them.
 
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Solution quality} perspective:
 	\begin{enumerate}
 		\item \textbf{Exact} solvers are those algorithms that always provide an optimal OP solution.
@@ -111,7 +111,7 @@ As was stated above, the exact algorithms are those, which always solve OP to gu
 According to the definition in~\cite{fomin2013exact}, the objective of an exact algorithm is to perform much better (in terms of running time) than the exhaustive search. In both works~\cite{woeginger2003exact,fomin2013exact} the authors enumerated the main techniques for designing the exact algorithms. Each of these techniques contributes in this `better' independently and later they could be combined.
 
 You may find a brief explanation of them below:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Branching and bounding} techniques, when applied to the original problem, split the search space of all possible solutions (e.g. exhaustive enumeration) to a set of smaller sub-spaces. More formally, this process is called \emph{branching the search tree into sub-trees}. This is done with an intent to prove that some of sub-spaces never lead to an optimal solution and thus could be rejected.
 	
 	\item \textbf{Dynamic programming across sub-sets} technique could be combined with the  branching techniques. After forming the sub-trees, the dynamic programming attempts to derive the solutions for the smaller subsets and later combine them into the solutions for the lager subsets. This process repeats until the solution for original search space obtained.
@@ -130,7 +130,7 @@ How do these algorithms guarantee on quality, if the optimal solution is unknown
 In~\cite{williamson2011design} the authors provided several techniques of the approximate solvers design. For instance, the \emph{Linear Programming} relaxation plays a central role in approximate solvers. It is well known, that solving the ILP is \textit{NP-hard} problem. However, it could be relaxed to the polynomial-time solvable linear programming. %Those, one of techniques is relaxation of ILP to LP. An optimal solution for LP will have value $S_LP \le S_IP = OPT$ (for the minimization case). Here we could derive a lower bound for the original minimization or upper bound for maximization problem. 
 Later, a fractional solution for the LP will be rounded to obtain a feasible solution for the ILP. % that is within a cerain factor $f$ the value of the LP $S_LP$. Thus, the ILP solution will cost no more than $f * OPT$.
 Different rounding strategies define separate approximate solver techniques~\cite{williamson2011design}: 
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Deterministic rounding} follows a predefined strategy.
 	\item \textbf{Randomized rounding} performs a round-up of each fractional solution value to the integer uniformly.
 \end{itemize}
@@ -141,7 +141,7 @@ In contrast to rounding, another technique requires building a \emph{Dual Linear
 
 As in the reviewed above approaches, here exist many facets for classification.
 We start from the largest one, namely the \textit{level of generality}:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Simple heuristics} are the specifically designed to tackle the concrete problem algorithms. They fully rely on the domain knowledge, obtained from the optimization problem. Simple heuristics do not provide any mechanisms to escape a local optimum therefore, could be easily trapped to it~\cite{pearl1984intelligent}.
 	
 	\item \textbf{Meta-heuristics} are the high-level heuristics, that being domain knowledge dependent, also provide some level of generality to control the search. They could be applied to broader range of the OPs. They are often nature-inspired and comprise mechanisms to escape the local optima, but may converge slower than the simple heuristics. For the more detailed explanation we refer to survey~\cite{bianchi2009survey}.
@@ -151,7 +151,7 @@ We start from the largest one, namely the \textit{level of generality}:
 	\item \textbf{Hyper-heuristics} are the algorithms, that operate on the search space of \emph{Low Level Heuristics} (LLH). Instead of tackling the original problem by their own, they choose (or construct) LLHs to do it for them~\cite{burke2003hyper}. 
 \end{itemize}
 
-In the upcoming Section~\ref{bg: section heuristics}, dedicated to heuristics, we provide more detailed information on each of the approaches mentioned above.
+In the upcoming \cref{bg: section heuristics}, dedicated to heuristics, we provide more detailed information on each of the approaches mentioned above.
 
 
 \subsubsection{The Most Suitable Solver Type}
@@ -165,17 +165,17 @@ Secondly, we have the approximate solvers. They do not guarantee finding the one
 
 Finally, the remaining heuristic approaches. They quickly produce the solution, in comparison to the previous two. In addition, they are much easier to apply for the specific problem — there is no need to build a complex mathematical models or prove the theorems. However, the biggest flaw in these approaches is an absence of the solution quality guarantee therefore, one should consider them up to own risk.
 
-As we mentioned in the Section~\ref{BG: subsection OPs}, this Thesis is dedicated to facing the practical combinatorial problems, such as the TSP. They are NP-complete, that is why we are not allowed to apply the exact solvers. In both approximate and heuristic solvers we are sacrificing the solution quality, though in different quantities. Nevertheless, the heuristic algorithms repay in the development time and provide the first results faster. The modern world is highly dynamic, in the business survive those, who are faster and stronger. In the most cases, former plays the crucial role for success. The great products are built iteratively, enhancing existing results step-by-step and leaving the unlucky decisions behind. It motivates us stick to the heuristic approach within the scope of the Thesis.
+As we mentioned in the \cref{BG: subsection OPs}, this Thesis is dedicated to facing the practical combinatorial problems, such as the TSP. They are NP-complete, that is why we are not allowed to apply the exact solvers. In both approximate and heuristic solvers we are sacrificing the solution quality, though in different quantities. Nevertheless, the heuristic algorithms repay in the development time and provide the first results faster. The modern world is highly dynamic, in the business survive those, who are faster and stronger. In the most cases, former plays the crucial role for success. The great products are built iteratively, enhancing existing results step-by-step and leaving the unlucky decisions behind. It motivates us stick to the heuristic approach within the scope of the Thesis.
 
-In the following Section~\ref{bg: section heuristics} we shortly survey different heuristic types and examples. We analyze their properties, weaknesses and ways to deal with them. As the result, we select the best suited class of heuristics for solving the TSP problem.
+In the following \cref{bg: section heuristics} we shortly survey different heuristic types and examples. We analyze their properties, weaknesses and ways to deal with them. As the result, we select the best suited class of heuristics for solving the TSP problem.
 
 \section{Heuristic Solvers for Optimization Problems}\label{bg: section heuristics}
-We base our descriptions of heuristics and their examples on the Traveling Salesman Problem (TSP), mentioned in the Section~\ref{BG: subsection OPs}. The input data $X$ to our heuristics will be the problem description in form of distance matrix (or coordinates to build this matrix), while as an output $Y$ from heuristics we expect to obtain the sequence of cities, depicting the route plan.
+We base our descriptions of heuristics and their examples on the Traveling Salesman Problem (TSP), mentioned in the \cref{BG: subsection OPs}. The input data $X$ to our heuristics will be the problem description in form of distance matrix (or coordinates to build this matrix), while as an output $Y$ from heuristics we expect to obtain the sequence of cities, depicting the route plan.
 
 % In general, when a heuristic applied to particular problem do not use the gradient or Hessian matrix of the objective function for optimizations \cite{boussaid2013survey}.
 
 Most heuristic approaches imply the following concepts:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Neighborhood}, which defines the set of solutions that could be derived performing single step of heuristic search.
 	\item \textbf{Iteration}, which could be defined as an action (or a set of actions) performed over the solution in order to derive a new, hopefully better one.
 	\item \textbf{Exploration} (diversification), which is the process of discovering previously unvisited and presumably high quality parts of the search space.
@@ -224,7 +224,7 @@ The development process of novel methodologies has slowed down and the research 
 \end{figure}
 
 As an example, authors in~\cite{birattari2001classification} classification review highlight following characteristics:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item The \textbf{walk-through search space method} could be either trajectory based or discontinuous. The former one corresponds a closed walk on the neighborhood where such prominent examples as \textit{Iterated Local Search}~\cite{lourencco2003iterated} or \textit{Tabu Search}~\cite{glover1989tabu} do exist. The later one allows large jumps in the search space with many MH exemplars, such as \textit{Variable Neighborhood Search}~\cite{hansen2003variable} and \textit{Simulated Annealing}~\cite{kirkpatrick1983optimization}.
 	
 	\item The \textbf{number of concurrent solutions} could be either single or multiple (population). Such approaches as Tabu Search, Simulated Annealing or Iterated Local Search are examples of former and Evolutionary Algorithms~\cite{eiben2015evolutionary}, Ant Colony Optimization~\cite{dorigo2007ant}, Particle Swarm Optimization~\cite{kennedy1995particle} are instances of later.
@@ -234,16 +234,16 @@ As an example, authors in~\cite{birattari2001classification} classification revi
 	\item \textbf{Neighborhood structure} could be either static or dynamic. Most local search algorithms, such as Simulated Annealing and Tabu Search are based on static neighborhood. The Variable Neighborhood Search is an opposite case, where various structures of neighborhood are defined and interchanged while solving the OP. 
 \end{itemize}
 
-There are many more classification facets, with are out of this thesis scope. Figure~\ref{BG: MH classification} illustrates the summarized classification including some skipped characteristics and well-known meta-heuristic instances~\cite{wiki_MH_classification}.
+There are many more classification facets, with are out of this thesis scope. \cref{BG: MH classification} illustrates the summarized classification including some skipped characteristics and well-known meta-heuristic instances~\cite{wiki_MH_classification}.
 
 
 \subsubsection{Meta-Heuristics Examples}\label{BG: MH Examples}
-Now we shortly describe some prominent and widely used meta-heuristics. The motivation for doing so comes from later usage of them as the LLH in Hyper-Heuristic, described in section~\ref{Impl: LLH}.
+Now we shortly describe some prominent and widely used meta-heuristics. The motivation for doing so comes from later usage of them as the LLH in Hyper-Heuristic, described in the \cref{Impl: LLH}.
 
 \paragraph{Evolutionary Algorithms (EAs).} Evolutionary Algorithms are directly inspired by the processes in nature, described in evolution theory. The common underlying idea in all of these methods is as follows: if we put a population of individuals (Solutions) into an environment with limited resources (population size limit), a competition processes cause natural selection, where only the best individuals survive (compared by the optimization objective)~\cite{eiben2015evolutionary}.
 
 Tree basic actions are defined as operators of EAs: the \textit{recombination} operator that when applied to selected among available in population candidate Solutions (parents) produces new ones (offspring); \textit{mutation} operator applied to Solutions creates a new and very similar one. 
-Applying both operators will create a set of new Solutions — the offspring, whose fitness evaluated on TS. After that, the \textit{selection} operator applied to all available Solutions (parents and offspring) for keeping the population size within defined boundaries. This process is repeatedly iterated until some termination criteria fulfilled, for instance maximal iterations counter reached, number of TS evaluations exceed, or Solution with required quality found. The work-flow of EA depicted on Figure~\ref{bg:pic:EAs}.
+Applying both operators will create a set of new Solutions — the offspring, whose fitness evaluated on TS. After that, the \textit{selection} operator applied to all available Solutions (parents and offspring) for keeping the population size within defined boundaries. This process is repeatedly iterated until some termination criteria fulfilled, for instance maximal iterations counter reached, number of TS evaluations exceed, or Solution with required quality found. The work-flow of EA depicted on the \cref{bg:pic:EAs}.
 
 \begin{figure}
 	\centering
@@ -262,7 +262,7 @@ Well-known examples of EAs include \textit{Genetic Algorithm}~\cite{sastry2005ge
 
 The search process in SA treated as the metal with a high temperature at the beginning and lowering it to minimum while approaching the end. %SA algorithm handles the optimization objective as annealing threat the material energy. 
 SA starts with initial Solution $S$ creation (randomly or using some heuristic) and temperature parameter \underline{$T$} initialization. At each iteration, new solution candidate $S^*$ sampled within a neighborhood $N(S)$ of current $S$ and the selection criteria evaluated based on $S^*$ quality and $T$ value. $S^*$ replaces $S$ if (1) optimization objective $f(S^*)$ dominates over $f(S)$ or (2) with a probability that depends on quality loose and current $T$ value: $p(T, f(S^*), f(S)) = \exp(-\frac{f(S^*) - f(S)}{T})$. %for minimization OP and $p(T, f(S^*), f(S)) = \exp(-\frac{f(S) - f(S^*)}{T})$. 
-At each iteration the temperature parameter $T$ value is decreased following some type of \underline{annealing schedule} also called as \textit{cooling rate}~\cite{boussaid2013survey}. The weak side here is that the quality of each annealing schedule is problem dependent and cannot be determined beforehand, however SA algorithms with parameter control do exist and address this problem by changing the Cooling Rate or temperature parameter $T$ during the search process. Later we shortly review these techniques in section~\ref{bg: parameter control: SA}.
+At each iteration the temperature parameter $T$ value is decreased following some type of \underline{annealing schedule} also called as \textit{cooling rate}~\cite{boussaid2013survey}. The weak side here is that the quality of each annealing schedule is problem dependent and cannot be determined beforehand, however SA algorithms with parameter control do exist and address this problem by changing the Cooling Rate or temperature parameter $T$ during the search process. Later we shortly review these techniques in the \cref{bg: parameter control: SA}.
 
 
 \subsection{Hybrid-Heuristics}
@@ -290,7 +290,7 @@ Iteration starts with the current Solution perturbation — 'kick', referring a 
 Easily Modifiable Iterated Local search Implementation (EMILI) is a framework-like system for automatic generation of new hybrid stochastic Local Search algorithms. \textit{EMILI} is a solver for Permutation Flow-Shop Problems (PFSP), also known as Flow Shop Scheduling problems in which performed a search of an optimal sequence of steps to create products within a workshop.
 Here authors have implemented both algorithmic- and problem-specific building blocks, defined grammar-based rules for those blocks composition and used an automatic parameter tuning tool \textit{IRACE}~\cite{lopez2016irace} to find a high performing algorithm configurations. The work-flow of \textit{EMILI} could be split onto three steps: (1) adaptation of grammar rules to specific PFSP objective representation type (Make-span, Sum completion times, Total tardiness), (2) generation of all possible hybrid heuristics for each of PFSP type and (3) appliance of iterated racing in \textit{IRACE} to select the best performing hybrid for specific problem type. 
 
-From our perspective, described approach of automatic algorithm generation is direct incumbent of construction Hyper-Heuristics strategies described in upcoming section~\ref{bg: hh}, however we are not authorized to change the system class (from hybrid- to hyper-heuristic) defined by \textit{EMILI} authors.
+From our perspective, described approach of automatic algorithm generation is direct incumbent of construction Hyper-Heuristics strategies described in the upcoming \cref{bg: hh}, however we are not authorized to change the system class (from hybrid- to hyper-heuristic) defined by \textit{EMILI} authors.
 \todoy{or we can move it into hyper-heuristics?}
 
 
@@ -319,7 +319,7 @@ In~\cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can 
 	\label{bg:pic:HH}
 \end{figure}
 
-The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier} (Figure~\ref{bg:pic:HH}\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}).
+The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier} (\cref{bg:pic:HH}\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}).
 As we told previously, HH do not tackle the OP directly, but use LLH instead. This means, that usually HH are minimally aware of the domain details, such as what are data types, relationships, etc. within a domain. This information rather encapsulated in LLHs, thus HHs could be used to broader range of Optimization Problems.
 
 With this idea, many researchers started to create not only Hyper-Heuristics to tackle a concrete optimization problem class, but also frameworks with building blocks for their creation.
@@ -341,7 +341,7 @@ In other words: ``How does the LLH derive Solutions for the OP?'' Authors in~\ci
 
 The other broadly used characteristic is the \textbf{memory usage method}. 
 From this perspective we distinguish Hyper-Heuristics in which the learning happens \textit{on-line}, \textit{off-line} or learning mechanisms are \textit{not present} at all~\cite{ryser2014review,burke2019classification}.
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item In \textbf{on-line} case, the HH derives an information, used to select among LLH, while those LLH are solving the problem.
 
 	\item In \textbf{off-line} case, the learning happens before solving concrete Optimization Problem. Here one should first train an HH solving other homogeneous problem instances by underlying LLHs (off-line learning phase). After that, the HLH will be able to choose among LLHs, thus be applicable to problem in hand (on-line use phase). Note, that this approach also requires creation of meta-features extraction mechanism and its application to every Optimization Problem.
@@ -379,7 +379,7 @@ For more detailed analysis, description, other classification facets and respect
 The intent of \textit{HyFlex} creators was to provide Low-Level features that enable others to focus directly on High-Level-Heuristics implementation without need to challenge other minor needs. It also brings a clear comparison among created HLH performance, since the other parts are mostly common. From the classification perspective, all derivatives from the \textit{HyFlex} framework are Selection Hyper-Heuristics, however they utilize different learning approaches. Algorithms, built on top of \textit{HyFlex} framework could be found in many reviews~\cite{misir2012intelligent,ryser2014review,drake2019recent} or on the CHeSC 2011 challenge website\footnote{\href{http://www.asap.cs.nott.ac.uk/external/chesc2011/}{Cross Domain Heuristic Search Challenge website: asap.cs.nott.ac.uk/external/chesc2011/}} (dedicated to choosing the best HH built on top of \textit{HyFlex}).
 
 Along with \textit{HyFlex}, a number of hyper-heuristic-dedicated frameworks is growing, some of them are under active development while others are abandoned:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Hyperion}~\cite{swan2011hyperion} is a construction hyper-heuristic framework aiming to extract information from the OP search domain for identification of promising components in form of object-oriented analysis.
 	
 	\item \textbf{hMod}~\cite{urra2013hMod} framework allows not only to rapidly prototype an algorithm using provided components, but also to construct those components using predefined abstractions (such as $IterativeHeuristic$). In current development stage, developers of \textit{hMod} are focusing on creation of development mechanisms rather than providing a set pre-built heuristics. 
@@ -426,7 +426,7 @@ One of the simplest and error-prone ways is just trusting your (or someones else
 \subsection{Parameter Tuning}\label{bg: parameter tuning}
 Roughly speaking, the off-line approach is a process of traversing the search space of hyper-parameters and evaluating TS with these parameters on some set of toy problems. After finishing this process, the best found HPs are later used to solve new, unforeseen problem instance.
 
-In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on a figure~\ref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
+In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on a \cref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
 
 \begin{figure}
 	\centering
@@ -449,11 +449,11 @@ In this part of thesis we briefly outline existing automated approaches for para
 	\label{bg: fig:automated parameter tuning approaches}
 \end{figure}
 
-\paragraph{Grid Search Parameter Tuning.} It is a rather simple approach for searching parameters. Here the original search problem is relaxed and later solved by brute-force algorithm. The set of all possible configurations (parameter sets) for relaxed problem is derived by specifying a finite number of possible values for each hyper-parameter under consideration. After evaluating all configurations on TS, the best found solution is reported. As you can see, this approach could skip promising parts of search space (Figure~\ref{bg: fig:automated parameter tuning approaches: grid}).
+\paragraph{Grid Search Parameter Tuning.} It is a rather simple approach for searching parameters. Here the original search problem is relaxed and later solved by brute-force algorithm. The set of all possible configurations (parameter sets) for relaxed problem is derived by specifying a finite number of possible values for each hyper-parameter under consideration. After evaluating all configurations on TS, the best found solution is reported. As you can see, this approach could skip promising parts of search space (\cref{bg: fig:automated parameter tuning approaches: grid}).
 
-\paragraph{Random Search Parameter Tuning.} This methodology relies on random (often uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}: compare the best configurations (highlighted in pink) found by grid (Figure~\ref{bg: fig:automated parameter tuning approaches: grid}) and random search (Figure~\ref{bg: fig:automated parameter tuning approaches: random}) techniques.
+\paragraph{Random Search Parameter Tuning.} This methodology relies on random (often uniform) sampling of hyper-parameters and their evaluation on each iteration. At first sight, it might look unreliable to chaotically traverse the search space. But empirical studies show that with growing number of evaluations this technique starts to outperform grid search~\cite{bergstra2012random}: compare the best configurations (highlighted in pink) found by grid (\cref{bg: fig:automated parameter tuning approaches: grid}) and random search (\cref{bg: fig:automated parameter tuning approaches: random}) techniques.
 
-\paragraph{Model Based Search Parameter Tuning.} In the most cases, the dependencies between tuned parameter values and optimization objective do exist and can be utilized for hyper-parameter tuning. By predicting which parameter combinations lead to better results, model-based tuning could make precise guesses. As it showed on Figure~\ref{bg: fig:automated parameter tuning approaches: learning}, at the beginning, this approach behaves as random search, but after accumulating enough information, learning algorithm starts making more precise guesses, which in contrast to previously described model-free approaches is desirable and more robust.
+\paragraph{Model Based Search Parameter Tuning.} In the most cases, the dependencies between tuned parameter values and optimization objective do exist and can be utilized for hyper-parameter tuning. By predicting which parameter combinations lead to better results, model-based tuning could make precise guesses. As it showed on the \cref{bg: fig:automated parameter tuning approaches: learning}, at the beginning, this approach behaves as random search, but after accumulating enough information, learning algorithm starts making more precise guesses, which in contrast to previously described model-free approaches is desirable and more robust.
 
 Naturally, this optimization problem could be tackled by almost every discussed here approach, however taking into account the facts that (1) TS here in most cases is a \textit{black-box} we eliminate exact and approximate solvers, (2) the evaluation cost is huge, thus it is not desirable to apply any of described above heuristics directly.
 
@@ -468,7 +468,7 @@ Novel tuning approaches are usually built in form of frameworks with exposed hoo
 Since, the Target System evaluations here supposed to be extremely costly, thus parameter tuning frameworks are trying to utilize every single bit of information from evaluations by building surrogate models and using Bayesian optimization approaches is obligatory.
 
 In this section we review some among existing open-source parameter tuning systems from following perspectives:
-\begin{itemize}[itemsep=8pt]
+\begin{itemize}
 	\item \textbf{Conditional parameters support} is (1) a provided for user and (2) handled by tuning system ability to describe conditional dependencies between hyper-parameters. As an example, imagine \textit{crossover type} parameter of Genetic Algorithm that can take only some specific values: \textit{Partially Mapped Crossover ($PMX$)}, \textit{Cycle Crossover ($CX$)}, etc. Binding concrete crossover type, one will be required provide parameters for this crossover type, but eliminate respective parameters for other crossover types. This type of dependency could be described in form of parent-child relationship, however other types of dependencies also exists.
 	
 	\item \textbf{Parameter types support} is one of the basic usable tuning systems requirements. More concretely, Target System parameters could be not only numerical (integer or fractional), but also categorical in form of strings, boolean values, etc. Considering categorical data types, they could be either \textit{nominal} (depict only possible atomic values) or \textit{ordinal} (implies also value comparison, but no distance notion). For instance lets again analyze parameters of Genetic Algorithm: population size — numerical integer in range $[1...\inf)$, mutation probability — numerical fractional $[0...1]$, crossover type — categorical nominal ${PMX, CX}$. Indeed, we could treat population size as a set of finite values ${10, 100, 1000}$ — categorical ordinal parameter type.
@@ -530,11 +530,11 @@ Running examples of budget could be the number of iterations in iterative algori
 
 As the result, requirements arise for TS to expose and support budget usage as expected in \textit{BOHB}.
 
-At each iteration, HB randomly samples a number of Configurations which, in fact, decreases for later iterations while the amount of budget remains the same. As the outcome, first iterations of HB are full of coarse-grain evaluated Configurations, while later iterations produce higher number of more accurate measurements. Each iteration of HB is split to number of Successful Halving (SH) procedure executions which drop (usually $\frac{2}{3}$) badly performing Configurations. As one could expect, since the number of measured Configurations in each iteration decreases, the amount of SHs execution drops too, thus the remaining Configurations are evaluated more precisely.
+At each iteration, HB randomly samples a number of Configurations which, in fact, decreases for later iterations while the amount of budget remains the same. As the outcome, first iterations of HB are full of coarse-grain evaluated Configurations, while later iterations produce higher number of more accurate measurements. Each iteration of HB is split to number of Successful Halving (SH) procedure executions which drop (usually $\sfrac{2}{3}$) badly performing Configurations. As one could expect, since the number of measured Configurations in each iteration decreases, the amount of SHs execution drops too, thus the remaining Configurations are evaluated more precisely.
 
 The binding of HyperBand and Bayesian Tree Parzen Estimator made is several places. Firstly, the learning models are updated each time when new results are available for every budget value. Next, at each iteration of HB, TPE model is used for sampling new Configurations. Note that \textit{BOHB} uses models, built on results obtained with the largest budget only. This decision leads in more precise predictions in the later stages of parameter tuning process.
 
-The drawback of this system lays in the way of handling conditions between hyper-parameters. Distributed HyperBand implementation on Steroids (HpBandSter)~\footnote{GitHub repository: \url{https://github.com/automl/HpBandSter}} is a \textit{BOHB} particular implementation uses \textit{ConfigSpace} framework (as \textit{SMACv3}) for Configuration Space definition. As we discussed in \textit{SMACv3} description (section~\ref{bg: smac}), \textit{ConfigSpace} naturally allows to encode the dependencies and conditions among parameters. As authors stated, the TPE learning models are also able to learn these dependencies implicitly by shrinking the densities for forbidden parameters (actually those parameter values are still added to models by \textit{imputation} mechanism where default values are used for forbidden parameters). However, consider a case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$, which will break the densities and as a consequence, the prediction performed using such distributions will often result in Configurations with violated parameter dependencies within `sparse' search spaces, hurting the performance and accuracy of sampling. The actual number of such cases could vary dramatically in `sparse' Search Spaces, thus probability distributions estimated by KDEs will not reflect the reality.
+The drawback of this system lays in the way of handling conditions between hyper-parameters. Distributed HyperBand implementation on Steroids (HpBandSter)~\footnote{GitHub repository: \url{https://github.com/automl/HpBandSter}} is a \textit{BOHB} particular implementation uses \textit{ConfigSpace} framework (as \textit{SMACv3}) for Configuration Space definition. As we discussed in \textit{SMACv3} description (\cref{bg: smac}), \textit{ConfigSpace} naturally allows to encode the dependencies and conditions among parameters. As authors stated, the TPE learning models are also able to learn these dependencies implicitly by shrinking the densities for forbidden parameters (actually those parameter values are still added to models by \textit{imputation} mechanism where default values are used for forbidden parameters). However, consider a case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$, which will break the densities and as a consequence, the prediction performed using such distributions will often result in Configurations with violated parameter dependencies within `sparse' search spaces, hurting the performance and accuracy of sampling. The actual number of such cases could vary dramatically in `sparse' Search Spaces, thus probability distributions estimated by KDEs will not reflect the reality.
 
 
 \subsubsection{BRISEv2~\cite{brise2spl}}
