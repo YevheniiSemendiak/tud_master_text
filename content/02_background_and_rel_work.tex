@@ -605,13 +605,23 @@ While searching the parameter control examples in heuristics, one will find doze
 
 The deterministic and adaptive mechanisms in EAs are extended by the $3^{rd}$ type — the \emph{self-adaptive} approach. It implies an encoding of parameter values in the solution genomes therefore, allowing them to co-evolve with the solutions in runtime~\cite{doerr2020theory}. All the proposed strategies could be split into two families: one includes the algorithms proposing to adapt a concrete parameter solely and the other, which includes the approaches to control a group of parameters. In EAs the commonly implicated hyper-parameters are the \emph{population size}, the \emph{selection strategies} and the \emph{variation aspects} (namely the crossover and mutation operators). In case of interest, we propose the reader to analyze recently conducted reviews and researches dedicated to the parameter control in evolutionary algorithms~\cite{karafotias2014parameter,aleti2016systematic,smith2020self,doerr2020theory}.
 
-There is one rather intriguing parameter control approach proposed for the evolutionary algorithms. In~\cite{karafotias2014generic} the authors examine usage of a Reinforcement Learning (RL) for the parameter control.
+There is one rather intriguing parameter control approach proposed for the evolutionary algorithms. In~\cite{karafotias2014generic} the authors introduce a Reinforcement Learning (RL) parameter controller, which goal is to select the EA parameters on-line, evaluating a set of simple observables. They include: a genotype diversity, a phenotype diversity, a fitness standard deviation, a fitness improvement and a stagnation counter.
+The RL in this work is executed following MAPE-K methodology~\cite{brun2009engineering}. On each iteration the observables are \textbf{m}onitored, their values are \textbf{a}nalyzed to build a parameter control \textbf{p}lan, which is \textbf{e}xecuted in the next iteration. The letter \textbf{k} denotes the central part of thus methodology — the knowledge.
+This set of proposed observables could be split onto two logical groups. One is the algorithm specific with the genotype/phenotype diversities and the fitness standard deviation, while the other is algorithm independent and includes the fitness improvement and the stagnation counter. We believe the proposed RL approach could be applied to other algorithms, with the only requirement in exposing the observable knowledge. The proposed in~\cite{karafotias2014generic} parameter control methodology may one of the first to generalize a parameter control techniques and later in~\cref{concept:parameter control} we use it as a part of our approach.
 
+
+\subsection{Conclusion on Parameter Setting}\label{bg: parameter setting conclution}
+At this point, we finalize our review of the parameter settings problems with a three conclusions:
+\begin{enumerate}
+	\item The parameter tuning area is investigated widely and nowadays the research settles in form of combining different learning models to implement the SMBO algorithms in framework-like tuning systems.
+	
+	\item The parameter control is actively driven by two motivations. Firstly, the runtime changes in solving process are unpredictable therefore, the control is believed to better fit them, comparing to the tuning techniques. Secondly, the resources spent for off-line parameter settings are high, but they are paid-off by a high quality algorithm configuration therefore from this perspective, the control approaches are trying to reach the off-line settings quality spending less resources. However, nowadays the on-line approach is not generic to be commonly applicable.
+	
+	\item The decision on concrete technique usage is the use-case specific and is driven by the amount of available resources and the required setting quality as well.
+\end{enumerate}
 
 \section{Combined Algorithm Selection and Hyper-Parameter Tuning Problem}\label{bg: section cash}
-As we can observe, the goals of automatic machine learning are quite similar to persecuted by Hyper-Heuristics.
-
-They both operate on Search Space of algorithms (or their building blocks) which later are combined, with an objective to find the best performing one, and used to solve the problem in hand. 
+The goals of automatic machine learning are quite similar to persecuted by Hyper-Heuristics. They both operate on Search Space of algorithms (or their building blocks) which later are combined, with an objective to find the best performing one, and used to solve the problem in hand. 
 
 In this section we review one particular representative of automatic machine learning systems.
 Based on ML framework Scikit-learn~\cite{scikit-learn}, Auto-sklearn system~\cite{feurer2015efficient} operates over number of classifiers, data and features preprocessing methods \textbf{including their hyper-parameters} to construct, for given dataset, the best performing (in terms of classification accuracy) machine learning pipeline.
