@@ -1,11 +1,11 @@
-\chapter{Concept Description}
+\chapter{Concept Description}\label{Concept description}
 While there exist no universal approach to control the algorithms parameters (\cref{bg: parameter setting conclution}), our conclusion on the literature analysis was the absence of existing approaches to combine both on-line techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
 
 In this Chapter we propose the methodology to resolve this problem, excluding the implementation details.
 
 In the \cref{concept:parameter control}, we introduce the generic parameter control technique and expand it with the use-case of algorithm selection. As concluded in the \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in `sparse' search spaces. The same issue arises in case of on-line algorithm selection and parameter settings, and we resolve it on two levels: firstly in the search space structure and secondly in the prediction process. In the \cref{concept:search space} we present the joint search space of both algorithm selection and parameter control problems. We outline the functional requirements for such space. Next, we describe the related prediction process in the \cref{concept:prediction}. While decoupling the learning models from the search space structure, we provide the certain level of flexibility in the usage of different learning models.
 % TODO: check if needed in this chapter
-Finally, in the \cref{concept: llh} we direct our attention onto the low level heuristics (LLH) — a working horses of the desired hyper-heuristic. We highlight the requirements to LLH that are crucial in our case.
+Finally, in the \cref{concept: llh} we direct our attention to the low level heuristics (LLH) — a working horses of the desired hyper-heuristic. We highlight the requirements to LLH that are crucial in our case.
 
 
 \section{Combined Parameter Control and Algorithm Selection Problem}\label{concept:parameter control}

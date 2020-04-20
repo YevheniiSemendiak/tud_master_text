@@ -1,33 +1,68 @@
 \chapter{Implementation Details}
-\paragraph{In this chapter} we dive into the implementation details of the selection hyper-heuristic with parameter control.
+In this Chapter we dive into the development description of listed in the \cref{Concept description} requirements.
  
-The best practice in software engineering is to minimize an effort for the implementation and reuse already existing and well-tested code.
-With this idea in mind we had decided to reuse one of existing (and highlighted by us in \ref{bg: parameter tuning}) open-source hyper-parameter tuning systems as the code basis and those turn it into the core of hyper-heuristic. 
-Do to so we analyze the existing systems and highlight important non-functional characteristics from the implementation perspective in section \ref{implementation:hh code basis section}. Since the selected code base system is not the ideal in terms of such features as Search Space entity abilities and the prediction process, we consider some adaptations in sections \ref{implementation: search space} and \ref{implementation: prediction logic} respectively.
-We also reuse the set of Low Level Heuristics in section \ref{implementation:llh code basis selection}.
+The best practice in software engineering is to minimize an implementation effort reusing the already existing and well-tested code. With this idea in mind, we use one of the reviewed open-source parameter tuning frameworks (\cref{bg: parameter tuning}) as the code basis for the high level heuristic (HLH) in desired hyper-heuristic. We also reuse the existing low level heuristics (LLH) implementation in other frameworks. While we use LLH-basis almost out of box, the HLH-basis requires more changes.
+
+In the \cref{impl:hlh code basis section} we analyze the parameter tuning frameworks from a perspective of needed effort to fulfill the HLH requirements, listed in the \cref{concept:prediction}. In a conclusion (\cref{impl:hlh code basis conclusion}) we outline the adaptations, needed to be done in the selected code basis. Afterwards, we split the former HLH implementation description into two logical parts, as we have done for the concept description. In the \cref{impl: search space} we discuss the search space development, while the \ref{impl: prediction logic} is dedicated to the prediction process.
+
+Finally, in the \cref{impl: LLH} we choose the LLH code basis for, present a set of reused meta-heuristics and their adaptations to fulfill our requirements listed in the \cref{concept: llh} as well.
 
 
-\section{Hyper-Heuristics Code Base Selection}\label{implementation:hh code basis section}
-A.k.a. "brain". Need to find a better way to call this part of HH..
-\subsection{Requirements}
-\subsection{Parameter Tuning Frameworks}
-\paragraph{SMAC}
-\paragraph{BOHB}
+\section{Hyper-Heuristics Code Base Selection}\label{impl:hlh code basis section}
+To start with the framework analysis, let us firstly outline the important characteristics from the implementation perspective.
+The first two crucial criteria are the framework \emph{variability} and \emph{extensibility}. The desired HLH should be easily variable in terms of replacing such functionality as the learning model or the termination criteria by a new one. We may need to use different models to select the LLH and control the parameters therefore, the code basis should be extensible in terms of usage different model for each prediction level (see \cref{concept:pict:Level-wise prediction process}).
+Also, the parameter control implies an important ability of the optimization problem (OP) solving in a set-wise manure (\cref{concept:parameter control}) therefore, we must analyze the \emph{learning time} of the implemented algorithms (on-line or off-line).
+The next characteristic is the support of \emph{conditional parameters}. Since, it is a complex feature, which lays not only in the search space, but also in the prediction process, we pay attention to both of them separately.
+
+The accumulated list of framework characteristics under comparison is as follows: extensibility, variability, on-line problem solving, learning time, conditional parameters.
+
+\subsection{Parameter Tuning Frameworks Analysis}\label{impl: Parameter Tuning Frameworks Analysis}
+\paragraph{SMACv3}
+The implementation of Sequential Model-based Algorithm Configuration framework is available on-line under the BSD-3 license.
+
+The idea of SMACv3 lays in ROAR mechanism enhancement with the model-based sampling algorithm.
+As we mention in \cref{bg: smac}, underlying surrogate model are one of the random forest or Gaussian process kernel density estimator. These models could fit complex dependencies among parameters in the search spaces. To choose a next configuration the \emph{one-exchange} neighborhood of best found so far is traversed, using the surrogate models and the expected improvement estimations.
+The learning capabilities in surrogates are great, and the usage of expected improvement guarantees converging to the global optimum given enough time as well. However, the major drawback in this system is lack of ability to include the conditional dependencies between parameters into the sampling process. In fact, used here search space representation framework ConfigSpace~\cite{configspace} is able to specify the dependencies among hyper-parameters.
+However, to the best of our knowledge, the one-exchange neighborhood is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{https://github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
+
+The ROAR mechanism is a derivative from the FocusedILS algorithm (solver in the parameter tuning framework ParamILS~\cite{hutter2009paramils}) where each evaluation of a new candidate solution on problem instance performed sequentially. Since the ROAR evaluation strategy is also used in SMACv3, we expect it to require much effort to enable system solving the problem on-line.
+
+% TODO: maybe more here, since the motivation is not clear...
+
+\paragraph{IRACE}
+The IRACE framework implements the iterated racing algorithm to evaluate the set of configurations during the parameter tuning session(\cref{bg: irace}). It is distributed under the GNU General Public License and the source code is available on-line.
+
+As the surrogate models, IRACE uses the probability distributions of those parameter values, which shown to be good during racing step. The prediction process is defined as the step-wise sampling in previously built distributions. It elegantly handles the conditions among parameters and illuminates the possibility of invalid configuration appearance.
+The framework completely relies on the racing algorithm for parallel evaluations and on \emph{Friedman test}~\cite{conover1980practical} or alternatively \emph{paired t-test} for statistical analysis of racing configurations. Thus, we found it to be static in terms of variability and extensibility on the learning mechanisms.
+In terms of parallel evaluations, the algorithm utilizes all available resources at the beginning of each racing step, but as the process continues, fewer evaluations are executed in parallel those available resources are idling and not utilized optimally at all steps of IRACE execution.
+
+As for the on-line problem solving, let us discuss the racing algorithm. As we described in \cref{bg: irace}, this step is executed with a (1) set of TS configurations under evaluation and (2) a benchmark set of optimization problems. Then, the TS starts to solve the problem set under each configuration, while racing algorithm drops the worst-performing configurations. It is possible to use a single problem instance however, divided into parts (from the perspective of TS allowed running time) instead of using a benchmark set. Doing so, it will be possible to adapt system for on-line problem solving cheaply however, the granularity of parameter (and LLH type as well) control will be reduced. The reason for such reduce is the amount of information obtained from race: only the best configurations are returned, leaving the performance evidences of others behind, which may used to create a more precise surrogate models. The only possible way to deal with this is to leave a racing algorithm and use the reinforcement learning.
+
+\paragraph{HpBandSter}
+As we discussed in the \cref{bg: bohb}, HpBandSter is an implementation of BOHB algorithm, which turns to be a hybridization of Hyperband and Bayesian Optimization approaches.
+
+A role of Hyperband in this duet is the configuration evaluation and comparison, while the Bayesian Tree Parzen Estimator (TPE) suggests the which configuration to evaluate next. The idea behind this combination is to eliminate the weak sides of each algorithm with the strengths of other. For instance, in original Hyperband the configuration selection is made uniform at random, which results in a slow converge of optimization process. As for the BO TPE, a drawback lays in configuration evaluation, which does not take into account an early evidences about the TS performance. Thus, even when the proposed configuration results in poor intermediate TS performance (which may be an evidence of a weak final performance), BO still continues TS execution. 
+
+From our perspective, there are several drawbacks in the proposed BOHB implementation.
+
+The two core algortihms are tightly coupled
+
+Firstly, it is the way of handling conditions between hyper-parameters. HpBandSter is a \textit{BOHB} particular implementation uses \textit{ConfigSpace} framework (as \textit{SMACv3}) for Configuration Space definition. As we discussed in \textit{SMACv3} description (\cref{bg: smac}), \textit{ConfigSpace} naturally allows to encode the dependencies and conditions among parameters. As authors stated, the TPE learning models are also able to learn these dependencies implicitly by shrinking the densities for forbidden parameters (actually those parameter values are still added to models by \textit{imputation} mechanism where default values are used for forbidden parameters). However, consider a case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$, which will break the densities and as a consequence, the prediction performed using such distributions will often result in Configurations with violated parameter dependencies within `sparse' search spaces, hurting the performance and accuracy of sampling. The actual number of such cases could vary dramatically in `sparse' Search Spaces, thus probability distributions estimated by KDEs will not reflect the reality.
+
 
 % TODO: it is more for concept description
 % Even if fix of Configuration sampling in such cases is relatively simple task (parent-child relationship utilized in IRACE), then building proper density distributions of `good' parameters reflecting conditions is hard.
 
 
-\paragraph{IRACE}
+
 \paragraph{BRISEv2}
-\todoy{Maybe, smth else..}
 
 % TODO: implementation \item[Support for Online Problem Solving.] This is a bit complex characteristic of system that we are willing to distinguish. As it turns out, most parameter tuning systems require full evaluation of Target System for Configuration comparison. However, in case of Hyper-Heuristic, the Configuration evaluation is a trial to solve the problem in hand using particular $LLH$ (tuned parameter) Here we compare final result quality, reported by each $LLH$
-\subsection{Conclusion}
+\subsection{Conclusion on Code Base}\label{impl:hlh code basis conclusion}
 BRISEv2 is the best system for code basis, however it has to be changed as we describe in following sections.
 
 
-\section{Search Space}\label{implementation: search space}
+\section{Search Space}\label{impl: search space}
 
 \subsection{Base Version Description}
 What is the problem with the current Search Space?
@@ -39,7 +74,7 @@ What is the problem with the current Search Space?
 \paragraph{Class diagram} - i think, I will put it into the appendix
 
 
-\section{Prediction Logic}\label{implementation: prediction logic}
+\section{Prediction Logic}\label{impl: prediction logic}
 \subsection{Base Version Description}
 \paragraph{The Scope Refinement Work} prediction should be done in feature-tree structured search space. Most models could handle only flat search space and we would like to enable reuse of those existing models. Though we decouple the structure of Search Space in entity \textbf{Predictor}, while actual prediction process is done in underlying models, that Predictor uses.
 
@@ -60,7 +95,7 @@ to decouple prediction from structure of search space.
 \subsection{Wrapper for Scikit-learn Preprocessors}
 
 
-\section{Low Level Heuristics}\label{Impl: LLH}
+\section{Low Level Heuristics}\label{impl: LLH}
 
 \subsection{Requirements}
 
