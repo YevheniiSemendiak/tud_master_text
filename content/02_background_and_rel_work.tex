@@ -525,47 +525,43 @@ Unlike vanilla BO, where the optimization is done by modeling the result distrib
 The central part of BOHB, namely the HyperBand is a promising multi-armed bandit strategy for hyper-parameter optimization~\cite{li2017hyperband} in which the \emph{budget} for parameter tuning is defined beforehand and divided between iterations. The role of budget could play any control parameter that denotes the accuracy of configuration evaluation by TS, where estimation with the maximum budget gives you the most precise configuration evaluation, while the minimum amount of budget results in the least accurate approximation of configuration evaluation result.
 The running examples of budget could be a number of iterations in iterative algorithm, a number of epochs to train the neuron network, or a number of problem instances from benchmark set to evaluate. As the result, requirements arise for TS to expose and support budget usage as expected in BOHB.
 
-At each iteration, HB randomly samples a number of configurations which, decreases for the later iterations while the amount of budget given for iteration remains the same. As an outcome, first iterations of HB are full of coarse-grain evaluated configurations, while the later iterations produce a higher number of more precise measurements. Each iteration of HB is split to the number of \emph{Successful Halving} (SH) procedure executions which drop poorly performing configurations (usually $\sfrac{2}{3}$) at each execution. As one could expect, since the number of measured configurations in subsequent iterations decreases, the amount of SHs execution drops too therefore, the remaining configurations are evaluated more precisely.
+At each iteration, HB samples uniformly at random a number of configurations. The authors introduced an \emph{intensification} mechanism according to which, a number of per-iteration sampled configurations decreases for the later iterations, while the amount of budget given for iteration remains the same. As an outcome, first iterations of HB are full of coarse-grain evaluated configurations, while the later iterations produce a higher number of more precise measurements. Each iteration of HB is split to the number of \emph{Successful Halving} (SH) procedure executions which drop poorly performing configurations (usually $\sfrac{2}{3}$) at each execution. As one could expect, since the number of measured configurations in subsequent iterations decreases, the amount of SHs execution drops too therefore, the remaining configurations are evaluated more precisely.
 
 The binding of HyperBand and Bayesian Tree Parzen Estimator is made in several places. Firstly, the learning models are updated each time, when new results are available for every budget value. Next, at each HB iteration instead of random sampling, the TPE model is used to pick next configurations. Note that \textit{BOHB} uses only those models, which built on configurations obtained for the largest budget. This decision results in more precise surrogate models (parameter distributions) and therefore, better predictions in the later stages of parameter tuning process.
 
 
-\subsubsection{BRISEv2~\cite{brise2spl}}
+\subsubsection{BRISEv2}\label{bg: brise}
 The great part of software potential lays not only in its ability to tackle a problem in hand, but also on the general usability and adaptivity to unforeseen tasks.
-Here we review BRISE of version 2\footnote{GitHub repository: \url{https://github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}, since the very early BRISE versions (major 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
+Here we review a $2^{nd}$ version of BRISE\footnote{BRISEv2 GitHub repository: \url{https://github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}~\cite{brise2spl}, since the very early BRISE versions (major version 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
 
-While designing this system, authors were focused on learning mechanisms for parameter prediction and overall system modularity as well.
-Being a Software Product Line, BRISE was designed as a set of interacting components (nodes) each acting according to its own specific role. 
-The system could be viewed from two perspectives. One is general outline of all available nodes and the other is analysis of~\textit{main-node} concretely.
+While designing this system, authors were focused not solely on learning mechanisms for parameter prediction, but on the overall system modularity as well.
+Being a software product line (SPL), BRISE was designed as a set of interacting components (nodes), each acting according to its own specific role. 
+The system could be viewed from two perspectives. One is a birds eye view on all available nodes with their roles and the other is a fine-grained description of~\textit{main-node} concretely.
 
-Before reviewing each part, it is worth to justify formalized in system terms. Note, that they are pretty the same as we defined above, but here most of them also have been implemented in form of classes.
+Before reviewing each perspective, it is worth to justify the central terms used in system. Note, that some of them are pretty the same as we defined above, but here most of them also were implemented in form of classes.
 \begin{enumerate}
-	\item \emph{Experiment} denotes a complete run of BRISE, for instance parameter tuning session. Handles such information as BRISE Experiment Description (JSON-like specification of parameter tuning procedure), all evaluated during session configurations and derived from description search space.
+	\item \emph{Experiment} encapsulates the information about a concrete run of BRISE. For instance, within a parameter tuning session it carries such information as BRISE experiment description (a specification of parameter tuning procedure in JSON format), all evaluated during session configurations with their results.
 
-	\item \emph{Configuration} is a combination of input Parameter values for target system (or algorithm) under evaluation. It could be evaluated several times (to obtain statistical data), thus contain number of \emph{Tasks} and compared against other Configurations.
+	\item \emph{Configuration} is a combination of input parameter values for target system, or algorithm under tuning. It could be run several times to obtain a statistical data therefore, contain number of \emph{Tasks}. Naturally, the configurations are comparable in terms of their runs results.
 
-	\item \emph{Parameter} is a meta-description of concrete Configuration part and a building block for Search Space, defines a set or range of possible values. 
+	\item \emph{Parameter} is a meta-description of concrete configuration part and a building block for search space. It defines a set or range of possible values.
 
-	\item \emph{Search Space} comprises all Parameters and their dependencies, could verify the validity of Configuration.
+	\item \emph{Search Space} comprises all parameters and their dependencies and could verify the validity of configuration.
 
-	\item \emph{Task} is an evaluation of TS under provided Configuration for statically specified in Description scenario.
+	\item \emph{Task} is an evaluation of TS under provided configuration for specified in description problem scenario.
 \end{enumerate}
 
-From a birds eye view perspective, BRISE consists of \textit{main-node} as the system backbone, several \textit{worker-nodes} as target algorithm runners under provided Configurations, \textit{worker-service} to distribute tasks load between set of worker-nodes, \textit{front-end-node} to control and report optimization process on a web-page, and non-obligatory \textit{benchmark-node} that could be handy for executing and analyzing number of Experiments.
+From a birds eye view perspective, BRISE consists of \emph{main-node} as the system backbone, several \emph{worker-nodes} as target algorithm runners under provided configurations, \emph{worker-service} to distribute tasks between set of worker-nodes, \emph{front-end-node} to control and report optimization process on a web-page, and non-obligatory \emph{benchmark-node} that could be handy for executing and analyzing number of experiments.
 
-To use BRISE for parameter tuning, one should (1) construct an Experiment and Search Space json-like descriptions and (2) add the respective function for target system evaluation in \textit{workers} with provided Task. All the rest will be carried out by system.
+The main-node is a combination of objects, which interact in terms of queue callbacks. Therefore, as soon the new configuration is evaluated, the new model is built and used for the prediction using of all available information. The intent of introducing mentioned above terms is to use them as a core of framework, while such components as \emph{prediction models}, \emph{termination criteria}, \emph{repetition management} or \emph{outliers detection} are exposed to client for the variability reasons. Naturally, the developers also created a set of available out-of-the-box implementations for each variability component.
+
+To use BRISE for parameter tuning, one should (1) construct an experiment and search space descriptions in JSON format and (2) add the respective target system evaluation logic in \emph{workers}. All the rest will be carried out by system.
 % TODO: we deffinitely should formalize Tasks, since this entry is exposed to user (it should parse it to retrieve prameters as well as add results).
-
-From our perspective, the advantage of BRISE over other systems comes from the design of \textit{main-node}. It is a set of operating core entities (Experiment, Search Space and Configuration) with other non-core entities exposed to user for variability, such as surrogate models, termination criteria, outliers detectors, repetition strategies, etc. Naturally, a number of implementations are provided out-of-box for all variable entities. For instance, two prediction models: ridge regression with polynomial features and TPE BO; several termination criteria: wall-clock timeout, exceeding number of evaluated Configurations, absence of improvement and others. Using different combinations entities, one could obtain the system with desired behavior or even further, supply own learning models, sampling plans, enhance termination logic, etc.
-
-As every other system, BRISE also has flaws. Talking about the search space representation, BRISE relies on ConfigSpace module~\cite{configspace} which is also used SMACv3 and BOHB frameworks. The predictive models are acting pretty the same, so all previous claims are also valid here — it is hard to apply BRISE in cases of sparse Configurations spaces.
-
-
-Generally, the biggest disadvantage of Parameter Tuning defined by the fact, that it usually requires large number of target algorithm runs to evaluate its performance with different settings.
-On opposite site, the parameter control approaches are solving this issue but the drawback lays in their universality.
 
 
 \subsection{Parameter Control}\label{bg: parameter control}
+Generally speaking, the biggest disadvantage of parameter tuning approaches is defined by the fact that they usually require large number of target algorithm runs to evaluate its performance with different configurations. On the opposite site, the parameter control approaches are solving this issue but the drawback lays in their universality.
+
 The advantageous characteristic of any system is its ability to adapt in runtime.
 It could happen so, that an algorithm with tuned parameters performs well in the early beginning of a problem solving process, but in later stages it struggles. The other algorithm configuration may result in an opposite behavior. This could be caused by various reasons and it is often hard to tell, which of them the algorithm is facing in a moment. 
 

@@ -76,7 +76,7 @@ This decision sets the following search space \emph{structural requirements}:
 \section{Parameter Prediction Process}\label{concept:prediction}
 After formalizing the search space structural requirements, let us switch to the prediction process and define the  \emph{functional requirements} for both search space and prediction process, which should be fulfilled to decouple the learning models from the complex search space shape.
 
-The idea of this decoupling lays in resolving the value-specific dependencies among the parameters in a step-wise prediction manure. To do so, we firstly predict the parent value, which in case of the hyper-heuristic is a low-level heuristic type (Level 0 on the \cref{concept:pict:Level-wise prediction process}). Afterwards, the search space must expose the parameters of this solver only, ignoring the others (Level 1 on the \cref{concept:pict:Level-wise prediction process}). The dependencies among exposed parameters, are then handled in the same way (Level 2 and further on the \cref{concept:pict:Level-wise prediction process}).
+The idea of this decoupling lays in resolving the value-specific dependencies among the parameters in a step-wise prediction approach. To do so, we firstly predict the parent value, which in case of the hyper-heuristic is a low-level heuristic type (Level 0 on the \cref{concept:pict:Level-wise prediction process}). Afterwards, the search space must expose the parameters of this solver only, ignoring the others (Level 1 on the \cref{concept:pict:Level-wise prediction process}). The dependencies among exposed parameters, are then handled in the same way (Level 2 and further on the \cref{concept:pict:Level-wise prediction process}).
 
 The prediction on each level is performed in three main steps: (1) filtering the required for this level information, (2) building the surrogate model and (3) finding the best performing parameters on this level.
 
@@ -95,22 +95,22 @@ At this point, let us summarize the functional requirements.
 \begin{itemize}
 	\item[$\bullet$] \textbf{In the search space we need:}
 	\begin{enumerate}
-		\item[F.R.1] The \textbf{data filtering mechanism}, which will be used to find out only those feature-label pairs, which can be utilized to learn the dependencies on current level.
+		\item[S.F.R.1] The \textbf{data filtering mechanism}, which will be used to find out only those feature-label pairs, which can be utilized to learn the dependencies on current level.
 		
-		\item[F.R.2] The \textbf{sampling propagation mechanism}, which will be used to randomly sample the parameter values for  the next level taking into account currently available parameter values, which is required to expose the parameters after predicting on current level.
+		\item[S.F.R.2] The \textbf{sampling propagation mechanism}, which will be used to randomly sample the parameter values for  the next level taking into account currently available parameter values, which is required to expose the parameters after predicting on current level.
 		
-		\item[F.R.3] The \textbf{parameter description mechanism}, which will provide the information about a type and possible values for the given parameters. This knowledge will later be used by the models for making the parameters values prediction.
+		\item[S.F.R.3] The \textbf{parameter description mechanism}, which will provide the information about a type and possible values for the given parameters. This knowledge will later be used by the models for making the parameters values prediction.
 		
-		\item[F.R.4] The \textbf{configuration validation mechanism}, which will find out, whether the parameter ranges are not violated by the selected values (flat validation), and whether for all selected values the dependent (exposed) parameters are selected properly as well (deep validation).
+		\item[S.F.R.4] The \textbf{configuration validation mechanism}, which will find out, whether the parameter ranges are not violated by the selected values (flat validation), and whether for all selected values the dependent (exposed) parameters are selected properly as well (deep validation).
 	\end{enumerate}
 
 	\item[$\bullet$] \textbf{In the prediction models:}
 	\begin{enumerate}
-		\item[F.R.1] The \textbf{model encapsulation mechanism}, which should aggregate and hide the level-wise approach of the search space traversal and the feature ignorance as well. In the contrary, it should rely on underlying models for making the prediction.
+		\item[P.F.R.1] The \textbf{model encapsulation mechanism}, which should aggregate and hide the level-wise approach of the search space traversal and the feature ignorance as well. In the contrary, it should rely on underlying models for making the prediction.
 		
-		\item[F.R.2] The \textbf{model unification mechanism}, which is required for the system variability in terms of the learning and sampling algorithms.
+		\item[P.F.R.2] The \textbf{model unification mechanism}, which is required for the system variability in terms of the learning and sampling algorithms.
 		
-		\item[F.R.3] The \textbf{information forgetting mechanism}, which is required to follow only the recent trends among the parameter values dependencies.
+		\item[P.F.R.3] The \textbf{information forgetting mechanism}, which is required to follow only the recent trends among the parameter values dependencies.
 	\end{enumerate}
 \end{itemize}
 
@@ -124,7 +124,7 @@ Firstly, we want these algorithms to continue their solving process from the pre
 
 Secondly, after the algorithm execution, the solution quality should be estimated and reported to the HLH to proceed with the RL.
 
-Both actions should be performed in the implementation independent way therefore, following a predefined shared interface, described above. We discuss it in the \cref{Impl: LLH}, dedicated to LLH implementation.
+Both actions should be performed in the implementation independent way therefore, following a predefined shared interface, described above. We discuss it in the \cref{impl: LLH}, dedicated to LLH implementation.
 
 
 \section{Conclusion of concept}

@@ -10,11 +10,12 @@ Finally, in the \cref{impl: LLH} we choose the LLH code basis for, present a set
 
 \section{Hyper-Heuristics Code Base Selection}\label{impl:hlh code basis section}
 To start with the framework analysis, let us firstly outline the important characteristics from the implementation perspective.
-The first two crucial criteria are the framework \emph{variability} and \emph{extensibility}. The desired HLH should be easily variable in terms of replacing such functionality as the learning model or the termination criteria by a new one. We may need to use different models to select the LLH and control the parameters therefore, the code basis should be extensible in terms of usage different model for each prediction level (see \cref{concept:pict:Level-wise prediction process}).
-Also, the parameter control implies an important ability of the optimization problem (OP) solving in a set-wise manure (\cref{concept:parameter control}) therefore, we must analyze the \emph{learning time} of the implemented algorithms (on-line or off-line).
-The next characteristic is the support of \emph{conditional parameters}. Since, it is a complex feature, which lays not only in the search space, but also in the prediction process, we pay attention to both of them separately.
 
-The accumulated list of framework characteristics under comparison is as follows: extensibility, variability, on-line problem solving, learning time, conditional parameters.
+The first two crucial criteria are the framework \emph{variability} and \emph{extensibility}. The desired HLH should be easily variable in terms of replacing such functionality as the learning model or the termination criteria by a new one. We may need to use different models to select the LLH and control the parameters therefore, the code basis should be extensible in terms of usage different model for each prediction level (see \cref{concept:pict:Level-wise prediction process}).
+
+The next is a \emph{support for on-line optimization}. This is a bit complex characteristic of system that we are willing to distinguish. As it turns out, many parameter tuning systems require full evaluation of target system for configuration comparison. However, in case of desired hyper-heuristic, we treat the configuration evaluation as a trial to solve the problem in hand using particular LLH with tuned parameter. It implies an important ability of the optimization problem (OP) solving in a set-wise manner (\cref{concept:parameter control}).
+
+The next characteristic is the support of \emph{conditional parameters}. Since, it is a complex feature, which lays not only in the search space, but also in the prediction process, we pay attention to both of them separately.
 
 \subsection{Parameter Tuning Frameworks Analysis}\label{impl: Parameter Tuning Frameworks Analysis}
 \paragraph{SMACv3}
@@ -23,7 +24,7 @@ The implementation of Sequential Model-based Algorithm Configuration framework i
 The idea of SMACv3 lays in ROAR mechanism enhancement with the model-based sampling algorithm.
 As we mention in \cref{bg: smac}, underlying surrogate model are one of the random forest or Gaussian process kernel density estimator. These models could fit complex dependencies among parameters in the search spaces. To choose a next configuration the \emph{one-exchange} neighborhood of best found so far is traversed, using the surrogate models and the expected improvement estimations.
 The learning capabilities in surrogates are great, and the usage of expected improvement guarantees converging to the global optimum given enough time as well. However, the major drawback in this system is lack of ability to include the conditional dependencies between parameters into the sampling process. In fact, used here search space representation framework ConfigSpace~\cite{configspace} is able to specify the dependencies among hyper-parameters.
-However, to the best of our knowledge, the one-exchange neighborhood is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{https://github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
+However, to the best of our knowledge, the one-exchange neighborhood used as sample mechanism in SMACv3, is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{https://github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
 
 The ROAR mechanism is a derivative from the FocusedILS algorithm (solver in the parameter tuning framework ParamILS~\cite{hutter2009paramils}) where each evaluation of a new candidate solution on problem instance performed sequentially. Since the ROAR evaluation strategy is also used in SMACv3, we expect it to require much effort to enable system solving the problem on-line.
 
@@ -41,37 +42,123 @@ As for the on-line problem solving, let us discuss the racing algorithm. As we d
 \paragraph{HpBandSter}
 As we discussed in the \cref{bg: bohb}, HpBandSter is an implementation of BOHB algorithm, which turns to be a hybridization of Hyperband and Bayesian Optimization approaches.
 
-A role of Hyperband in this duet is the configuration evaluation and comparison, while the Bayesian Tree Parzen Estimator (TPE) suggests the which configuration to evaluate next. The idea behind this combination is to eliminate the weak sides of each algorithm with the strengths of other. For instance, in original Hyperband the configuration selection is made uniform at random, which results in a slow converge of optimization process. As for the BO TPE, a drawback lays in configuration evaluation, which does not take into account an early evidences about the TS performance. Thus, even when the proposed configuration results in poor intermediate TS performance (which may be an evidence of a weak final performance), BO still continues TS execution. 
+A role of Hyperband in this duet is the configuration evaluation and comparison, while the Bayesian Tree Parzen Estimator (TPE) suggests the which configuration to evaluate next. The idea behind this combination is to eliminate the weak sides of each algorithm with the strengths of other. For instance, in original Hyperband the configuration selection is made uniform at random, which results in a slow converge of optimization process. As for the BO TPE, a drawback lays in configuration evaluation, which does not take into account an early evidences about the TS performance. Thus, even when the proposed configuration results in poor intermediate TS performance (which may be an evidence of a weak final performance), BO still continues TS execution. This motivated authors to merge those two algorithms and create one with strong anytime (HB) and final (BO) performance, which will effectively use available computational resources in parallel (HB) and scalable learning mechanisms (BO).
 
-From our perspective, there are several drawbacks in the proposed BOHB implementation.
-
-The two core algortihms are tightly coupled
-
-Firstly, it is the way of handling conditions between hyper-parameters. HpBandSter is a \textit{BOHB} particular implementation uses \textit{ConfigSpace} framework (as \textit{SMACv3}) for Configuration Space definition. As we discussed in \textit{SMACv3} description (\cref{bg: smac}), \textit{ConfigSpace} naturally allows to encode the dependencies and conditions among parameters. As authors stated, the TPE learning models are also able to learn these dependencies implicitly by shrinking the densities for forbidden parameters (actually those parameter values are still added to models by \textit{imputation} mechanism where default values are used for forbidden parameters). However, consider a case of two Configurations $C_1$, $C_2$ appearance such that some parameter $P_i$ is forbidden in $C_1$, but not in $C_2$, which will break the densities and as a consequence, the prediction performed using such distributions will often result in Configurations with violated parameter dependencies within `sparse' search spaces, hurting the performance and accuracy of sampling. The actual number of such cases could vary dramatically in `sparse' Search Spaces, thus probability distributions estimated by KDEs will not reflect the reality.
-
-
-% TODO: it is more for concept description
-% Even if fix of Configuration sampling in such cases is relatively simple task (parent-child relationship utilized in IRACE), then building proper density distributions of `good' parameters reflecting conditions is hard.
-
+Let us discuss the process of conditions between hyper-parameters handling. SMACv3 and HpBandSter as well, uses ConfigSpace framework for search space representation. As we discussed in SMACv3 description above, ConfigSpace naturally allows to encode the dependencies and conditions among parameters. The TPE learning models are also able to somehow fit these dependencies by using the \emph{impuration} mechanism\cite{levesque2017bayesian}. In short, when fitting the surrogate models, inactive parameters (turned off by means of dependencies) are treated with their default values. Later, while building the surrogate models those default parameter values are ignored therefore, the probability densities still represent a proper parameter values distributions. However, consider an appearance of two configurations sets: $C_1$ and $C_2$, such that some parameter $P_i$ is forbidden in $C_1$, but required in $C_2$ and in a contrary the other parameter $P_j$ is required in $C_1$, but forbidden in $C_2$. If these configuration families are turn to be superior, this will bias the densities towards $P_i$ and $P_j$ values. As a consequence, the proposed prediction mechanism will sample non-default parameter values for both $P_i$ and $P_j$, which results in the configurations with violated parameter dependencies. The more `sparse' search space, the more harming an effect will be from a prediction performance perspective. A possible treatment here is to change the sampling process, introducing an intermediate layer to perform a prediction in level-wise approach, suggested in the \cref{concept:prediction}.
 
 
 \paragraph{BRISEv2}
+BRISEv2 is a software product line (SPL), created with aim in solving the expensive optimization problems in general and for the parameter tuning in particular (\cref{bg: brise}).
 
-% TODO: implementation \item[Support for Online Problem Solving.] This is a bit complex characteristic of system that we are willing to distinguish. As it turns out, most parameter tuning systems require full evaluation of Target System for Configuration comparison. However, in case of Hyper-Heuristic, the Configuration evaluation is a trial to solve the problem in hand using particular $LLH$ (tuned parameter) Here we compare final result quality, reported by each $LLH$
+The advantage of BRISEv2 over other systems comes from its modular design of \emph{main-node}. It is a set of cooperating core entities (Experiment, Search Space and Configuration) with other non-core entities exposed to user for variability. The prediction models, termination criteria, outliers detectors, repetition strategies, etc. are representatives of these non-core and variable components. A number of implementations are provided out-of-box for all variable entities, but we focus our attention to implemented sampling process. The reason of such greedy review is that the underlying search space representation is carried out by the same ConfigSpace, while the provided surrogate models are ridge regression model with polynomial features and Bayesian Tree Parzen Estimator (TPE). We are not going to repeat ourselves reviewing the ConfigSpace + TPE combination, but we have to put a few words about the ridge regression. 
+
+Ridge is the machine learning linear regression model with parameters regularization~\cite{hoerl1970ridge}. Since, it is a linear model, its ability to fit a `sparce' search spaces is poor therefore, the machine learning community are suggested to treat such cases with \emph{conditional linear regression}~\cite{DBLP:journals/corr/abs-1806-02326}. The underlying idea is to split the search space into sub-search spaces and build a separate regression model, but to the best of our knowledge, this approach is not built in into the underlying ridge regression model.
+
+As for the support of on-line problem solving, the routine of optimization process, implemented in BRISEv2 is nothing else, but the reinforcement learning approach. After each new obtained evidence, a `fresh' surrogate model is built to react on the learning process by predicting of new configuration. Which makes it easy to embed the on-line parameter tuning approach, presented in \cref{concept:parameter control}.
+
+
 \subsection{Conclusion on Code Base}\label{impl:hlh code basis conclusion}
-BRISEv2 is the best system for code basis, however it has to be changed as we describe in following sections.
+The most among reviewed parameter tuning systems share the same SMBO approach for problem solving. They utilize a rather similar approaches for building the surrogate models and making the predictions however, the different architecture is implemented.
 
+To sum um our review, we use a term \emph{quality} to aggregate both the provided  out-of-the-box desired characteristic support and the required effort to adapt it, if necessary. We aggregate the reviewed characteristics quality in each software framework into \cref{iml: table code basis selection} for the visual representation.
+The quality estimates are quantized into three ordinal values:
+\begin{enumerate}
+	\item \textbf{Poor} quality, which implies the weak characteristic support and much effort required to provide it.
+	
+	\item \textbf{Average} quality, which implies the weak support, but requires small amount of effort to provide it.
+	
+	\item \textbf{Good} quality, which implies a great out-of-the-box characteristic support, and requires minor or no changes at all.
+\end{enumerate}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{l||cccc}
+		\textbf{Characteristic} & \textbf{SMACv3}& \textbf{IRACE} & \textbf{HpBandSter} & \textbf{BRISEv2} \\
+		\hline
+		\hline
+		Variability \& extensibility & \cellcolor{yellow!25}Average & \cellcolor{red!25}Poor & \cellcolor{yellow!25}Average & \cellcolor{green!25}Good \\
+	
+		On-line optimization & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average \\
+	
+		Conditional parameters & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor \\
+	\end{tabular}
+	\caption{Code basis candidate systems characteristics.}
+	\label{iml: table code basis selection}
+\end{table}
+
+Among the reviewed software systems, the majority were created as an implementation of some concrete algorithm (or a combination of algorithms). It results in the reduction of system flexibility. It turns out that there are two most promising candidates for hyper-heuristic with parameter control creation: IRACE and BRISEv2. They both require much adaptation and preparation steps, which we will discuss in upcoming sections, but still less in comparison to SMACv3 and HpBandSter. Among such features as proper support of conditional parameters vs variability and extensibility, the former plays a settle role therefore, we choose BRISEv2 as the code basis.
 
 \section{Search Space}\label{impl: search space}
+Previously, in the \cref{concept:search space} we presented a set of structural requirements for the search space representation: parent-child relationship should be presented explicitly, supporting different parameter types in a values-specific approach. To support the prediction process in the \cref{concept:prediction} we listed functional requirements in form of mechanisms: data filtering, sampling propagation, parameter description and a configuration verification.
+
+In this section we (1) analyze the available ConfigSpace framework, how it fits to our requirements and (2) decide whether to use it or to set it aside for making own search space representation implementation.
 
 \subsection{Base Version Description}
-What is the problem with the current Search Space?
-\paragraph{The Scope Refinement Work} Throw away and write a new one :D
+From the structural point of view, in ConfigSpace\footnote{ConfigSpace GitHub repository: \url{https://github.com/automl/ConfigSpace}} the parameters coupling is made implying parent-child relationship, which fit into our requirements. The parameter types suite the most of use-cases and the value-specific dependencies are supported as well. Therefore, from the structural requirements S.R.1, S.R.2 and S.R.3 (\cref{concept:search space}) are perfectly met.
 
-\subsection{Implementation}
-\paragraph{Description}
-\paragraph{Motivation of structure}
-\paragraph{Class diagram} - i think, I will put it into the appendix
+When it comes to the functional requirements (\cref{concept:prediction}), ConfigSpace samples the random configurations in a completion approach. In other words, there is no step-wise configuration creation, only a final and valid ones are produced. Thus, there is no way to expose the underlying dependencies among parameters for the prediction models, except of carrying them on a side and evaluating manually. As a consequence the data filtering mechanism should be implemented on a side and the sampling propagation as well. The framework exposes an ability to validate a created configuration, which turn to be also a proprietary class. As for the parameter description, the amount of exposed knowledge is satisfying. Here we conclude that all functional requirements, except S.F.R.4 are not met.
+
+As the conclusion, we decided to set aside the $3rd$ party ConfigSpace framework because: (1) it still requires much adaptation and implies its usage as a core entity in BRISEv2, (2) it implies replacement of the other core entity — Configuration, which turns to be costly and (3) it obligates us to use a third proprietary entity — Hyperparameter. 
+
+\subsection{Search Space Implementation}
+From the structural requirements of search space we know that the parameters should be treated uniformly. The desired \emph{feature tree} shape is perfectly handled by \emph{composite} design pattern. With this idea in mind, we construct the search space as a composite \emph{Hyperparameter} object with four possible hyper-parameter types: integer and float as numerical, nominal and ordinal as categorical. This fulfilling S.R.2, specified in \cref{concept:search space}. The implemented class diagram could be found in Appendix.
+\todoy{add class diagram in appendix}
+
+In the code snippets provided through the explanation we highlight an implemented method  signature, which fulfills one of our requirements, specified in \cref{Concept description}.
+
+\paragraph{Search space construction.} The S.R.3 implementation is performed by means of $add_child_hyperparameter$ method in Hyperparameter class (\cref{impl: S.R.1 listing}). It should be called on a parent hyper-parameter object, specifying the activation value(s) ($activation_categories$ argument) of parent hyper-parameter which will expose child. 
+
+\begin{lstlisting}[language=Python, caption=S.R.1 implementation., label=impl: S.R.1 listing]
+class Hyperparameter:
+	...
+	def add_child_hyperparameter(self, other: Hyperparameter, activation_categories: Iterable[_CATEGORY]) -> Hyperparameter: pass
+	...
+\end{lstlisting}
+
+Note, currently we support a composite construct only by means of categorical parameter type therefore, requiring a list of activation categories and postponing composition on numerical ranges enhancement for the future work, since our current needs do not include the composition on numerical ranges.
+
+\paragraph{Search space role in prediction.}
+Imagine a number of configurations were already evaluated. For making the prediction in tiered approach, the parameter values on current level should be selected. Thus, first we filter data which fits to this level by means of search space S.F.R.1. Thereby, filter accepts the already chosen parameter values and iterates over the available configurations. It is implemented in form of hyper-parameter instance method in \cref{impl: S.F.R.1 listing}.
+An intent of this method is to derive whether the already chosen parameter values ($base\_values$) form a sub-feature-tree of the parameter values under comparison ($target\_values$). The outcome of this method is a decision, should this particular configuration be included into the dataset or not. For instance, if the selected LLH type in $base\_values$ is not the same as one in $target\_values$, the result will be false.
+
+\begin{lstlisting}[language=Python, caption=S.F.R.1 implementation., label=impl: S.F.R.1 listing]
+class Hyperparameter:
+	...
+    def are_siblings(self, base_values: MutableMapping, target_values: MutableMapping) -> bool: pass
+	...
+\end{lstlisting}
+
+After filtering data, the time comes for predict a parameter values. For doing so, the search space, must expose parameters on the current level be means of S.F.R.2. Since we always interact with a search space root object, the call to $generate$ method is executed recursively (\cref{impl: S.F.R.2 listing}). If a callee finds itself in $values$, it redirects a call to \textit{activated} children. If it does not, it adds itself as a $parameter\ name \rightarrow random\ parameter\ value$ to the $values$.
+
+\begin{lstlisting}[language=Python, caption=S.F.R.2 implementation., label=impl: S.F.R.2 listing]
+class Hyperparameter:
+	...
+    def generate(self, values: MutableMapping) -> None: pass
+	...
+\end{lstlisting}
+
+Randomly sampled for current level values are then used for getting a description and (1) cutting-off the data from levels above and below, (2) building the surrogate models and (3) making the prediction.
+
+To build the surrogate models we require an available data (parameters) description. Thus, S.F.R.3 implementation is performed in method $describe$ (\cref{impl: S.F.R.3 listing}). This is once again a recursive method, which terminates when parameter can not find activated children or himself in the provided $values$. 
+This description contains a mapping from parameter name to its type and range of possible values.
+
+\begin{lstlisting}[language=Python, caption=S.F.R.3 implementation., label=impl: S.F.R.3 listing]
+class Hyperparameter:
+	...
+    def describe(self, values: MutableMapping) -> Description: pass
+	...
+\end{lstlisting}
+
+Later, this description is used by prediction models for building surrogates and making the predictions, which will replace a randomly sampled parameter values in $generate$ method.
+
+The described above process is controlled by S.F.R.4., implemented as method $validate$ (\cref{impl: S.F.R.4 listing}). The control occurs twice. Firstly, before starting a new loop of $filter \rightarrow propagate \rightarrow describe \rightarrow predict$ to check whether the construction process is finished (deep validation). Secondly, after making the prediction by models (flat validation). In the later case, if the conditions are violated, the predicted values are discarded and sampled randomly. Since the sampling process implemented in hyper-parameters guarantees to provide valid parameter values, after maximally $N$ mentioned above loops, we derive a new and valid configuration, where $N$ is a maximal depth in the defined search space.
+
+\begin{lstlisting}[language=Python, caption=S.F.R.4 implementation., label=impl: S.F.R.4 listing]
+class Hyperparameter:
+	...
+	def validate(self, values: MutableMapping, recursive: bool) -> bool: pass
+	...
+\end{lstlisting}
 
 
 \section{Prediction Logic}\label{impl: prediction logic}
