@@ -24,7 +24,7 @@ The implementation of Sequential Model-based Algorithm Configuration framework i
 The idea of SMACv3 lays in ROAR mechanism enhancement with the model-based sampling algorithm.
 As we mention in \cref{bg: smac}, underlying surrogate model are one of the random forest or Gaussian process kernel density estimator. These models could fit complex dependencies among parameters in the search spaces. To choose a next configuration the \emph{one-exchange} neighborhood of best found so far is traversed, using the surrogate models and the expected improvement estimations.
 The learning capabilities in surrogates are great, and the usage of expected improvement guarantees converging to the global optimum given enough time as well. However, the major drawback in this system is lack of ability to include the conditional dependencies between parameters into the sampling process. In fact, used here search space representation framework ConfigSpace~\cite{configspace} is able to specify the dependencies among hyper-parameters.
-However, to the best of our knowledge, the one-exchange neighborhood used as sample mechanism in SMACv3, is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{https://github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
+However, to the best of our knowledge, the one-exchange neighborhood used as sample mechanism in SMACv3, is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
 
 The ROAR mechanism is a derivative from the FocusedILS algorithm (solver in the parameter tuning framework ParamILS~\cite{hutter2009paramils}) where each evaluation of a new candidate solution on problem instance performed sequentially. Since the ROAR evaluation strategy is also used in SMACv3, we expect it to require much effort to enable system solving the problem on-line.
 
@@ -94,13 +94,13 @@ Previously, in the \cref{concept:search space} we presented a set of structural 
 In this section we (1) analyze the available ConfigSpace framework, how it fits to our requirements and (2) decide whether to use it or to set it aside for making own search space representation implementation.
 
 \subsection{Base Version Description}
-From the structural point of view, in ConfigSpace\footnote{ConfigSpace GitHub repository: \url{https://github.com/automl/ConfigSpace}} the parameters coupling is made implying parent-child relationship, which fit into our requirements. The parameter types suite the most of use-cases and the value-specific dependencies are supported as well. Therefore, from the structural requirements S.R.1, S.R.2 and S.R.3 (\cref{concept:search space}) are perfectly met.
+From the structural point of view, in ConfigSpace\footnote{ConfigSpace GitHub repository: \url{github.com/automl/ConfigSpace}} the parameters coupling is made implying parent-child relationship, which fit into our requirements. The parameter types suite the most of use-cases and the value-specific dependencies are supported as well. Therefore, from the structural requirements S.R.1, S.R.2 and S.R.3 (\cref{concept:search space}) are perfectly met.
 
 When it comes to the functional requirements (\cref{concept:prediction}), ConfigSpace samples the random configurations in a completion approach. In other words, there is no step-wise configuration creation, only a final and valid ones are produced. Thus, there is no way to expose the underlying dependencies among parameters for the prediction models, except of carrying them on a side and evaluating manually. As a consequence the data filtering mechanism should be implemented on a side and the sampling propagation as well. The framework exposes an ability to validate a created configuration, which turn to be also a proprietary class. As for the parameter description, the amount of exposed knowledge is satisfying. Here we conclude that all functional requirements, except S.F.R.4 are not met.
 
 As the conclusion, we decided to set aside the $3rd$ party ConfigSpace framework because: (1) it still requires much adaptation and implies its usage as a core entity in BRISEv2, (2) it implies replacement of the other core entity — Configuration, which turns to be costly and (3) it obligates us to use a third proprietary entity — Hyperparameter. 
 
-\subsection{Search Space Implementation}
+\subsection{Search Space Implementation}\label{impl: search space impl}
 From the structural requirements of search space we know that the parameters should be treated uniformly. The desired \emph{feature tree} shape is perfectly handled by \emph{composite} design pattern. With this idea in mind, we construct the search space as a composite \emph{Hyperparameter} object with four possible hyper-parameter types: integer and float as numerical, nominal and ordinal as categorical. This fulfilling S.R.2, specified in \cref{concept:search space}. The implemented class diagram could be found in Appendix.
 \todoy{add class diagram in appendix}
 
@@ -161,30 +161,130 @@ class Hyperparameter:
 \end{lstlisting}
 
 
-\section{Prediction Logic}\label{impl: prediction logic}
-\subsection{Base Version Description}
-\paragraph{The Scope Refinement Work} prediction should be done in feature-tree structured search space. Most models could handle only flat search space and we would like to enable reuse of those existing models. Though we decouple the structure of Search Space in entity \textbf{Predictor}, while actual prediction process is done in underlying models, that Predictor uses.
+\section{Prediction Process}\label{impl: prediction logic}
+The next step is an investigation and planning of prediction logic adaptation.
+In the \cref{impl: Parameter Tuning Frameworks Analysis} we learned that BRISEv2 provides two learning models: Bayesian TPE and ridge linear regression. Both approaches could be used within a tiered parameter values sampling however, it should be generalized.
 
-\subsection{Predictor}
-to decouple prediction from structure of search space.
--- learning window
+P.F.R.1 implies the addition of entity, which will encapsulate the prediction process, described in the \cref{impl: search space impl}. According to P.F.R.3, this entity may also be responsible for the forgetting strategy. Both requirements are not available in BRISEv2 yet therefore, we will implement them from scratch.
 
-\subsection{Prediction Models}\label{implementation: prediction models}
-\subsubsection{Tree parzen estimator}
+As for P.F.R.2, the current implementation of BRISEv2 already provides some level of model unification behind a required interface, which, however, is too coarse-grained and implies binding of tree logical steps: data preprocessing, surrogate models creation and optimization of surrogates to predict a next configuration.
+
+The following parts of prediction logic description are dedicated to (1) P.F.R.1 + P.F.R.3 implementation in form of $Predictor$ entity and P.F.R.2 in form of decoupled data preprocessing mechanism and the prediction models. Note, the current implementation does not solve the problem of binding surrogate models creation and optimization over them. We postpone this to the future work implementing a simple random search over the surrogate models.
+
+\subsection{Predictor Entity}
+In addition to previously listed logic during the search space description, a role of predictor is also to decouple a learning models from (1) feature model shape of search space and (2) other core entities such as Configuration. In addition to static search space, the input to predictor is the available in a moment data (evaluated configurations), while the desired output is a configuration. \cref{impl: P.F.R.1 + P.F.R.3 implementation pseudocode} provides a pseudo-code of predictor implementation.
+
+To implement the information forgetting mechanism, we refer the idea of sliding window, mentioned in~\cite{ferreira2017multi}. According to this, predictor should use specified in a settings number of the latest configurations as information for surrogate models creation. We modify this logic, allowing user to specify not only a static number, but also a percentage of the latest configurations (line 3). This fulfills the P.F.R.3 however, more exotic approaches may arise such as the statistical analysis to estimate a required configuration number or the other type of meta-learning.
+
+The next question is decoupling of prediction models from the search space structure by means off fulfilling P.F.R.1. As we discussed in the \cref{impl: search space impl}, to predict a parameter values on each level, the models should be built on only related to this level information. For doing so, after filtering the data (line 6), we propagate the prediction from previous level to current (line 7), remove parameters values from level above and derive a description for current level parameters (line 9). Independently, we instantiate a specified in predictor settings prediction model for this level and fit it with the related information (lines 11-13). Afterwards, we make a prediction and check if it not validates a search space boundaries (lines 16-17). If either model can not properly fit the data, or the prediction is invalid, we sample the parameter values randomly (lines 18-20).
+
+\begin{code}[language=Python, caption=P.F.R.1 + P.F.R.3 implementation pseudo-code., label=impl: P.F.R.1 + P.F.R.3 implementation pseudocode]
+class Predictor:
+	def predict(measured_configurations):
+		level_configurations = trim_in_window(measured_configurations)
+		prediction = Mapping()
+		while not search_space.validate(prediction, recursive=True):
+			level_configurations = filter(search_space.are_siblings(prediction, x), level_configurations)
+			randomly_generated = search_space.generate(prediction)
+			full_description = search_space.describe(randomly_generated)
+			level_description = trim_previous_levels(description, prediction)
+			
+			data = trim_accodring_to_description(level_configurations, level_description)
+			model = get_current_level_model()
+			model.build(data, level_description)
+			
+			if model.is_built():
+				level_prediction = model.predict()
+				if not search_space.validate(level_prediction, recursive=False):
+					level_prediction = randomly_generated
+			else:
+				level_prediction = randomly_generated
+		
+		return Configuration(prediction)
+\end{code}
+
+For the sake of simplicity we omit some minor implementation details and provide the description of (1) available models and (2) data preprocessing in a Sections below.
+
+\subsection{Data Preprocessing}\label{impl: preprocessing}
+Data preprocessing may be split into two concepts: an obligatory data encoding and optionally data transformation. The first is required to make the underlying model capable with provided data. Imagine the parameters values to be a simple string. Having a surrogate model, which is constructed as probability densities of parameter values, one should first derive a numeric data for those string parameter values. The second concept is applied on a data, which is already suitable. This is usually done to improve an available surrogate model performance. An example of former could be simple indexing of all possible string values, which results in replacement of strings by their indexes during the data preprocessing. On a contrary, the later case may be presented by an addition of polynomial features to already available data with aim to improve surrogate models preciseness by learning more complex dependencies.
+
+The decision of which encoding to use is strictly defined by the learning model, while the decision on data transformation is carried out by user and depends on the concrete use-case.
+
+In all reviewed parameter tuning systems, the data preprocessing is implemented only by means of an obligatory for underlying learning models encoding and omitting the possible data transformation. In most cases, the encoding is performed in simple label into integer numbers. Being the easiest approach, this encoding may introduce a non-existing patterns in nominal data. For instance, having 3 possible LLH types genetic algorithm, simulated annealing and evolution strategy, the label encoding will encode such parameter values to numbers 0, 1 and 2 respectively. When the such data is passed to surrogate for learning, the model may interpret that GA is closer to SA than to ES in the search space. To prevent this, the other preprocessing type should be used for instance, binary encoding.
+
+In any case, the intent of this discussion is to provide the reader an insight of data preprocessing importance, but the discussion of possible cases and their influence are out of this thesis scope. Here instead we decided to gain a certain level of flexibility by providing a uniformed wrapper for the preprocessing routines, implemented in Scikit-learn machine learning framework~\cite{scikit-learn}.
+
+We omit the details of wrapper implementation since it is a single class, that is instantiated with provided scikit-learn preprocessing unit. The wrapper is executed each time before the actual surrogate performs learning and after making the prediction to inverse the transformation.
+
+
+\subsection{Prediction Models}\label{impl: prediction models}
+As a derivative from predictor implementation, the underlying prediction models should implement unified interface and behavior. Due to predictor, the models are acting on a `flat' search space levels. This enables us to use a vast range of possible surrogates for instance, linear regression models. In fact, the previously used in BRISEv2 ridge regression with polynomial features is nothing else, but a combination of data preprocessing from the Section above and the ridge regression model from scikit-learn. Below we discuss an implementation of a unified wrapper for scikit-learn linear models.
+
+As a step further, we also add the implementation of Multi Armed Bandit (MAB) selection strategy proposed in~\cite{auer2002finite}. This is motivated by a great reported performance of the selective hyper-heuristics, with MAB as HLH. However, it is worth to mention that MAB is applicable only to categorical parameters types.
+
+The previously available in BRISEv2 Bayesian Tree Parzen Estimator should be decoupled from the data preprocessing logic however, no other major changes except refactoring are required. Thus, there is no reasons to present TPE implementation here.
+
+\paragraph{Scikit-learn linear models wrapper.}
+Scikit-learn is one among most popular open-source machine learning frameworks. As a consequence of flexible decisions ($H<=T$ framework design patter), the scikit-learn often plays a central role providing many implementations of building blocks for machine learning pipelines. This advantages in combination with a comprehensive documentation result into a large and active framework community~\footnote{Scikit-learn GitHub repository~\url{github.com/scikit-learn/scikit-learn}}.
+
+All available in scikit-learn linear regressors implement the same interface and usage routines. Firstly, before usage a regression model should be trained on a data providing separately \emph{features} and \emph{labels}. Afterwards, one may request a prediction for unforeseen features and surrogate will produce a corresponding label according to learned dependencies. This implies that to obtain a prediction of the best parameter combination, one should solve the same optimization problem. However, the crucial advantage of surrogate models is the reduced estimation cost.
+
+To reuse an available in scikit-learn surrogate models we create wrapper as an implementation of unified $Model$ interface, which is required in $Predictor$. The pseudo-code of this wrapper is presented on the \cref{impl: sklearn model wrapper pseudo-code}.
+
+\begin{code}[language=Python, caption=Scikit-learn linear model wrapper pseudo-code., label=impl: sklearn model wrapper pseudo-code]
+class SklearnModelWrapper(Model):
+	def build_model(features, labels, features_description):
+		features_preprocessors, labels_preprocessors = build_preprocessors()
+		transformed_features = features_preprocessors.transform(features)
+	 	transformed_labels = labels_preprocessors.transform(labels)
+	 	
+	 	score = cross_validation(model, transformed_features, transformed_labels)
+	 	if score > threshold:
+	 		model.fit(transformed_features, transformed_labels)
+	 		model_is_built = True
+	 	else:
+	 		model_is_built = False
+	 	return model_is_built
+	 
+	 def predict():
+	 	features = random_sample(features_description)
+	 	features_transformed = features_preprocessors.transform(features)
+	 	
+	 	labels_predicted_transfored = model.predict(features_transformed)
+	 	labels_predicted = labels_preprocessors.inverse_transform(labels_predicted_transfored)
+	 	
+	 	features_transformed_chosen = select_by_labels(features_transformed, labels_predicted)
+	 	prediction = features_preprocessors.inverse_transform(features_transformed_chosen)
+	 	
+		return prediction
+\end{code}
+
+During the model creation, we firstly instantiate features and labels preprocessors, and transform the input data (lines 3-5). The underlying process of model building includes also a verification step, which is performed by means of cross-validation: splitting the set of data onto \textit{k} folds, training \textit{k} times model each time excluding one fold for validation and using the others for training (line 7). If the obtained score less than predefined threshold — the model is considered to be not accurate enough therefore, we reject it (line 12), forcing the predictor to use the random parameter values sampling. However, if the model is able to perform well, we train it on an entire dataset and store for further usage (lines 8-10).
+
+Later, during the prediction (if the model was built successfully) we firstly sample features from this level and transform them to fit into created previously model (lines 16-17). Afterwards, we use a regression model to make a prediction for sampled features and transform those predictions back into original labels (lines 19-20). Finally, we select the best feature by means of predicted labels, transform it and return (lines 22-23).
+
 \subsubsection{Multi Armed Bandit}
-\subsubsection{Sklearn linear regression wrapper}
+Originally, the Multi Armed Bandit (MAB) problem were introduced by~\cite{robbins1952some} and defined as: for given set of choices $c_i$ with unknown stochastic reward values $r_i$, which are distributed normally with variance $v_i$, the goal is to maximize the accumulated reward, sequentially selecting one among available choices $c_i$. The problem derived its name as an analogy to one-hand slot machines in casino and comprises well-known exploration vs exploitation dilemma.
 
+In most of the times, MAB is solved by RL approaches, where before performing each new step, the already available evidences are analyzed. The authors in~\cite{auer2002finite} propose the Upper Confidence Bound algorithm, which proposes an intuitive solution: in iteration $k$, among available choices select one with a maximal UCB value. The category UCB values is calculated according to the \cref{impl: ucb formula}, where first component $Q$ is a quality of category under evaluation and represents the exploitation portion of UCB, while the second component estimates the exploration portion with $C$ as a balancing coefficient. 
 
-\section{Data Preprocessing}
-\subsection{Heterogeneous Data} description and motivation of data preprocessing notions
+\begin{equation}
+UCB = Q + C \cdot \sqrt{\frac{2 \log \sum_{1}^{i} n_k^i}{n_k}}
+\label{impl: ucb formula}
+\end{equation}
 
-\subsection{Base Version Description} and Scope of work analysis
-\subsection{Wrapper for Scikit-learn Preprocessors}
+In this work we implement Fitness-Rate-Average based MAB (FRAMAB) with two reasons: (1) it is an intuitive and robust approach, (2) according to benchmarks in~\cite{ferreira2017multi}, it outperforms the other. In FRAMAB, $n_k^i$ denotes the overall number of categories, while $n_k$ is a number of times the category under evaluation was selected. The quality estimation here is the average improvement, obtained by the underlying category.
+
+As for the balancing coefficient $C$, the authors in~\cite{ferreira2017multi} were evaluating a range of values $10^(-4)...10^(-1)$ and the dominance for various problem types were different. In addition to the statically used $C$ value, we add a mechanism for proper $C$ estimation by means of standard deviation among improvement. The motivation is as follows: if the deviation is high, there exist an uncertainty in category domination, therefore we encourage the exploration portion of UCB values. Since the implementation straightly repeats provided above algorithm description, we do not provide a pseudo-code.
 
 
 \section{Low Level Heuristics}\label{impl: LLH}
+When the HLH is ready to solve the problem, time comes to provide the tools for solving. In this section we present a review of several toolboxes (meta-heuristic frameworks) with an intent to select the best suited one.
 
-\subsection{Requirements}
+Nevertheless, before diving into description of available frameworks we briefly refresh our LLHs requirements, in the interest of which we analyze each framework.
+
+\subsection{Low Level Heuristics Requirements}
+
 
 \subsection{Code Base Selection}\label{implementation:llh code basis selection}
 Available Meta-heuristics with description of their current state

@@ -53,9 +53,17 @@
 	tabsize=2
 }
 
-\lstset{style=mystyle}
+\lstset{style=mystyle} % enable cref for listing
 \crefname{lstlisting}{Listing}{listings}
 \Crefname{lstlisting}{Listing}{Listings}
+
+\lstnewenvironment{code}[1][]% use 'code' instead of 'lstlisting' to prevent splitting between pages
+{
+	\noindent
+	\minipage{\linewidth} 
+	\vspace{0.5\baselineskip}
+	\lstset{basicstyle=\ttfamily\footnotesize,#1}}
+{\endminipage}
 
 
 \usepackage{caption}
@@ -79,7 +87,7 @@
 \usepackage[babel]{microtype}
 \usepackage{xfrac}
 \usepackage{enumitem}
-
+\usepackage[perpage]{footmisc} % reset footnote counter on each page
 \usepackage{epigraph}
 
 \usepackage{ellipsis}

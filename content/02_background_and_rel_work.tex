@@ -326,7 +326,7 @@ In~\cite{moriarty1999evolutionary} authors made infer that Hyper-Heuristics can 
 	\label{bg:pic:HH}
 \end{figure}
 
-The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier} (\cref{bg:pic:HH}\footnote{Icons from \href{https://thenounproject.com/}{thenounproject.com}}).
+The new concept which implicitly was used in Meta-Heuristics, but explicitly pointed out in Hyper-Heuristics is the \textbf{Domain Barrier} (\cref{bg:pic:HH}\footnote{Icons from \href{thenounproject.com/}{thenounproject.com}}).
 As we told previously, HH do not tackle the OP directly, but use LLH instead. This means, that usually HH are minimally aware of the domain details, such as what are data types, relationships, etc. within a domain. This information rather encapsulated in LLHs, thus HHs could be used to broader range of Optimization Problems.
 
 With this idea, many researchers started to create not only Hyper-Heuristics to tackle a concrete optimization problem class, but also frameworks with building blocks for their creation.
@@ -428,12 +428,12 @@ The same applies to heuristics: proper assignment of hyper-parameters has a grea
 Up until now there were formalized many approaches for solving task of settings hyper-parameters. 
 One of the simplest and error-prone ways is just trusting your (or someones else) intuition and using those parameters that seems more or less logical for particular system under the problem instance. People quickly abandoned it in favor of automatic approaches, fortunately novel computational capacities easily provide a possibility for it. These automatic methods later could be split onto \textit{off-line or parameter tuning} and \textit{on-line or parameter control} techniques.
 
-% TODO interesting visualization scheme on page 366 https://link.springer.com/chapter/10.1007/978-3-642-29178-4_37
+\todoy{interesting visualization scheme on page 366 $https://link.springer.com/chapter/10.1007/978-3-642-29178-4_37$}
 
 \subsection{Parameter Tuning}\label{bg: parameter tuning}
 Roughly speaking, the off-line approach is a process of traversing the search space of hyper-parameters and evaluating TS with these parameters on some set of toy problems. After finishing this process, the best found HPs are later used to solve new, unforeseen problem instance.
 
-In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on a \cref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
+In this part of thesis we briefly outline existing automated approaches for parameter tuning illustrating them on the \cref{bg: fig:automated parameter tuning approaches}\footnote{Original graphics are taken from~\cite{koch2017automated}}. In this example, the TS exposes two parameters: $X_1$ and $X_2$. Each graphic shows dependencies between $X_1$ (horizontal axis) and $X_2$ (vertical axis) values and the subject of optimization along those axes (here depicted the maximization case). The best found configuration by each approach is highlighted in pink.
 
 \begin{figure}
 	\centering
@@ -489,7 +489,7 @@ Among reviewed systems we could distinguish ones that were created directly to f
 A concrete optimizer will be usable for searching the parameters, if it exposes several features. First, it must consider optimization function evaluation to be expensive and tackle this problem explicitly. For instance, using surrogate models or the other TS approximations. Next, potential tuner should be able to tackle dependencies and conditions among parameters.
 
 \subsubsection{SMACv3~\cite{hutter2011sequential}}\label{bg: smac}
-Sequential Model-based Algorithm Configuration (SMAC~\footnote{SMACv3 GitHub repository~\url{https://github.com/automl/SMAC3/}}) is a system for parameters tuning, developed by the AutoML research group (here we review a $3^rd$ version of SMAC). 
+Sequential Model-based Algorithm Configuration (SMAC~\footnote{SMACv3 GitHub repository~\url{github.com/automl/SMAC3/}}) is a system for parameters tuning, developed by the AutoML research group (here we review a $3^rd$ version of SMAC). 
 
 In their research, scientists generalized the process of parameter tuning under the  \emph{Sequential Model-Based Optimization} (SMBO) term as the iterations between (1) fitting models and (2) using them to choice next configurations for evaluation. 
 We found this term naturally formalizes the most of existing (to the best of our knowledge) parameter tuning approaches and may be used as a distinguishing characteristic of optimization algorithms (since they naturally could be applied not only to parameter tuning problems).
@@ -504,7 +504,7 @@ The evaluation (3) here carried out by the original ROAR mechanism, where the ev
 
 
 \subsubsection{IRACE}\label{bg: irace}
-IRACE~\footnote{IRACE GitHub repository~\url{https://github.com/MLopez-Ibanez/irace}} is hyper-parameter tuning package~\cite{lopez2016irace} as the implementation of Iterated Racing Algorithm~\cite{birattari2010f}.
+IRACE~\footnote{IRACE GitHub repository~\url{github.com/MLopez-Ibanez/irace}} is hyper-parameter tuning package~\cite{lopez2016irace} as the implementation of Iterated Racing Algorithm~\cite{birattari2010f}.
 
 The underlying methodology is somehow similar to one implemented in SMACv3 and comprise three main steps: (1) sampling new configurations using a prior knowledge, (2) empirically finding the best ones among sampled using the racing algorithm and (3) updating the prior knowledge to bias future samples in towards better configurations. The prior knowledge here is represented as the probability distributions of values for each parameter independently (truncated normal and discrete distributions for numeric and categorical hyper-parameters respectively). During update step (3), the probability distributions are build using the best found in (2) step configurations therefore, increasing the sampling possibilities for the promising values.
 
@@ -514,7 +514,7 @@ IRACE supports various data types, such as numerical or categorical and the poss
 
 
 \subsubsection{HpBandSter}\label{bg: bohb}
-A distributed Hyperband implementation on Steroids (HpBandSter~\footnote{HpBandSter GitHub repository: \url{https://github.com/automl/HpBandSter}}) is the realization of BOHB algorithm~\cite{falkner2018bohb} in the software framework.
+A distributed Hyperband implementation on Steroids (HpBandSter~\footnote{HpBandSter GitHub repository: \url{github.com/automl/HpBandSter}}) is the realization of BOHB algorithm~\cite{falkner2018bohb} in the software framework.
 While SMAC outperforms and partially reuses the decisions made in ParamILS, BOHB (Bayesian Optimization combined with HyperBand) is the parameter tuning tool that outperforms SMAC and was created by the same AutoML research group.
 
 As it stated in name, the SMBO routines in this framework are carried out with mainly two algorithms: (1) learning and configurations sampling done by the Tree Parzen Estimator (TPE, Bayesian Optimization technique), while (2) evaluation of sampled configurations and their comparison are carried out by the Hyperband (HB) algorithm.
@@ -522,7 +522,7 @@ As it stated in name, the SMBO routines in this framework are carried out with m
 The TPE usage instead of na\"ive Gaussian Processes-based (GP BO) Bayesian Optimization + Expected Improvement evaluation was motivated by a better dimensional scaling abilities and internal support of both numerical and categorical data types. However, some minor transformations are still required.
 Unlike vanilla BO, where the optimization is done by modeling the result distributions given the configuration parameters, TPE builds two parameters distributions. It splits the configurations into two sets according to their `goodness'. During the sampling, it proposes those parameters, which have high probability to be in the `good' distribution and simultaneously low probability to be in the `bad' one. For more detailed explanation we refer to TPE description given in~\cite{bergstra2011algorithms}.
 
-The central part of BOHB, namely the HyperBand is a promising multi-armed bandit strategy for hyper-parameter optimization~\cite{li2017hyperband} in which the \emph{budget} for parameter tuning is defined beforehand and divided between iterations. The role of budget could play any control parameter that denotes the accuracy of configuration evaluation by TS, where estimation with the maximum budget gives you the most precise configuration evaluation, while the minimum amount of budget results in the least accurate approximation of configuration evaluation result.
+The central part of BOHB, namely the HyperBand is a promising bandit-based strategy for hyper-parameter optimization~\cite{li2017hyperband} in which the \emph{budget} for parameter tuning is defined beforehand and divided between iterations. The role of budget could play any control parameter that denotes the accuracy of configuration evaluation by TS, where estimation with the maximum budget gives you the most precise configuration evaluation, while the minimum amount of budget results in the least accurate approximation of configuration evaluation result.
 The running examples of budget could be a number of iterations in iterative algorithm, a number of epochs to train the neuron network, or a number of problem instances from benchmark set to evaluate. As the result, requirements arise for TS to expose and support budget usage as expected in BOHB.
 
 At each iteration, HB samples uniformly at random a number of configurations. The authors introduced an \emph{intensification} mechanism according to which, a number of per-iteration sampled configurations decreases for the later iterations, while the amount of budget given for iteration remains the same. As an outcome, first iterations of HB are full of coarse-grain evaluated configurations, while the later iterations produce a higher number of more precise measurements. Each iteration of HB is split to the number of \emph{Successful Halving} (SH) procedure executions which drop poorly performing configurations (usually $\sfrac{2}{3}$) at each execution. As one could expect, since the number of measured configurations in subsequent iterations decreases, the amount of SHs execution drops too therefore, the remaining configurations are evaluated more precisely.
@@ -532,7 +532,7 @@ The binding of HyperBand and Bayesian Tree Parzen Estimator is made in several p
 
 \subsubsection{BRISEv2}\label{bg: brise}
 The great part of software potential lays not only in its ability to tackle a problem in hand, but also on the general usability and adaptivity to unforeseen tasks.
-Here we review a $2^{nd}$ version of BRISE\footnote{BRISEv2 GitHub repository: \url{https://github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}~\cite{brise2spl}, since the very early BRISE versions (major version 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
+Here we review a $2^{nd}$ version of BRISE\footnote{BRISEv2 GitHub repository: \url{github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}~\cite{brise2spl}, since the very early BRISE versions (major version 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
 
 While designing this system, authors were focused not solely on learning mechanisms for parameter prediction, but on the overall system modularity as well.
 Being a software product line (SPL), BRISE was designed as a set of interacting components (nodes), each acting according to its own specific role. 
