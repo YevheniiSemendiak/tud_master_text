@@ -279,23 +279,64 @@ As for the balancing coefficient $C$, the authors in~\cite{ferreira2017multi} we
 
 
 \section{Low Level Heuristics}\label{impl: LLH}
-When the HLH is ready to solve the problem, time comes to provide the tools for solving. In this section we present a review of several toolboxes (meta-heuristic frameworks) with an intent to select the best suited one.
+When the HLH is ready to solve the problem, time comes to provide the tools for solving. A role of LLH in our selection hyper-heuristic (HH) may play a single heuristic algorithm or even a meta-heuristic (MH). As we discussed in \cref{bg: mh}, the present time in MH research is referred as the framework growth time. Therefore, we wish not only to reuse a single heuristic among available in framework, but be able to instantiate a set of underlying heuristics. Therefore, in this section we present a review of several toolboxes (meta-heuristic frameworks) with an intent to select the best suited one, implement a facade for framework usage and use it as LLHs in our hyper-heuristic.
 
-Nevertheless, before diving into description of available frameworks we briefly refresh our LLHs requirements, in the interest of which we analyze each framework.
+Before diving into description of available frameworks we briefly refresh the LLHs characteristics, with respect to which we analyze each framework:
+\begin{enumerate}
+	\item \textbf{Set of meta-heuristics}, which we will be able to use as LLH in our HH.
+	
+	\item \textbf{Exposed hyper-parameters}, which are required for LLH (MH) tuning. We point it out explicitly, since it happens that the parameters of an algorithm are exposed not fully.
+	
+	\item \textbf{Set of supported optimization problems} among which required in our case TSP. The wider this set, the more use-cases developed HH is able to tackle.
+	
+	\item \textbf{Warm-startup} is required to continue the problem solving from previously reached solution. Therefore, the underlying LLH should not only to report finally found solution(s), but also to accept them as starting points. Note, by plural form we refer to population-based MHs.
+	
+	\item \textbf{Termination criteria} characteristic is reviewed by means of providing the wall-clock time or number of target system evaluations criteria, which are required to control the intermediate results of optimization process by HH.
+\end{enumerate}
 
-\subsection{Low Level Heuristics Requirements}
+
+\subsection{Low Level Heuristics Code Base Selection}\label{implementation:llh code basis selection}
+As candidates, we select following open-source frameworks: Solid~\footnote{Solid GitHub repository~\url{github.com/100/Solid}}, mlrose~\footnote{mlrose GitHub repository~\url{github.com/gkhayes/mlrose}}, pyTSP~\footnote{pyTSP GitHub repository~\url{github.com/afourmy/pyTSP}}, LocalSolver~\footnote{LocalSolver website~\url{localsolver.com}}, jMetal~\footnote{jMetal GitHub repository~\url{github.com/jMetal/jMetal}} and jMetalPy~\footnote{jMetalPy GitHub repository~\url{github.com/jMetal/jMetalPy}}.
+
+\paragraph{Solid.} A framework for gradient-free optimization. It comprises basic versions of a wide MH range with exposed hyper-parameters: genetic algorithm, evolutionary algorithm, simulated annealing, particle swarm optimization, tabu search, harmony search and stochastic hill climbing. The support of warm-startup is not provided and requires changes in every algorithm as a consequence of single base class absence. As for the budget, algorithms in this framework support several types such as the maximal number of evaluations and termination after reaching the desired quality. Once again, to add a new termination criteria, one should modify the core of all algorithms. The framework does not provide the problem instances therefore, to use it one will need to carry out not only a domain-specific framework adaptation, but also the problem description according to this adaptation.
+
+\paragraph{mlrose.} A framework with implementation of various well-known stochastic optimization algorithms such as: na\'ive and randomized hill climbing, simulated annealing, genetic algorithm and mutual-information-maximizing input clustering (MIMIC) algorithm. Each listed solver is implemented as a separate function with exposed set of hyper-parameters and possibility to control an initial state, which is handy to continue with the problem solving. With respect to implemented OPs, the framework comprises a large set of different types: one max, flip-flop, four and six peaks, continuous peaks, knapsack, traveling salesman, n-queens and max-k color optimization problems. As for the proposed termination criteria, the only one criterion controlling the number of TS evaluations fits our needs. As in the previous framework, here the algorithms are not sharing the same code basis therefore, it may require much effort for their adaptation.
+
+\paragraph{pyTSP.} A system, specially designed to tackle a traveling salesman optimization problem. Together with visualization techniques, it also provides a bunch of algorithms. Here they are divided into four groups: (1) construction heuristics with the nearest neighbor, the nearest insertion, the farthest insertion and the cheapest insertion algorithms, (2) a linear programming algorithm, (3) simple heuristics among which a pairwise exchange, which is also known as 2-opt, a node insertion and an edge insertion, and finally (4) a meta-heuristics, represented by the genetic algorithm. As one may expect, the only supported problem type is the TSP. Other drawbacks of this framework is partial hard-coding of hyper-parameters and absence of exposed termination criteria. Also, as one may expect, the construction heuristics are not expose the possibility to seed them. Talking about the other algorithms, the functionality to specify the for initial solution is present however, not in all algorithms.
+
+\paragraph{LocalSolver.} A commercial optimization tool with free academic license. It is implemented in C++, but an API is exposed to such programming languages as Python, C++, Java and C\#. The software is a local search programming paradigm implementation~\cite{benoist2010toward,benoist2011localsolver} therefore, the algorithm itself and its parameters are not exposed. From the user side, it is required to provide a solver-specific problem description. Thanks to a detailed documentation, the desired TSP could be found among the number of other problem examples. Two possible termination criteria are exposed: a wall-clock time and a number of solver iterations. Also, the framework supports a possibility of setting an initial solution for the solver therefore, it looks like a good candidate for the LLH. However, our trial to use the tool showed up that the provided academic license could not be easily used within BRISEv2 containerized architecture. A possible work-around is to deploy a license server on a host machine and configure workers to register themselves, but we found this to be expensive from the perspective of configuration one-time solution.
+
+\paragraph{jMetalPy.} An open-source meta-heuristic framework for multi- and single-objective optimizations. Among the provided single-objective algorithm one will find genetic algorithm, evolutionary strategy, local search (hill climber) and simulated annealing. Even if the list of proposed heuristics is not the largest in comparison to other reviewed frameworks, every implemented algorithm exposes its hyper-parameters for tuning, and we found the code well-structured. A functionality for warming-up the solving process by already obtained solutions is available out-of-the-box and various termination criteria are ready as well (among which the time-based and the number-of-evaluations-based). The list of supported single-objective optimization problems consists of knapsack, traveling salesman and four synthetic problems: one max, sphere, Rastrigin and subset sum.
+
+\paragraph{jMetal.} A meta-heuristic framework implemented in Java is an alternative to reviewed above Python-based jMetalPy. This framework also provides meta-heuristics for multi- and single-objective OP. For later, jMetal developers implemented following algorithms: evolution strategy, covariance matrix adaptation evolution strategy (CMA-ES), genetic algorithm, particle swarm optimization (PSO), differential evolution and coral reef optimization. It is worth to mention that among this list, not all algorithms are universally applicable to wide range of OPs. More concretely, CMA-ES, PSO and differential evolution can be applied only to OPs with continuous numeric input such as synthetic mathematical problems. In contrast to his implemented in Python brother, jMetal supports only based on number of evaluations termination criteria, and do not support algorithm warm-startup at all.
+
+To sum up our discussion, we aggregate the desired characteristics in Table, similar to \cref{iml: table code basis selection} presented during the HLH code basis selection. Once again, the characteristics qualities are scored into three ordinal values: poor, average and good.
+
+\cellcolor{red!25}Poor
+\cellcolor{yellow!25}Average
+\cellcolor{green!25}Good
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{l||cccccc}
+		\textbf{Characteristic} & \textbf{Solid} & \textbf{mlrose} & \textbf{pyTSP} & \textbf{LocalSolver} & \textbf{jMetalPy} & \textbf{jMetal} \\
+		\hline
+		\hline
+		Set of heuristics & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{yellow!25}Average & \cellcolor{green!25}Good \\
+		
+		Exposed hyper-parameters & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good \\
+		
+		Provided OPs & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average \\
+		
+		Warm-startup support & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{red!25}Poor \\
+		
+		Termination criteria & \cellcolor{yellow!25}Average & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{yellow!25}Average \\
+	\end{tabular}
+	\caption{LLH frameworks characteristics.}
+	\label{iml: table llh selection}
+\end{table}
 
 
-\subsection{Code Base Selection}\label{implementation:llh code basis selection}
-Available Meta-heuristics with description of their current state
-With the aim of effort reuse, the code base should be selected for implementation of the designed hyper-heuristic approach.
-% https://docs.google.com/spreadsheets/d/19xjL_ire0R5VLP9seCE5_4sWorSMZP4xvgx7d1q4a9s/edit#gid=0
-\paragraph{SOLID}
-\paragraph{MLRose}
-\paragraph{OR-tools}
-\paragraph{pyTSP}
-\paragraph{LocalSolver}
-\paragraph{jMetalPy}
 
 \subsection{Scope of work analysis}
 \paragraph{opened PR}
