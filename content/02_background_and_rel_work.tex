@@ -489,7 +489,7 @@ Among reviewed systems we could distinguish ones that were created directly to f
 A concrete optimizer will be usable for searching the parameters, if it exposes several features. First, it must consider optimization function evaluation to be expensive and tackle this problem explicitly. For instance, using surrogate models or the other TS approximations. Next, potential tuner should be able to tackle dependencies and conditions among parameters.
 
 \subsubsection{SMACv3~\cite{hutter2011sequential}}\label{bg: smac}
-Sequential Model-based Algorithm Configuration (SMAC~\footnote{SMACv3 GitHub repository~\url{github.com/automl/SMAC3/}}) is a system for parameters tuning, developed by the AutoML research group (here we review a $3^rd$ version of SMAC). 
+Sequential Model-based Algorithm Configuration (SMAC~\footnote{SMACv3 GitHub repository~\url{https://github.com/automl/SMAC3/}}) is a system for parameters tuning, developed by the AutoML research group (here we review a $3^rd$ version of SMAC). 
 
 In their research, scientists generalized the process of parameter tuning under the  \emph{Sequential Model-Based Optimization} (SMBO) term as the iterations between (1) fitting models and (2) using them to choice next configurations for evaluation. 
 We found this term naturally formalizes the most of existing (to the best of our knowledge) parameter tuning approaches and may be used as a distinguishing characteristic of optimization algorithms (since they naturally could be applied not only to parameter tuning problems).
@@ -504,7 +504,7 @@ The evaluation (3) here carried out by the original ROAR mechanism, where the ev
 
 
 \subsubsection{IRACE}\label{bg: irace}
-IRACE~\footnote{IRACE GitHub repository~\url{github.com/MLopez-Ibanez/irace}} is hyper-parameter tuning package~\cite{lopez2016irace} as the implementation of Iterated Racing Algorithm~\cite{birattari2010f}.
+IRACE~\footnote{IRACE GitHub repository~\url{https://github.com/MLopez-Ibanez/irace}} is hyper-parameter tuning package~\cite{lopez2016irace} as the implementation of Iterated Racing Algorithm~\cite{birattari2010f}.
 
 The underlying methodology is somehow similar to one implemented in SMACv3 and comprise three main steps: (1) sampling new configurations using a prior knowledge, (2) empirically finding the best ones among sampled using the racing algorithm and (3) updating the prior knowledge to bias future samples in towards better configurations. The prior knowledge here is represented as the probability distributions of values for each parameter independently (truncated normal and discrete distributions for numeric and categorical hyper-parameters respectively). During update step (3), the probability distributions are build using the best found in (2) step configurations therefore, increasing the sampling possibilities for the promising values.
 
@@ -514,7 +514,7 @@ IRACE supports various data types, such as numerical or categorical and the poss
 
 
 \subsubsection{HpBandSter}\label{bg: bohb}
-A distributed Hyperband implementation on Steroids (HpBandSter~\footnote{HpBandSter GitHub repository: \url{github.com/automl/HpBandSter}}) is the realization of BOHB algorithm~\cite{falkner2018bohb} in the software framework.
+A distributed Hyperband implementation on Steroids (HpBandSter~\footnote{HpBandSter GitHub repository: \url{https://github.com/automl/HpBandSter}}) is the realization of BOHB algorithm~\cite{falkner2018bohb} in the software framework.
 While SMAC outperforms and partially reuses the decisions made in ParamILS, BOHB (Bayesian Optimization combined with HyperBand) is the parameter tuning tool that outperforms SMAC and was created by the same AutoML research group.
 
 As it stated in name, the SMBO routines in this framework are carried out with mainly two algorithms: (1) learning and configurations sampling done by the Tree Parzen Estimator (TPE, Bayesian Optimization technique), while (2) evaluation of sampled configurations and their comparison are carried out by the Hyperband (HB) algorithm.
@@ -532,7 +532,7 @@ The binding of HyperBand and Bayesian Tree Parzen Estimator is made in several p
 
 \subsubsection{BRISEv2}\label{bg: brise}
 The great part of software potential lays not only in its ability to tackle a problem in hand, but also on the general usability and adaptivity to unforeseen tasks.
-Here we review a $2^{nd}$ version of BRISE\footnote{BRISEv2 GitHub repository: \url{github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}~\cite{brise2spl}, since the very early BRISE versions (major version 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
+Here we review a $2^{nd}$ version of BRISE\footnote{BRISEv2 GitHub repository: \url{https://github.com/dpukhkaiev/BRISE2/releases/tag/v2.3.0}}~\cite{brise2spl}, since the very early BRISE versions (major version 1~\cite{brise1monolite}) were more monolithic and hard to apply for parameter tuning problem in hand.
 
 While designing this system, authors were focused not solely on learning mechanisms for parameter prediction, but on the overall system modularity as well.
 Being a software product line (SPL), BRISE was designed as a set of interacting components (nodes), each acting according to its own specific role. 

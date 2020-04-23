@@ -24,7 +24,7 @@ The implementation of Sequential Model-based Algorithm Configuration framework i
 The idea of SMACv3 lays in ROAR mechanism enhancement with the model-based sampling algorithm.
 As we mention in \cref{bg: smac}, underlying surrogate model are one of the random forest or Gaussian process kernel density estimator. These models could fit complex dependencies among parameters in the search spaces. To choose a next configuration the \emph{one-exchange} neighborhood of best found so far is traversed, using the surrogate models and the expected improvement estimations.
 The learning capabilities in surrogates are great, and the usage of expected improvement guarantees converging to the global optimum given enough time as well. However, the major drawback in this system is lack of ability to include the conditional dependencies between parameters into the sampling process. In fact, used here search space representation framework ConfigSpace~\cite{configspace} is able to specify the dependencies among hyper-parameters.
-However, to the best of our knowledge, the one-exchange neighborhood used as sample mechanism in SMACv3, is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
+However, to the best of our knowledge, the one-exchange neighborhood used as sample mechanism in SMACv3, is unaware of the parameter dependencies therefore, violates them during the configuration sampling resulting in illegal parameter combination. Those cases are rejected by the ConfigSpace, but we believe that in case of `sparse' search spaces this approach could lead to ineffective sampling and struggling in system predictive abilities. Unfortunately, we did not find any officially published empirical studies of such cases and can only make guesses based on own intuition but, the SMACv3 developers advises for operation in such cases~\footnote{Visit GitHub repository of SMACv3 for more info~\url{https://github.com/automl/SMAC3/issues/403}} could serve as an evidence to correctness of our assumptions. One of the possible solutions here could be the usage of a conditional-aware one-exchange neighborhood definition for sampling process.
 
 The ROAR mechanism is a derivative from the FocusedILS algorithm (solver in the parameter tuning framework ParamILS~\cite{hutter2009paramils}) where each evaluation of a new candidate solution on problem instance performed sequentially. Since the ROAR evaluation strategy is also used in SMACv3, we expect it to require much effort to enable system solving the problem on-line.
 
@@ -94,7 +94,7 @@ Previously, in the \cref{concept:search space} we presented a set of structural 
 In this section we (1) analyze the available ConfigSpace framework, how it fits to our requirements and (2) decide whether to use it or to set it aside for making own search space representation implementation.
 
 \subsection{Base Version Description}
-From the structural point of view, in ConfigSpace\footnote{ConfigSpace GitHub repository: \url{github.com/automl/ConfigSpace}} the parameters coupling is made implying parent-child relationship, which fit into our requirements. The parameter types suite the most of use-cases and the value-specific dependencies are supported as well. Therefore, from the structural requirements S.R.1, S.R.2 and S.R.3 (\cref{concept:search space}) are perfectly met.
+From the structural point of view, in ConfigSpace\footnote{ConfigSpace GitHub repository: \url{https://github.com/automl/ConfigSpace}} the parameters coupling is made implying parent-child relationship, which fit into our requirements. The parameter types suite the most of use-cases and the value-specific dependencies are supported as well. Therefore, from the structural requirements S.R.1, S.R.2 and S.R.3 (\cref{concept:search space}) are perfectly met.
 
 When it comes to the functional requirements (\cref{concept:prediction}), ConfigSpace samples the random configurations in a completion approach. In other words, there is no step-wise configuration creation, only a final and valid ones are produced. Thus, there is no way to expose the underlying dependencies among parameters for the prediction models, except of carrying them on a side and evaluating manually. As a consequence the data filtering mechanism should be implemented on a side and the sampling propagation as well. The framework exposes an ability to validate a created configuration, which turn to be also a proprietary class. As for the parameter description, the amount of exposed knowledge is satisfying. Here we conclude that all functional requirements, except S.F.R.4 are not met.
 
@@ -225,7 +225,7 @@ As a step further, we also add the implementation of Multi Armed Bandit (MAB) se
 The previously available in BRISEv2 Bayesian Tree Parzen Estimator should be decoupled from the data preprocessing logic however, no other major changes except refactoring are required. Thus, there is no reasons to present TPE implementation here.
 
 \paragraph{Scikit-learn linear models wrapper.}
-Scikit-learn is one among most popular open-source machine learning frameworks. As a consequence of flexible decisions ($H<=T$ framework design patter), the scikit-learn often plays a central role providing many implementations of building blocks for machine learning pipelines. This advantages in combination with a comprehensive documentation result into a large and active framework community~\footnote{Scikit-learn GitHub repository~\url{github.com/scikit-learn/scikit-learn}}.
+Scikit-learn is one among most popular open-source machine learning frameworks. As a consequence of flexible decisions ($H<=T$ framework design patter), the scikit-learn often plays a central role providing many implementations of building blocks for machine learning pipelines. This advantages in combination with a comprehensive documentation result into a large and active framework community~\footnote{Scikit-learn GitHub repository~\url{https://github.com/scikit-learn/scikit-learn}}.
 
 All available in scikit-learn linear regressors implement the same interface and usage routines. Firstly, before usage a regression model should be trained on a data providing separately \emph{features} and \emph{labels}. Afterwards, one may request a prediction for unforeseen features and surrogate will produce a corresponding label according to learned dependencies. This implies that to obtain a prediction of the best parameter combination, one should solve the same optimization problem. However, the crucial advantage of surrogate models is the reduced estimation cost.
 
@@ -296,7 +296,7 @@ Before diving into description of available frameworks we briefly refresh the LL
 
 
 \subsection{Low Level Heuristics Code Base Selection}\label{implementation:llh code basis selection}
-As candidates, we select following open-source frameworks: Solid~\footnote{Solid GitHub repository~\url{github.com/100/Solid}}, mlrose~\footnote{mlrose GitHub repository~\url{github.com/gkhayes/mlrose}}, pyTSP~\footnote{pyTSP GitHub repository~\url{github.com/afourmy/pyTSP}}, LocalSolver~\footnote{LocalSolver website~\url{localsolver.com}}, jMetal~\footnote{jMetal GitHub repository~\url{github.com/jMetal/jMetal}} and jMetalPy~\footnote{jMetalPy GitHub repository~\url{github.com/jMetal/jMetalPy}}.
+As candidates, we select following open-source frameworks: Solid~\footnote{Solid GitHub repository~\url{https://github.com/100/Solid}}, mlrose~\footnote{mlrose GitHub repository~\url{https://github.com/gkhayes/mlrose}}, pyTSP~\footnote{pyTSP GitHub repository~\url{https://github.com/afourmy/pyTSP}}, jMetal~\footnote{jMetal GitHub repository~\url{https://github.com/jMetal/jMetal}}, jMetalPy~\footnote{jMetalPy GitHub repository~\url{https://github.com/jMetal/jMetalPy}} and commercial tool LocalSolver~\footnote{LocalSolver website~\url{https://localsolver.com}}.
 
 \paragraph{Solid.} A framework for gradient-free optimization. It comprises basic versions of a wide MH range with exposed hyper-parameters: genetic algorithm, evolutionary algorithm, simulated annealing, particle swarm optimization, tabu search, harmony search and stochastic hill climbing. The support of warm-startup is not provided and requires changes in every algorithm as a consequence of single base class absence. As for the budget, algorithms in this framework support several types such as the maximal number of evaluations and termination after reaching the desired quality. Once again, to add a new termination criteria, one should modify the core of all algorithms. The framework does not provide the problem instances therefore, to use it one will need to carry out not only a domain-specific framework adaptation, but also the problem description according to this adaptation.
 
@@ -310,11 +310,7 @@ As candidates, we select following open-source frameworks: Solid~\footnote{Solid
 
 \paragraph{jMetal.} A meta-heuristic framework implemented in Java is an alternative to reviewed above Python-based jMetalPy. This framework also provides meta-heuristics for multi- and single-objective OP. For later, jMetal developers implemented following algorithms: evolution strategy, covariance matrix adaptation evolution strategy (CMA-ES), genetic algorithm, particle swarm optimization (PSO), differential evolution and coral reef optimization. It is worth to mention that among this list, not all algorithms are universally applicable to wide range of OPs. More concretely, CMA-ES, PSO and differential evolution can be applied only to OPs with continuous numeric input such as synthetic mathematical problems. In contrast to his implemented in Python brother, jMetal supports only based on number of evaluations termination criteria, and do not support algorithm warm-startup at all.
 
-To sum up our discussion, we aggregate the desired characteristics in Table, similar to \cref{iml: table code basis selection} presented during the HLH code basis selection. Once again, the characteristics qualities are scored into three ordinal values: poor, average and good.
-
-\cellcolor{red!25}Poor
-\cellcolor{yellow!25}Average
-\cellcolor{green!25}Good
+\paragraph{} To sum up our discussion, we aggregate the described characteristics in \cref{iml: table llh selection}, which is similar to presented during the HLH code basis selection \cref{iml: table code basis selection}. Once again, the characteristics qualities are scored into three ordinal values: poor, average and good with respect to provided functionality and required effort for adaptation.
 
 \begin{table}[h!]
 	\centering
@@ -326,9 +322,9 @@ To sum up our discussion, we aggregate the desired characteristics in Table, sim
 		
 		Exposed hyper-parameters & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good \\
 		
-		Provided OPs & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average \\
+		Provided OPs & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average \\
 		
-		Warm-startup support & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{red!25}Poor \\
+		Warm-startup support & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{yellow!25}Average \\
 		
 		Termination criteria & \cellcolor{yellow!25}Average & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{yellow!25}Average \\
 	\end{tabular}
@@ -336,9 +332,55 @@ To sum up our discussion, we aggregate the desired characteristics in Table, sim
 	\label{iml: table llh selection}
 \end{table}
 
+Currently, our ultimate goal is not to reach the best performance in provided solution, but to investigate whether a proposed concept to solve the problem of algorithm selection and generic parameter control simultaneously, using the reinforcement learning approaches is able to improve the baseline performance measures. Thus, while selecting LLH, the quality of provided heuristics and their hyper-parameters are playing a crucial role. There is no perfect candidate among the reviewed systems, every system requires some sort of adaptation, and for our experiments we decided to use two MHs from Python-based jMetalPy (simulated annealing and evolution strategy) and one from Java-based jMetal (evolution strategy).
 
 
-\subsection{Scope of work analysis}
-\paragraph{opened PR}
+\subsection{Scope of Low Level Heuristics Adaptation}
+The selected framework propose many algorithm implementation. Since the develop process is leading by the same people, the overall architecture of both frameworks is similar. Nevertheless, the proposed features are slightly different. For instance, jMetal does not provide time-based termination, nor warming-up the solver by initial solutions. Therefore, we split the adaptation  of frameworks on two parts, one is dedicated to jMetalPy and in the other we discuss jMetal.
+
+\paragraph{jMetalPy.} During the analysis above, we found out that the provided features are greatly fit to our requirements. Even if the lists of implemented MHs and supported OPs are not that wide, we could naturally reuse the provided out-of-box implementations. To do so, we implement a framework wrapper (see \cref{impl: jMetalPy framework wrapper pseudo-code}), which according to the received task creates a desired instance of required problem type and instantiate MH solver with provided hyper-parameters (line 4). Later, this wrapper will be called to start a solver execution and report the results in framework-independent way (line 6). To prevent an expensive loading of static problem instances each time during the run from scratch we use memory caching (lines 12-13). Also, we cache an expensive IO introspection calls, which are used to find framework components: algorithms, termination criteria or different algorithm operators such as mutation, selection, crossover, etc. (lines 15-20).
+
+\begin{code}[language=Python, caption=jMetalPy framework wrapper pseudo-code., label=impl: jMetalPy framework wrapper pseudo-code]
+class JMetalPyWrapper(ILLHWrapper):
+
+	def construct(hyperparameters: Mapping, scenario: Mapping, warm_startup_info: Mapping) -> None:
+		# Constructing meta-heuristics initialization arguments, attach initial solutions
+		pass
+	def run_and_report() -> Mapping:
+		pass
+
+	# Helper methods
+	@lru_cache(maxsize=10, typed=True)
+	def _get_problem(problem_name: str, init_params: HashableMapping) -> Problem:
+		pass
+	@lru_cache(maxsize=10, typed=True)
+	def _get_algorithm_class(mh_name: str) -> jmetal.core.algorithm.Algorithm.__class__:
+		pass
+	@lru_cache(maxsize=10, typed=True)
+	def _get_class_from_module(name: str, module: object) -> Type:
+		pass
+\end{code}
+
+While experimenting with framework, we found several implementation flaws in listed algorithms. The fixes for these bugs were submitted as contributions~\footnote{jMetalPy PR 1:~\url{https://github.com/jMetal/jMetalPy/pull/67}}~\footnote{jMetalPy PR 2:~\url{https://github.com/jMetal/jMetalPy/pull/80}} to implemented open-source framework.
+
+\paragraph{jMetal.} In the contrary to jMetalPy, this framework is implemented in Java therefore, we can not implement the software instantiating in straightforward way, since BRISEv2 workers are based on Python. There are several libraries which allow to execute a Java code within Python: JPype~\footnote{JPype GitHub repository:~\url{https://github.com/jpype-project/jpype/}}, Py4J~\footnote{Py4J GitHub repository:~\url{https://github.com/bartdag/py4j}} or PyJNIus~\footnote{PyJNIus GitHub repository:~\url{https://github.com/kivy/pyjnius}}. The usage of one among listed modules enables us to build the same framework wrapper, as we did in previous case. However, since currently we are planning to use only one among provided meta-heuristics, the implementation of such wrapper will be excessive. Thus, to use provided ES, we pack it into a jar file and call it from our script, providing a hyper-parameters settings and warming-up solutions.
+
+\subsection{Low Level Heuristic Runner}
+When the MH wrappers are ready, we use them as different execution strategies of low level heuristic with unified by $ILLHWrapper$ interface (see jMetalPy implements it on \cref{impl: jMetalPy framework wrapper pseudo-code} line 1). To execute the desired wrapper we implement as separate entity — LLH runner, which forwards the construction and execution commands to the LLH, tracks the state, make general information logging and pass the results after execution. This enables us to scale workers horizontally easily, since they are homogeneous and state-less (not taking into account caching mechanisms). The resulting sequence diagram from the worker perspective is presented on \cref{impl:pict:llh sequence diagram}.
+
+\svgpath{{graphics/Impl/}}
+\begin{figure}
+	\centering
+	\includesvg[width=\textwidth]{LLH}
+	\caption{Sequence diagram of the low level heuristic execution.}
+	\label{impl:pict:llh sequence diagram}
+\end{figure}
 
 \section{Conclusion}
+The performed implementation of the proposed in \cref{Concept description} concept was done reusing the existing frameworks as a code basis. The implemented hyper-heuristic is mostly based on modular BRISEv2 framework for parameter tuning. We utilize BRISEv2 prediction models in form of reinforcement learning as a high-level heuristic, while several homogeneous workers are carrying out the load by low-level heuristics. For LLH implementation we reuse the existing meta-heuristics from jMetalPy and jMetal frameworks.
+
+Despite the selected code basis, the proposed approach could be implemented in most of SMBO parameter tuning systems however, requiring the adaptation according to our review in \cref{impl:hlh code basis section}.
+
+In this particular case, we were forced to set aside the previously used search space representation approach and add our own to handle the configuration `sparseness' issue. An intermediate entity namely \emph{predictor} was added to decouple the search space shape from the learning and prediction process. It allowed us to extend the previously available models with several others: fitness-rate-average based multi-armed bandits for categorical parameter selection and linear regressors from scikit-learn framework as surrogates models. For better support, we also decoupled and reused the data preprocessing tools from scikit-learn. All underlying component parameters are exposed to user for configuration.
+
+We believe the proposed implementation will serve great deal not only as a hyper-heuristic, but also as old good parameter tuning framework.
