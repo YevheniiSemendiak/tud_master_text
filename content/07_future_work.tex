@@ -1,0 +1,31 @@
+\chapter{Future work}
+In this Chapter we discuss the investigations that we postponed as a future work. They could be grouped in the several sets therefore, we discuss them in a separate sections. Thus, in the \cref{fw: search space} we discuss a set of enhancements for the search space implementation that should be performed to better suite for users needs. The \cref{fw: prediction process} is dedicated to the prediction process and learning models, which guide the system performance. Finally, in the section \cref{fw: evaluation} we discuss a benchmark experiments to obtain a better evidences about the implemented solution applicability.
+
+\section{Search Space}\label{fw: search space}
+\paragraph{Composition on numerical parameters} In the \cref{impl: search space impl} we highlighted that the implemented search space is able to form the parent-child relationship only when parent is of the categorical type. However, it may happen, when the dependencies among parameters are based on their numeric values. As instance, for one range the first child type should be exposed, while for other range — another child. As a hint for future implementation we propose utilizing a similar to used in categorical parameters approach however, instead of activation values, use the ranges of values. Thus, during the prediction propagation step the parameter will simply check all ranges and trigger the related children (for more details see description of the \cref{impl: P.F.R.1 + P.F.R.3 implementation pseudocode}).
+
+\paragraph{Constraints among parameters} Sometimes, the prohibitions for a specific values may arise with respect to other parameters. For instance, the value of one numeric parameter should be at least as high as value of the other. 
+
+
+\section{Prediction Process}\label{fw: prediction process}
+\paragraph{add more sophisticated models}
+\paragraph{technique to optimize obtained surrogate model should be generalized}
+I did not investigate decoupling the surrogate models from the search algorithm to optimize those surrogates (done in Sasha's thesis).
+\paragraph{investigate more deeply decoupling of data preprocessing and learning algorithm} auto-sklearn
+\paragraph{influence for warm-start onto this kind of HH (by off-line learning)}
+Although, the influence of meta-learning, applied in Auto-Sklearn system~\cite{feurer2015efficient} to warm-start the learning mechanism proved to worth the effort spent, as well as it was reported by developers of Selective Hyper-Heuristics with mixed type of learning~\cite{uludaug2013hybrid,}, it is intriguing to check an influence of metal-learning onto Selective Hyper-Heuristics with Parameter Control.
+Also, $https://ml.informatik.uni-freiburg.de/papers/20-ECAI-DAC.pdf$
+\paragraph{Random Forest HLH surrogate model}
+% TODO: try a random forest as a 1ST level of HH, SMAC paper (short version), PAGE 7, CITES 18, 19.
+\paragraph{add other learning metrics}
+Inspiration could be found at:
+- EAs in~\cite{karafotias2014generic}: progress stagnation, 
+
+
+\section{Evaluations and Benchmarks}\label{fw: evaluation}
+\paragraph{add new class of problem (jmetalpy easly allows it)}
+\paragraph{evaluation on different types and classes}
+\paragraph{interesting direction: apply to automatic machine learning problems solving, compare to auto-sklearn.}
+\paragraph{bounding LLH by number of evaluations, not time}
+\paragraph{adaptive time for tasks}
+
