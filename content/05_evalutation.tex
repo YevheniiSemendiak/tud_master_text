@@ -1,77 +1,182 @@
 \chapter{Evaluation}\label{eval}
 The concepts, proposed in the \cref{Concept description}, implemented in the \cref{imp} of search space representation, prediction process and based on this generalized parameter control approach, selection hyper-heuristic and the hyper-heuristic with parameter control should be broadly evaluated. The experiments may be performed in number of investigation directions, starting from the developed reinforcement learning performance with respect to system configuration and ending with the scalability to different problem sizes.
 
-The structure of this Chapter is as follows: we start the evaluation process with planning in the \cref{eval: plan}.
+The structure of this Chapter is as follows. We start the evaluation process with a review of TSP benchmark set in the \cref{eval: op}. The following benchmarks could be divided to two main parts. The first is dedicated to the evaluation of developed concept in comparison to the base line and is presented in the \cref{eval: concept}, while in the second we investigate an influence of the proposed hyper-heuristic with parameter control settings on its performance (\cref{eval: hh-pc}). Finally, in the \cref{eval: conclution} we conclude a discussion of the obtained results.
 
-\section{Evaluation Plan}\label{eval: plan}
 
-\subsection{Optimization Problems Definition}
-\subsubsection{Traveling Salesman Problem}
-\paragraph{tsplib95 benchmark set}
-which problem I want to solve with hyper-heuristic
-$http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/STSP.html$
+\section{Optimization Problem}\label{eval: op}
+Through this thesis we are tackling a vehicle routing problem — the traveling salesman OP, which explanation could be found in the \cref{BG: subsection OPs}. Nevertheless, as a reminder we repeat its short definition here. We also include the other details, related to the benchmarks.
 
-\subsection{Hyper-Heuristic Settings}
-To evaluate the performance of developed system we first need to compare it with the base line. In our case it is the simple meta-heuristic that is solving the problem with static hyper-parameters.
+``Given a set of cities and the distances among them, find the shortest path, which visits all cities''. It is a combinatorial OP with a number $n = N!$ of possible solutions. For the benchmarks we use several instances of symmetric TSP (distances $x_i \rightarrow x_j$ and $x_j \rightarrow x_i$ are equal) from a publicly available and broadly used benchmark set TSPLIB95~\footnote{TSPLIB95 website:~\url{http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/}}. The advantage of choosing this benchmark set lays in a broad compatibility of solvers and frameworks with the proposed standardized problem instance description (including used jMetal and jMetalPy). The TSP in this case is defined as a set of city coordinates therefore. Thus, before starting to solve a problem, the distance matrix should be built, calculating Euclidean distances between cities. For more detailed explanation of TSPLIB95 problem instance files refer to~\cite{reinelt1995tsplib95}.
 
-In order to organize the evaluation plan, we distinguish two stages of setup, where different approaches could be applied. 
-At the first stage we select Low Level Heuristic, while at the second one we select hyper-parameters for LLH.
-The approaches for each step are represented in table \ref{evaluation: settings table}.
-
-% highlight that such MHs as Simulated Annealing are now "restarting". It measn, that is in SA case, the Temperature parameter change drops to initial state. Thus here we obtain Iterative Simulated Annealing
+For our benchmarks we select four problem instances from a simpler case harder they are: \emph{kroA100}, \emph{pr439}, \emph{rat783} and \emph{pla7397} of sizes 100, 439, 783 and 7397 cities respectively. The optimal tours for each of these problem instances were previously obtained by exact solvers and reported in aforementioned library. While presenting our evaluation results, we refer to them therefore, we present the optimal solution results on the \cref{eval:table:tsp optimal tour length}.
 
 \begin{table}[h!]
 	\centering
-	\begin{tabular}{|l|l|}
+	\begin{tabular}{c||c}
+		\textbf{TSP instance} & \textbf{Optimal tour length} \\
 		\hline
-		\textbf{Low Level Heuristics selection} & \textbf{LLH Hyper-parameters selection} \\
 		\hline
-		1. Random & 1. Default \\
-		2. Multi Armed Bandit & 2. Tuned beforehand \\
-		3. Sklearn Bayesian Optimization & 3. Random \\
-		4. Static selection of SA, GA, ES & 4. Tree Parzen Estimator \\
-		& 5. Sklearn Bayesian Optimization\\
+		kroA100 & 21282 \\
+		pr439 & 107217 \\
+		rat783 & 8806 \\
+		pla7397 & 23260728 \\
+	\end{tabular}
+	\caption{TSP instances optimal tour length.}
+	\label{eval:table:tsp optimal tour length}
+\end{table}
+
+Note, that the goal of this thesis and the evaluation in particular is not to beat the exact solvers in any case, but to investigate the applicability of proposed generic parameter control concept.
+
+
+\section{Concept Evaluation}\label{eval: concept}
+
+\subsection{Evaluation Plan}\label{eval: concept plan}
+To evaluate the performance of developed approach we firstly need to define the base line. In our case it is the single meta-heuristics, which are solving the OP using static hyper-parameters. 
+
+Therefore, firstly we probe those MHs, which were selected as LLHs to draw a baseline. Afterwards, we check their performance with enabled generic parameter control. The next comparison is the usage of those MHs with static parameters as low level heuristics in the selection hyper-heuristic. And finally, we check the performance of HH with parameter control in LLH.
+
+In order to organize the evaluation plan, we distinguish two setup stages, where different approaches could be applied to select the appropriate parameters from the search space. 
+At the first stage we select LLH, while at the second one we chose hyper-parameters for the selected LLH. For each step we may use different prediction models, which description could be found in the \cref{impl: prediction models}. To select the LLH, apart from random and static selection, we also use FRAMAB (see \cref{impl: FRAMAB}) and Bayesian ridge regression model, implemented in the Scikit-learn framework and wrapped by our wrapper (see \cref{impl: sklearn wrapper}). Note, for the Bayesian ridge regression model we use a default parameters, which could be found in the framework documentation~\footnote{~\url{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html}}. To select the hyper-parameters for LLHs, apart from static default and tuned hyper-parameters we also use (1) random selection, available in BRISEv2 TPE and the mentioned above Bayesian ridge model from Scikit-learn with the same parameters.
+
+We present the set of used techniques in the following table:
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{l||l}
+		\textbf{LLH selection} & \textbf{LLH parameters selection} \\
 		\hline
+		\hline
+		\textbf{1.} Random & \textbf{1.} Default \\
+		\textbf{2.} Multi-armed bandit & \textbf{2.} Tuned beforehand \\
+		\textbf{3.} Bayesian ridge regression & \textbf{3.} Random \\
+		\textbf{4.1.} Static jMetalPy.ES & \textbf{4.} Tree Parzen Estimator \\
+		\textbf{4.2.} Static jMetalPy.SA & \textbf{5.} Bayesian ridge regression\\
+		\textbf{4.3.} Static jMetal.ES & 
 	\end{tabular}
 	
-	\caption{System settings for benchmark}
-	\label{evaluation: settings table}
+	\caption{Prediction techniques used for the concept evaluation.}
+	\label{eval: concept settings table}
 \end{table}
 
 
-For instance, mentioned above baseline could be described as $Settings 4.1.$ for meta-heuristics with default hyper-parameters and as $Settings 4.2.$ for meta-heuristics with tuned beforehand hyper-parameters.
+Using this table, we now could pick a prediction technique to form a desired system configuration. For instance, mentioned above baseline could be encoded into configurations starting from \emph{4.1.1} for the evolution strategy from jMetalPy framework, used with default hyper-parameters and ending with \emph{4.3.2} for evolution strategy from jMetal framework, used with tuned beforehand parameters.
 
-For our benchmark we selected following settings sets:
-
+Our benchmark plan for the concept evaluation looks as a set of following experiment groups:
 \begin{itemize}
-	\item \textit{Baseline:} $4.1, 4.2;$
-	\item \textit{Random Hyper-heuristic:} $1.1, 1.2, 1.3, 4.3;$
-	\item \textit{Parameter control:} $4.4, 4.5;$
-	\item \textit{Selection Hyper-Heuristic:} $2.1, 3.1, 2.2, 3.2;$
-	\item \textit{Selection Hyper-Heuristic with Parameter Control:} $2.4, 2.5, 3.4, 3.5;$
+	\item \textbf{Meta-heuristics (MH).} This is our baseline. Here we evaluate each used meta-heuristic separately with default and tuned hyper-parameters: \emph{4.1.1} and \emph{4.1.2} for jMetalPy evolution strategy;  \emph{4.2.1} and \emph{4.2.2} for jMetalPy simulated annealing; \emph{4.3.1} and \emph{4.3.2} for jMetal evolution strategy with default and tuned hyper-parameters respectively.
+
+	\item \textbf{Meta-heuristics with parameter control (MH-PC).} This set of experiments is dedicated to verify an impact of the generic parameter control on different meta-heuristics performance. The selected set of experiments looks as follows: \emph{4.1.3, 4.2.3, 4.3.3} to investigate the influence of random parameter allocation; \emph{4.1.4, 4.2.4, 4.3.4} to check good is the TPE-based parameter control and \emph{4.1.5, 4.2.5, 4.3.5} to probe the Scikit-learn Bayesian ridge.
+
+	\item \textbf{Selection hyper-heuristic with static parameters (HH-SP).} During these benchmarks we investigate the performance of implemented selection HH. Originally, HH implies usage of LL with static parameters therefore, we evaluate HH performance with default and tuned beforehand LLH parameters. Experiment codes are as follows: \emph{2.1, 3.1, 2.2, 3.2.}
+	
+	\item \textbf{Selection hyper-Heuristic with parameter control in LLH (HH-PC).} This is a final set of benchmarks, performed for concept evaluation. Here we evaluate an influence of simultaneous LLH selection and parameter control on system performance, while it solves the OP. The respective experiment encoding set is following: \emph{1.3, 2.4, 2.5, 3.4, 3.5.}
 \end{itemize}
 
-The goal of parameter control is to reach the performance of algorithms with the tunned hyper-parameters.
-The goal of hyper-heuristic is to reach the performance of the best underlying algorithm.
+The aggregated concept benchmark plan is as following:
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||p{3cm}}
+		\textbf{Experiment group} & \textbf{Related codes} \\
+		\hline
+		\hline
+		
+		\rowcolor{blue!20}
+		\multirow{2}{*}{MH} & 4.1.1., 4.2.1, 4.3.1 \newline 4.1.2, 4.2.2, 4.3.2 \\
+		
+		\rowcolor{orange!20}
+		\multirow{3}{*}{MH-PC} & 4.1.3, 4.2.3, 4.3.3 \newline 4.1.4, 4.2.4, 4.3.4 \newline 4.1.5, 4.2.5, 4.3.5 \\
+		
+		\rowcolor{green!20}
+		\multirow{3}{*}{HH-SP} & 1.1, 1.2 \newline 2.1, 2.2 \newline 3.1, 3.2 \\
 
-Each of this settings will be discussed in details in following section.
+		\rowcolor{red!20}
+		\multirow{3}{*}{HH-PC} &  1.3 \newline 2.4, 2.5 \newline 3.4, 3.5 \\
+	\end{tabular}
+	
+	\caption{Concept benchmark plan.}
+	\label{eval: concept benchmark plan table}
+\end{table}
+
+We will discuss each of the experiment group while reviewing the evaluation results.
+
+\subsection{Environment Setup}\label{eval: environment}
+To run our experiments we use BRISEv2 dockerized deployment on a single host machine with following characteristics:
+\begin{itemize}
+	\item \textbf{Hardware:} Fujitsu ESPRIMO P958 computer with 64GB 2667MHz RAM (16GB * 4 pcs), Intel Core i7-8700 CPU @ 3.2 GHz (6 cores * 2 threads) and Samsung 1TB SSD.
+
+	\item \textbf{Software:} GNU/Linux Fedora 29 host OS and installed docker version 1.13.1.
+\end{itemize}
+
+We run all experiments for 15 minutes each, repeating it 9 times to obtain the statistical data. We deploy 6 homogeneous BRISEv2 workers with LLHs to carry the load.
 
 
-\subsection{Selected for Evaluation Hyper-Heuristic Settings}
-\paragraph{Baseline}
+\subsection{Meta-heuristics Tuning}\label{eval: mh tuning}
+According to the defined plan, before running the major benchmark experiments we have to perform a parameter tuning for the underlying LLHs.
 
-\paragraph{Hyper-heuristic With Random Switching of Low Level Heuristics}
+\subsubsection{Parameter Tuning System Configuration.} 
+As a tuning system, we used our the implemented concept, but in the tuner mode. As we described in the \cref{concept: conclution}, to enable the parameter tuning mode, we built a search space based on the singe LLH with its parameters. In our particular case it were three search spaces for each underlying meta-heuristic respectively. We also disabled the solution transfer between each configuration, forcing LLH to use the OP each time from scratch.
 
-\paragraph{Parameter control}
+For each LLH we run the tuning for 8 hours on 10 deployed worker nodes and three minutes for task evaluation. The underlying prediction mechanism was configured to use TPE with 100\% window size. We also disabled the repetition strategy (\emph{repeater} entity), leaving each configuration evaluated only once (with one task). We do so since our preliminary experiments have shown that the variance among evaluations is negligible. As one may expect, since the repetition strategy was disabled, outliers detection was turned off as well.
 
-\paragraph{Selection Only Hyper-Heuristic}
+\subsubsection{Target Optimization Problem and Search Space of Parameters.} 
+The role of target optimization problem was played by one of evaluated TSP instances: \emph{rat783}. We selected this instance because, it is a middle size problem, comparing all the used through evaluation OPs.
 
-\paragraph{Selection Hyper-Heuristic with Parameter Control}
+\paragraph{jMetalPy evolution strategy.} This meta-heuristic is implemented in a framework as na\"ive evolution strategy however, we found an important recombination mechanism missing therefore, the heuristic is performing mostly by means of the mutation operations. As a configuration, this ES implementation requires providing several hyper-parameters. Integer $\mu$, which denotes the number of parents in the population, while integer $\lambda$ defines the number of offspring. We tune both parameters in ranges $[1..1000]$. Boolean \emph{elitist} defines the selection strategy, which true value enables elitist selection $(\mu+\lambda)$, while false disables the elitist selection $(\mu,\lambda)$ (more detains in the \cref{BG: MH Examples}). Also, the framework proposes two possible \emph{mutation types} for combinatorial OPs: permutation swap and scramble mutation, which we use for tuning. The respective mutation probability is tuned in range $[0..1]$.
+
+\paragraph{jMetalPy simulated annealing.} In this meta-heuristic authors defined the solution neighborhood by means of the same mutation operators, mentioned above. Thus, we use them and the same mutation probability range for tuning the SA. Unfortunately, the authors did not provide other but exponential cooling schedule and did not expose parameters temperature or alpha. This is the reason of such tiny parameter space for this MH.
+
+\paragraph{jMetal evolution strategy.} The set of exposed hyper-parameters is almost the same, as we described for the Python-based MH implementation. The only difference that the mutation is represented only by one type, therefore we exclude it from the parameter space, but leaving the mutation probability. All the other parameter ranges are the same as for the defined above ES.
 
 
-\section{Results Discussion}
+\subsubsection{Parameter tuning results.} 
+The results of parameter tuning and the default values for the parameters are presented in a separate table for each meta-heuristic.
 
-\subsection{Baseline Evaluation}
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{r||c|c}
+		\textbf{Hyper-parameter} & \textbf{Default value} & \textbf{Tuned value} \\
+		\hline
+		\hline
+		\rowcolor{gray!10}
+		\multicolumn{3}{c}{jMetalPy evolution strategy} \\
+		\hline
+		$\mu$ & 500 & 5 \\
+		$\lambda$ & 500 & 22 \\
+		\emph{elitist} & False & True \\
+		\emph{mutation type} & Permutation swap & Permutation swap \\
+		\emph{mutation probability} & 0.5 & 0.99 \\
+		\hline
+		\rowcolor{gray!10}
+		\multicolumn{3}{c}{jMetalPy simulated annealing} \\
+		\hline
+		\emph{mutation type} & Permutation swap & Permutation swap \\
+		\emph{mutation probability} & 0.5 & 0.89 \\
+		\hline
+		\rowcolor{gray!10}
+		\multicolumn{3}{c}{jMetal evolution strategy} \\
+		\hline
+		$\mu$ & 500 & 5 \\
+		$\lambda$ & 500 & 605 \\
+		\emph{elitist} & False & True \\
+		\emph{mutation probability} & 0.5 & 0.99 \\
+	\end{tabular}
+	
+	\caption{Static hyper-parameters of low-level meta-heuristics.}
+	\label{eval: params jmetalpy es}
+\end{table}
+
+
+
+\subsection{Concept Evaluation Results}\label{eval: concept results}
+
+\subsubsection{Baseline}
+As we discussed previously, our results comparison should be done against the defined baseline.
+
+The parameter control approaches are often compared against the tuned 
+
+
+
+\subsubsection{Baseline Evaluation}
 
 \paragraph{Meta-Heuristics With Default Hyper-Parameters}
 
@@ -80,24 +185,35 @@ Each of this settings will be discussed in details in following section.
 \paragraph{Results Description and Explanation}
 
 
-\subsection{Hyper-Heuristic With Random Switching of Low Level Heuristics}
+\subsubsection{Hyper-Heuristic With Random Switching of Low Level Heuristics}
 
 \paragraph{Results Description and Explanation}
 
 
-\subsection{Parameter Control}
-
+\subsubsection{Parameter Control}
+The goal of parameter control is to reach the performance of algorithms with the tunned hyper-parameters.
 \paragraph{Results Description and Explanation}
 
 
-\subsection{Selection Only Hyper-Heuristic}
+\subsubsection{Selection Only Hyper-Heuristic}
+The goal of hyper-heuristic is to reach the performance of the best underlying algorithm.
 auto-sklearn paper, p.2 - comparison of GP and TPE BOs.
 
 \paragraph{Results Description and Explanation}
 
 
-\subsection{Selection Hyper-Heuristic with Parameter Control}
+\subsubsection{Selection Hyper-Heuristic with Parameter Control}
 
 \paragraph{Results Description and Explanation}
 
-\section{Conclusion}
+
+
+
+
+\section{Hyper-Heuristic with Parameter Control Settings Evaluation}\label{eval: hh-pc}
+\subsection{Evaluation Plan}\label{eval: hh-pc plan}
+\subsection{Evaluation Results}\label{eval: hh-pc results}
+
+
+
+\section{Conclusion}\label{eval: conclution}
