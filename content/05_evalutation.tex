@@ -62,7 +62,7 @@ The role of target optimization problem was played by one of evaluated TSP insta
 The process of parameter tuning is depicted in \cref{eval:pict:mh tuning}. During the session each MH was probed with at least $1.5k$ configurations. 
 
 
-\svgpath{{graphics/Eval/}}
+\svgpath{{graphics/Eval/tuning}}
 \begin{figure}[h!]
 	\centering
 	\includesvg[width=\textwidth]{tuning progress}
@@ -122,7 +122,7 @@ As for the categorical parameters, one may see a strong bias towards bad results
 \end{figure}
 
 
-This heuristic were tuned by means of only two parameters: categorical mutation type, which results are presented on \cref{eval:pict:jmetalpy sa categoric} and numerical mutation probability with graphs on \cref{eval:pict:jmetalpy sa numeric}. One may see a strong dominance of permutation mutation type, while scramble produce an average, but stable results. The mutation probability trends are also clear: higher parameter values produce better results. Indeed, the dependency on mutation probability is obvious, since the underlying algorithm is performing the search space traversal by means of solution mutation.
+This heuristic were tuned by means of only two parameters: categorical mutation type, which results are presented on \cref{eval:pict:jmetalpy sa categoric} and numerical mutation probability with graphs on \cref{eval:pict:jmetalpy sa numeric}. One may see a strong dominance of permutation mutation type, while scramble produce an average, but stable results. The mutation probability trends are also clear: higher parameter values produce better results. Indeed, the dependency on mutation probability is obvious, since the underlying algorithm is performing the search space traversal by means of solution mutation. The two lines of results, that could be viewed on the \cref{eval:pict:jmetalpy sa numeric} are correlated with the mutation type: lower corresponds to usage of permutation, while upper to scramble mutation.
 
 
 \paragraph{jMetal evolution strategy parameters.}
@@ -135,7 +135,7 @@ This heuristic were tuned by means of only two parameters: categorical mutation 
 	\label{eval:pict:jmetal es numeric}
 \end{figure}
 
-\begin{wrapfigure}{R}{0.4\textwidth}
+\begin{wrapfigure}{R}{0.5\textwidth}
 	\centering
 	\vspace{-20pt}
 	\includesvg[width=\linewidth]{jMetal evolution strategy categorical parameters}
@@ -144,9 +144,10 @@ This heuristic were tuned by means of only two parameters: categorical mutation 
 	\vspace{-30pt}
 \end{wrapfigure}
 
-The final heuristic under investigation is the Java-based implementation of viewed above ES. Even if the regression lines are not looking the same from at the first glance, the overall trends are pretty the same: lower values of \emph{mu} parameter result in better objective, while the mutation probability should be kept high. In a contrary to Python-based ES, here the middle-range values of parameter \emph{lambda} produce the best results. A dominance of elitist version of algorithm is non-obvious, but this could be seen from a distribution first quartile.
+The final heuristic under investigation is the Java-based implementation of viewed above ES. Even if at the first glance the regression lines are not looking the same, the overall trends are similar: lower values of \emph{mu} parameter result in better objective, while the mutation probability should be kept high. In a contrary to Python-based ES, here the middle-range values of parameter \emph{lambda} produce the best results. It may be explained by the fact of performance straggling in Python-based version: with large offspring number, the computational effort, required to accomplish the iteration increases, while Java-based version could handle it. A dominance of elitist version of algorithm is non-obvious, but this could be seen from a distribution first quartile.
 
-We collected the best performing configurations in each meta-heuristic and presented them in \cref{eval: params jmetalpy es}. We also highlight here the default parameter values, which are motivated by their location is the middle of the values ranges.
+\paragraph{}
+We collected the best performing configurations of each meta-heuristic and presented them in \cref{eval: params jmetalpy es}. We also highlight here the default parameter values, which were selected with motivation of being in the middle of the values ranges.
 
 \begin{table}%[h!]
 	\centering
@@ -188,14 +189,10 @@ We collected the best performing configurations in each meta-heuristic and prese
 \section{Concept Evaluation}\label{eval: concept}
 
 \subsection{Evaluation Plan}\label{eval: concept plan}
-To evaluate the performance of developed approach we firstly need to define the base line. In our case it is the single meta-heuristics, which are solving the OP using static hyper-parameters. 
+To evaluate the performance of developed approach we firstly need to define the base line. In most cases it is the single meta-heuristics, which are solving the OP using static hyper-parameters. However, to evaluate the parameter control feature we must make a closer look on the performance of each separate heuristic with static and dynamic hyper-parameters. For selection hyper-heuristic analysis we compare the performances of all underlying MHs running separately and together within a hyper-heuristic. Note, in this case the hyper-parameters are statically defined. And last, but not least, to evaluate a selection hyper-heuristic with enabled parameter control we compare it to separately running underlying meta-heuristics with parameter control and to selection hyper-heuristic.
 
-Therefore, firstly we probe those MHs, which were selected as LLHs to draw a baseline. Afterwards, we check their performance with enabled generic parameter control. The next comparison is the usage of those MHs with static parameters as low level heuristics in the selection hyper-heuristic. And finally, we check the performance of HH with parameter control in LLH.
-
-In order to organize the evaluation plan, we distinguish two setup stages, where different approaches could be applied to select the appropriate parameters from the search space. 
-At the first stage we select LLH, while at the second one we chose hyper-parameters for the selected LLH. For each step we may use different prediction models, which description could be found in \cref{impl: prediction models}. To select the LLH, apart from random and static selection, we also use FRAMAB (see \cref{impl: FRAMAB}) and Bayesian ridge regression model, implemented in the Scikit-learn framework and wrapped by our wrapper (see \cref{impl: sklearn wrapper}). Note, for the Bayesian ridge regression model we use a default parameters, which could be found in the framework documentation~\footnote{~\url{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html}}. To select the hyper-parameters for LLHs, apart from static default and tuned hyper-parameters we also use (1) random selection, available in BRISEv2 TPE and the mentioned above Bayesian ridge model from Scikit-learn with the same parameters.
-
-We present the set of used techniques in the following table:
+In order to organize the evaluation plan, we distinguish two stages.
+At the first stage the LLH selection occurs, while at the second one we chose hyper-parameters for the selected LLH. At each stage we may use different prediction approaches, which description could be found in \cref{impl: prediction models}. To select the LLH, apart from random and static selection we also use FRAMAB (see \cref{impl: FRAMAB}) and Bayesian ridge regression model implementation from Scikit-learn framework (see \cref{impl: sklearn wrapper}). Note, for the Bayesian ridge regression model we use a default parameters, which could be found in the framework documentation~\footnote{~\url{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html}}. To select the hyper-parameters for LLHs, apart from static default and tuned variants we also use random selection, available in BRISEv2 TPE and the mentioned above Bayesian ridge. The set of used techniques is presented in the \cref{eval: concept settings table}.
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{l||l}
@@ -215,20 +212,20 @@ We present the set of used techniques in the following table:
 \end{table}
 
 
-Using this table, we now could pick a prediction technique to form a desired system configuration. For instance, mentioned above baseline could be encoded into configurations starting from \emph{4.1.1} for the evolution strategy from jMetalPy framework, used with default hyper-parameters and ending with \emph{4.3.2} for evolution strategy from jMetal framework, used with tuned beforehand parameters.
+Using this table, we now could pick a prediction technique to form a desired system configuration. For instance, mentioned above baseline could be encoded into configurations starting from \emph{4.1.1} for the evolution strategy from jMetalPy framework, running with default hyper-parameters and ending with \emph{4.3.2} for evolution strategy from jMetal framework, running with tuned beforehand parameters.
 
 Our benchmark plan for the concept evaluation looks as a set of following experiment groups:
 \begin{itemize}
-	\item \textbf{Meta-heuristics (MH).} This is our baseline. Here we evaluate each used meta-heuristic separately with default and tuned hyper-parameters: \emph{4.1.1} and \emph{4.1.2} for jMetalPy evolution strategy;  \emph{4.2.1} and \emph{4.2.2} for jMetalPy simulated annealing; \emph{4.3.1} and \emph{4.3.2} for jMetal evolution strategy with default and tuned hyper-parameters respectively.
+	\item \textbf{Meta-heuristics (MH).} The baseline. We evaluate each used meta-heuristic separately with default and tuned hyper-parameters: \emph{4.1.1} and \emph{4.1.2} for jMetalPy evolution strategy;  \emph{4.2.1} and \emph{4.2.2} for jMetalPy simulated annealing; \emph{4.3.1} and \emph{4.3.2} for jMetal evolution strategy respectively.
 
-	\item \textbf{Meta-heuristics with parameter control (MH-PC).} This set of experiments is dedicated to verify an impact of the generic parameter control on different meta-heuristics performance. The selected set of experiments looks as follows: \emph{4.1.3, 4.2.3, 4.3.3} to investigate the influence of random parameter allocation; \emph{4.1.4, 4.2.4, 4.3.4} to check good is the TPE-based parameter control and \emph{4.1.5, 4.2.5, 4.3.5} to probe the Scikit-learn Bayesian ridge.
+	\item \textbf{Meta-heuristics with parameter control (MH-PC).} The set of experiments dedicated to verify an impact of the generic parameter control on meta-heuristics performance. A selected set of experiments looks as follows: \emph{4.1.3, 4.2.3, 4.3.3} to investigate the influence of random parameter allocation; \emph{4.1.4, 4.2.4, 4.3.4} to check TPE-based parameter control and \emph{4.1.5, 4.2.5, 4.3.5} to probe Bayesian-ridge-based parameter control.
 
-	\item \textbf{Selection hyper-heuristic with static parameters (HH-SP).} During these benchmarks we investigate the performance of implemented selection HH. Originally, HH implies usage of LL with static parameters therefore, we evaluate HH performance with default and tuned beforehand LLH parameters. Experiment codes are as follows: \emph{2.1, 3.1, 2.2, 3.2.}
+	\item \textbf{Selection hyper-heuristic with static parameters (HH-SP).} These benchmarks are dedicated to an investigation of the implemented on-line selection HH performance. It implies the LLHs usage with static parameters therefore, we evaluate HH-SP performance with default and tuned beforehand LLH parameters. Experiment codes are following: \emph{2.1, 2.2} for FRAMAB-based HH-SP and \emph{3.1, 3.2} for Bayesian-ridge-based HH-SP.
 	
-	\item \textbf{Selection hyper-Heuristic with parameter control in LLH (HH-PC).} This is a final set of benchmarks, performed for concept evaluation. Here we evaluate an influence of simultaneous LLH selection and parameter control on system performance, while it solves the OP. The respective experiment encoding set is following: \emph{1.3, 2.4, 2.5, 3.4, 3.5.}
+	\item \textbf{Selection hyper-Heuristic with parameter control in LLH (HH-PC).} This is a final set of benchmarks for concept evaluation. By this we evaluate an influence of simultaneous on-line LLH selection and parameter control on system performance. The respective experiment set is following: \emph{1.3, 2.4, 2.5, 3.4, 3.5.}
 \end{itemize}
 
-The aggregated concept benchmark plan is as following:
+The aggregated concept benchmark plan is presented in \cref{eval: concept benchmark plan table}.
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{c||p{3cm}}
@@ -253,27 +250,107 @@ The aggregated concept benchmark plan is as following:
 	\label{eval: concept benchmark plan table}
 \end{table}
 
-We will discuss each of the experiment group while reviewing the evaluation results.
-
-
-
 
 \subsection{Concept Evaluation Results}\label{eval: concept results}
 
-\subsubsection{Baseline}
-As we discussed previously, our results comparison should be done against the defined baseline.
-
-The parameter control approaches are often compared against the tuned 
-
-
-
 \subsubsection{Baseline Evaluation}
+As we discussed previously, our results comparison should be done against the defined baseline. Therefore, this section is dedicated to review of the meta-heuristics performance out-of-the-box on different problem sizes and parameter settings. For visibility reasons we plot the intermediate and the final performance evidences for each problem instance separately, since they naturally imply different result ranges.
 
-\paragraph{Meta-Heuristics With Default Hyper-Parameters}
+Since we are tackling a set of TSP instances, which were previously solved by other exact solvers, we also present an optimal solution, available for each instance as a green dashed line.
 
-\paragraph{Meta-Heuristics With Tuned Hyper-Parameters}
 
-\paragraph{Results Description and Explanation}
+\paragraph{kroA100 TSP instance.}
+\svgpath{{graphics/Eval/baseline}}
+\begin{figure}[b]
+	\centering
+	\includesvg[width=\textwidth]{kroA100 baseline progress}
+	\caption{Intermediate results of meta-heuristics with static parameters on kroA100.}
+	\label{eval:pict:bl:kroA100 intermediate}
+\end{figure}
+
+\begin{wrapfigure}{R}{0.5\textwidth}
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\linewidth]{kroA100 baseline final boxplot}
+	\label{eval:pict:bl:kroA100 final}
+	%\ffigbox[\FBwidth]
+	\caption{Final results of meta-heuristics with static parameters on kroA100.}
+	\vspace{-20pt}
+\end{wrapfigure}
+The TSP for 100 cities is a relatively small problem instance. Therefore, all underlying MHs reach a local optimum after first few minutes of the run and stuck there till the end, making a relatively small moves (\cref{eval:pict:bl:kroA100 intermediate}). Note, the bold line is a statistical mean of all 9 experiment runs, while a shadow around it is a confidence interval. One may observe how the parameter tuning affects different MHs: in some the difference is dramatic (ES), while others are almost not affected (\cref{eval:pict:bl:kroA100 final}).
+
+An observation of a worse SA results with tuned parameters, in contrast to default values is explained by the fact that for algorithm tuning we used different problem instance (rat783). It only confirms a motivation of the parameter control approaches: tuning is not problem-instance-universal technique.
+
+%\newpage
+\paragraph{pr439 TSP instance.} 
+\begin{figure}[tb]
+	\centering
+	\includesvg[width=\textwidth]{pr439 baseline progress}
+	\caption{Intermediate results of meta-heuristics with static parameters on pr439.}
+	\label{eval:pict:bl:pr439 intermediate}
+\end{figure}
+
+\begin{wrapfigure}{R}{0.5\textwidth}%\setcapindent{1em}
+	%\centering
+	\vspace{-20pt}
+	\includesvg[width=\linewidth]{pr439 baseline final boxplot}
+	\label{eval:pict:bl:pr439 final}
+	\caption{Final results of meta-heuristics with static parameters on pr439.}
+	\vspace{-20pt}
+\end{wrapfigure}
+The next problem instance comprises a 4 hundred cities. Since the number of possible solutions increased, the required time for MHs to settle in a local optima is increased as well. We may see a similar to the previous experiment set trends: produced by SA results are almost not affected by the parameter tuning, however with tuned parameters the performance is slightly better. From the other side, Python version of tuned ES requires more time to converge in local optima, while Java-based reaches it after a couple of first iterations (\cref{eval:pict:bl:pr439 intermediate}).
+
+The final result quality of underlying MHs is the same as on previously reviewed problem instance: MHs with tuned parameters (an SA with default) produce solutions of a similar quality (\cref{eval:pict:bl:pr439 final}).
+
+%\newpage
+\paragraph{rat783 TSP instance.}
+\begin{figure}[bt]
+	\centering
+	\includesvg[width=\textwidth]{rat783 baseline progress}
+	\caption{Intermediate results of meta-heuristics with static parameters on rat783.}
+	\label{eval:pict:bl:rat783 intermediate}
+\end{figure}
+
+\begin{wrapfigure}{R}{0.5\textwidth}%\setcapindent{1em}
+	%\centering
+	\vspace{-20pt}
+	\includesvg[width=\linewidth]{rat783 baseline final boxplot}
+	\label{eval:pict:bl:rat783 final}
+	\caption{Final results of meta-heuristics with static parameters on rat783.}
+	\vspace{-20pt}
+\end{wrapfigure}
+This is an average size problem among reviewed in this thesis. The behavior of solvers in this case changes slightly. For instance, ES from jMetal framework with default parameters is unable to solve a problem however, while using an optimized hyper-parameters it quickly reaches a local optima (after ~50 iterations) with the best produced results (\cref{eval:pict:bl:rat783 intermediate}). Analyzing performance evidences of the other heuristics (Python-based), we may conclude that they did not reach a local optima in a given 15 minutes therefore, their final results are slightly worse (\cref{eval:pict:bl:rat783 final}). Taking into account previous problem instances we may guess that given enough time they will reach the results of jMetal ES. Note the decreased stability of jMetalPy ES reflected by a large confidence interval.
+
+
+\paragraph{pla7397 TSP instance.} 
+The largest investigated here TSP instance for ~$7.4k$ cities is however, referred as a middle-size OP in used TSPLIB95. Here the performance evidences changed the most therefore, we discuss each MH separately.
+
+\begin{figure}[b]
+	\centering
+	\includesvg[width=\textwidth]{pla7397 baseline progress}
+	\caption{Intermediate results of meta-heuristics with static parameters on pla7397.}
+	\label{eval:pict:bl:pla7397 intermediate}
+\end{figure}
+
+\begin{wrapfigure}{R}{0.5\textwidth}%\setcapindent{1em}
+	%\centering
+	\vspace{-20pt}
+	\includesvg[width=\linewidth]{pla7397 baseline final boxplot}
+	\label{eval:pict:bl:pla7397 final}
+	\caption{Final results of meta-heuristics with static parameters on pla7397.}
+	\vspace{-20pt}
+\end{wrapfigure}
+
+Python-based version of ES provide the worst results with both default and tuned parameters. Note the amount of performed iterations by this MH in a given 15 minutes — less than 100. It is affected by a several reasons. Firstly, the amount of time required to perform an internal iteration increased dramatically. Thus, even with specified 15 seconds for one task run, actually it requires much more (up to 1 minute) to accomplish a task. We have a several guesses, what may cause such a behavior. Firstly, it is a general Python performance issues, in most of the times caused by usage of global interpreter lock (GIL), which explanation is out of this thesis scope. Secondly, it may be caused by the algorithms code basis implementation in jMetalPy framework. To implement a generic termination criteria (and some other features) the authors utilized a push-observer design pattern~\cite{benitez2019jmetalpy} according to which the underlying algorithm (ES in our case) triggers its observers after each iteration. Therefore, stopping criteria may be evaluated only after finishing an iteration, which in case running ES with TSP for $7.4k$ cities, may take a while. We observed the ES algorithm termination after the first internal iteration, which causes a poor solution quality improvement. Naturally, there is also an overhead for the results sending through the network, but as Java-based ES with default parameter shows, this causes decrease only in ~100 configurations. We also eliminate the possible issue in a required time for problem loading (building distance matrix), since the worker node does it only once and stores its cached version. In any case, this issue requires deeper investigation, that we postpone to the future work. Running jMetalPy ES with tuned parameters fixes the issue with task delays and therefore, results in higher number of external iterations, but the solution improvement are still weak (see left picture on the \cref{eval:pict:bl:pla7397 intermediate}).
+
+As in the previous case, the jMetalPy-based simulated annealing produce a good quality improvement, least depending on the hyper-parameter values. A resulting progress curve, presented in a central picture of \cref{eval:pict:bl:pla7397 intermediate} shows that SA requires more time to converge that was provided and is still far from its potential local optima.
+
+The final evidences obtained from the jMetalPy ES show it dominance in intermediate and final results (see \cref{eval:pict:bl:pla7397 intermediate} and \cref{eval:pict:bl:pla7397 final} respectively). In this example we observe a dramatic impact of the solver parameter tuning. Using default configuration, ES is struggling in making improvements. Our guess here is the same as for the Python-based version — the number of internal iterations is extremely low a good search space traversal but, they are finishing much faster.
+
+
+\paragraph{Discussion.} The observed results of meta-heuristics execution confirm the algorithm parameter setting problem importance, discussed in \cref{bg: section Parameters Setting}. An effect of proper parameter selection is different among algorithms. In our case, the performance of two out of three solvers are highly dependent on the hyper-parameter settings. Thus, an application of our generic parameter control approach to these algorithms is rather intriguing and may partially reveal the overall methodology benefits.
+
+From the other side, we also observe the only one algorithm domination among the others with static parameters. See how all MHs were solving each TSP instance with default parameters. In each case SA outperforms two other ES. The usage of all three MHs in a selection hyper-heuristic with static (default) hyper-parameters will reveal the implemented selection HH applicability. In this case we expect to observe the results close to provided by pure SA. The other case — the application of MHs to the biggest TSP instance with tuned hyper-parameters. Here Java-based ES is the best. Thus, we expect to observe such a behavior of selection hyper-heuristic. Also, it should be rather interesting to see the impact of Python ES struggling with default parameters on HH.
 
 
 \subsubsection{Hyper-Heuristic With Random Switching of Low Level Heuristics}
