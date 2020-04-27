@@ -28,6 +28,162 @@ For our benchmarks we select four problem instances from a simpler case harder t
 
 Note, that the goal of this thesis and the evaluation in particular is not to beat the exact solvers in any case, but to investigate the applicability of proposed generic parameter control concept.
 
+\section{Environment Setup}\label{eval: environment}
+To run our experiments we use an enhanced by our approach BRISEv2 and deploy it in Docker containers on a single host machine with following characteristics:
+\begin{itemize}
+	\item \textbf{Hardware:} Fujitsu ESPRIMO P958 computer with 64GB 2667MHz RAM (16GB * 4 pcs), Intel Core i7-8700 CPU @ 3.2 GHz (6 cores * 2 threads) and Samsung 1TB SSD.
+	
+	\item \textbf{Software:} GNU/Linux Fedora 29 host OS and installed docker version 1.13.1.
+\end{itemize}
+
+We deploy 6 homogeneous BRISEv2 workers with LLHs on the same host machine to carry the problem solving process.
+We run each experiment 9 times for 15 minutes to obtain the statistical data.
+
+
+\section{Meta-heuristics Tuning}\label{eval: mh tuning}
+As we conclude in \cref{bg: parameter setting conclution}, the goal of parameter control is to reach at least the quality of parameter tuning approaches. Therefore, before running the major set of evaluation experiments, we have to perform a parameter tuning for the underlying LLHs.
+
+\subsection{Parameter Tuning System Configuration.} 
+As a tuning system, we used our the implemented concept, but in the tuner mode. As we described in \cref{concept: conclution}, to enable the parameter tuning mode, we built a search space based on the singe LLH with its parameters. In our particular case it were three search spaces for each underlying meta-heuristic respectively. We also disabled the solution transfer between each configuration, forcing LLH to use the OP each time from scratch.
+
+For each LLH we run the tuning for 8 hours on 10 deployed worker nodes and three minutes for task evaluation. The underlying prediction mechanism was configured to use TPE with 100\% window size. We also disabled the repetition strategy (\emph{repeater} entity), leaving each configuration evaluated only once (with one task). We do so since our preliminary experiments have shown that the variance among evaluations is negligible. As one may expect, since the repetition strategy was disabled, outliers detection was turned off as well.
+
+\subsection{Target Optimization Problem and Search Space of Parameters.} 
+The role of target optimization problem was played by one of evaluated TSP instances: \emph{rat783}. We selected this instance because, it is a middle size problem, comparing all the used through evaluation OPs.
+
+\paragraph{jMetalPy evolution strategy.} This meta-heuristic is implemented in a framework as na\"ive evolution strategy however, we found an important recombination mechanism missing therefore, the heuristic is performing mostly by means of the mutation operations. As a configuration, this ES implementation requires providing several hyper-parameters. Integer $\mu$ (\emph{mu}), which denotes the number of parents in the population, while integer $\lambda$ (\emph{lambda}) defines the number of offspring. We tune both parameters in ranges $[1..1000]$. Boolean \emph{elitist} defines the selection strategy, which true value enables elitist selection $(\mu+\lambda)$, while false disables the elitist selection $(\mu,\lambda)$ (more detains in \cref{BG: MH Examples}). Also, the framework proposes two possible \emph{mutation types} for combinatorial OPs: permutation swap and scramble mutation, which we use for tuning. The respective mutation probability is tuned in range $[0..1]$.
+
+\paragraph{jMetalPy simulated annealing.} In this meta-heuristic authors defined the solution neighborhood by means of the same mutation operators, mentioned above. Thus, we use them and the same mutation probability range for tuning the SA. Unfortunately, the authors did not provide other but exponential cooling schedule and did not expose parameters temperature or alpha. This is the reason of such tiny parameter space for this MH.
+
+\paragraph{jMetal evolution strategy.} The set of exposed hyper-parameters is almost the same, as we described for the Python-based MH implementation. The only difference that the mutation is represented only by one type, therefore we exclude it from the parameter space, but leaving the mutation probability. All the other parameter ranges are the same as for the defined above ES.
+
+
+\subsection{Parameter tuning results.} 
+The process of parameter tuning is depicted in \cref{eval:pict:mh tuning}. During the session each MH was probed with at least $1.5k$ configurations. 
+
+
+\svgpath{{graphics/Eval/}}
+\begin{figure}[h!]
+	\centering
+	\includesvg[width=\textwidth]{tuning progress}
+	\caption{The low level heuristics parameter tuning process.}
+	\label{eval:pict:mh tuning}
+\end{figure}
+
+In the figures below we propose a visual analysis of the parameter tuning results. For each meta-heuristic we separately present the numerical and categorical parameters.
+
+The numeric hyper-parameters are showed as scattered points of parameter value (\emph{x-axis}) and the respective objective function result (\emph{y-axis}), obtained for configuration with this parameter value. Although such an isolated approach to analyze data in some cases may be error-prone, still it enough to get a birds-eye view on the existing dependencies. To represent trends among numeric parameter values we draw the regression line ($4^{th}$ degree) in green. At the top and to the right of the graph presented also the axis value densities. Thus, the density on a right side shows which objective values and how often were obtained, changing the underlying parameter, while the density on the top shows which parameter values were selected more often.
+
+As for the categorical parameters, we plot their values as violin plots. It is a combination of box plot with the addition of a kernel density plot on each side. Since in our case, all categorical parameters of underlying algorithms have only two values, each violin plot shows which results of an objective function and how often were obtained. Using colors we depict different value of underlying parameter, while the shape of violin shows an expected result value and its probability. Inside the figure we also draw three dashed lines. A middle line with long dashes is a median, while lower and upper lines with short dashes show first and third quartiles respectively.
+
+
+\paragraph{jMetalPy evolution strategy parameters.}
+\begin{figure}[h!]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{jMetalPy evolution strategy numeric parameters}
+	\caption{jMetalPy evolution strategy numeric parameters values.}
+	\label{eval:pict:jmetalpy es numeric}
+	\vspace{-20pt}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{jMetalPy evolution strategy categorical parameters}
+	\caption{jMetalPy evolution strategy categorical parameters values.}
+	\label{eval:pict:jmetalpy es categoric}
+	\vspace{-20pt}
+\end{figure}
+
+Looking on the \cref{eval:pict:jmetalpy es numeric}, one will see an explicit dependency between the number of parents (\cref{eval:pict:jmetalpy es numeric} parameter \emph{mu}) and the objective function: less amount of parents are tended to produce the better results. However, the dependency is such clearly observable for the number of offspring (\cref{eval:pict:jmetalpy es numeric} parameter \emph{lambda}). We may see, that a high number of offspring does not tend to provide good results but, the number of performed estimations for low \emph{lambda} is not enough to be strongly ensured that this value is better. Yet, even with small amount of observations we may make a guess that low \emph{lambda} is a good parameter choice. With respect to the mutation probability, it may be observed, that the higher mutation rates tend to produce a better results. 
+
+As for the categorical parameters, one may see a strong bias towards bad results when using non-elitist algorithm version (\cref{eval:pict:jmetalpy es categoric} parameter \emph{elitist}). When concerning the mutation type, the dominance is not an obvious but, permutation version of mutation is slightly outperforms scramble type (\cref{eval:pict:jmetalpy es categoric} parameter \emph{mutation}).
+
+
+\paragraph{jMetalPy simulated annealing parameters.}
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.35\textwidth}
+		\vspace{-10pt}
+		\includesvg[width=\linewidth]{jMetalPy simulated annealing numeric parameters}
+		\caption{Mutation probability.}
+		\label{eval:pict:jmetalpy sa numeric}
+	\end{subfigure}
+	\hfil 
+	%\vspace{-5pt}
+	\begin{subfigure}{0.4\textwidth}
+		\includesvg[width=\textwidth]{jMetalPy simulated annealing categorical parameters}
+		\vspace{-5pt}
+		\caption{Mutation type.}
+		\label{eval:pict:jmetalpy sa categoric}
+	\end{subfigure}
+	\caption{jMetalPy simulated annealing parameters.}
+\end{figure}
+
+
+This heuristic were tuned by means of only two parameters: categorical mutation type, which results are presented on \cref{eval:pict:jmetalpy sa categoric} and numerical mutation probability with graphs on \cref{eval:pict:jmetalpy sa numeric}. One may see a strong dominance of permutation mutation type, while scramble produce an average, but stable results. The mutation probability trends are also clear: higher parameter values produce better results. Indeed, the dependency on mutation probability is obvious, since the underlying algorithm is performing the search space traversal by means of solution mutation.
+
+
+\paragraph{jMetal evolution strategy parameters.}
+\begin{figure}[h]
+	\centering
+	\vspace{-10pt}
+	\includesvg[width=\textwidth]{jMetal evolution strategy numeric parameters}
+	\caption{jMetal evolution strategy numeric parameters values.}
+	\vspace{-15pt}
+	\label{eval:pict:jmetal es numeric}
+\end{figure}
+
+\begin{wrapfigure}{R}{0.4\textwidth}
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\linewidth]{jMetal evolution strategy categorical parameters}
+	\label{eval:pict:jmetal es categoric}
+	\caption{jMetal ES elitist parameter.}
+	\vspace{-30pt}
+\end{wrapfigure}
+
+The final heuristic under investigation is the Java-based implementation of viewed above ES. Even if the regression lines are not looking the same from at the first glance, the overall trends are pretty the same: lower values of \emph{mu} parameter result in better objective, while the mutation probability should be kept high. In a contrary to Python-based ES, here the middle-range values of parameter \emph{lambda} produce the best results. A dominance of elitist version of algorithm is non-obvious, but this could be seen from a distribution first quartile.
+
+We collected the best performing configurations in each meta-heuristic and presented them in \cref{eval: params jmetalpy es}. We also highlight here the default parameter values, which are motivated by their location is the middle of the values ranges.
+
+\begin{table}%[h!]
+	\centering
+	\begin{tabular}{r||c|c|c}
+		\textbf{Hyper-parameter} & \textbf{Default value} & \textbf{Tuned value} & \textbf{Estimated range} \\
+		\hline
+		\hline
+		\rowcolor{gray!10}
+		\multicolumn{4}{c}{jMetalPy evolution strategy} \\
+		\hline
+		$\mu$ & 500 & 5 & $[1..1000]$ \\
+		$\lambda$ & 500 & 22 & $[1..1000]$ \\
+		\emph{elitist} & False & True & {True, False} \\
+		\emph{mutation type} & Permutation & Permutation & {Permutation, Scramble} \\
+		\emph{mutation probability} & 0.5 & 0.99 & $[0..1]$\\
+		\hline
+		\rowcolor{gray!10}
+		\multicolumn{4}{c}{jMetalPy simulated annealing} \\
+		\hline
+		\emph{mutation type} & Permutation & Permutation & {Permutation, Scramble} \\
+		\emph{mutation probability} & 0.5 & 0.89  & $[0..1]$\\
+		\hline
+		\rowcolor{gray!10}
+		\multicolumn{4}{c}{jMetal evolution strategy} \\
+		\hline
+		$\mu$ & 500 & 5 & $[1..1000]$ \\
+		$\lambda$ & 500 & 605 & $[1..1000]$ \\
+		\emph{elitist} & False & True  & {True, False}\\
+		\emph{mutation probability} & 0.5 & 0.99 & $[0..1]$ \\
+	\end{tabular}
+	
+	\caption{Static hyper-parameters of low-level meta-heuristics.}
+	\label{eval: params jmetalpy es}
+\end{table}
+
+
+
 
 \section{Concept Evaluation}\label{eval: concept}
 
@@ -99,71 +255,6 @@ The aggregated concept benchmark plan is as following:
 
 We will discuss each of the experiment group while reviewing the evaluation results.
 
-\subsection{Environment Setup}\label{eval: environment}
-To run our experiments we use BRISEv2 dockerized deployment on a single host machine with following characteristics:
-\begin{itemize}
-	\item \textbf{Hardware:} Fujitsu ESPRIMO P958 computer with 64GB 2667MHz RAM (16GB * 4 pcs), Intel Core i7-8700 CPU @ 3.2 GHz (6 cores * 2 threads) and Samsung 1TB SSD.
-
-	\item \textbf{Software:} GNU/Linux Fedora 29 host OS and installed docker version 1.13.1.
-\end{itemize}
-
-We run all experiments for 15 minutes each, repeating it 9 times to obtain the statistical data. We deploy 6 homogeneous BRISEv2 workers with LLHs to carry the load.
-
-
-\subsection{Meta-heuristics Tuning}\label{eval: mh tuning}
-According to the defined plan, before running the major benchmark experiments we have to perform a parameter tuning for the underlying LLHs.
-
-\subsubsection{Parameter Tuning System Configuration.} 
-As a tuning system, we used our the implemented concept, but in the tuner mode. As we described in \cref{concept: conclution}, to enable the parameter tuning mode, we built a search space based on the singe LLH with its parameters. In our particular case it were three search spaces for each underlying meta-heuristic respectively. We also disabled the solution transfer between each configuration, forcing LLH to use the OP each time from scratch.
-
-For each LLH we run the tuning for 8 hours on 10 deployed worker nodes and three minutes for task evaluation. The underlying prediction mechanism was configured to use TPE with 100\% window size. We also disabled the repetition strategy (\emph{repeater} entity), leaving each configuration evaluated only once (with one task). We do so since our preliminary experiments have shown that the variance among evaluations is negligible. As one may expect, since the repetition strategy was disabled, outliers detection was turned off as well.
-
-\subsubsection{Target Optimization Problem and Search Space of Parameters.} 
-The role of target optimization problem was played by one of evaluated TSP instances: \emph{rat783}. We selected this instance because, it is a middle size problem, comparing all the used through evaluation OPs.
-
-\paragraph{jMetalPy evolution strategy.} This meta-heuristic is implemented in a framework as na\"ive evolution strategy however, we found an important recombination mechanism missing therefore, the heuristic is performing mostly by means of the mutation operations. As a configuration, this ES implementation requires providing several hyper-parameters. Integer $\mu$, which denotes the number of parents in the population, while integer $\lambda$ defines the number of offspring. We tune both parameters in ranges $[1..1000]$. Boolean \emph{elitist} defines the selection strategy, which true value enables elitist selection $(\mu+\lambda)$, while false disables the elitist selection $(\mu,\lambda)$ (more detains in \cref{BG: MH Examples}). Also, the framework proposes two possible \emph{mutation types} for combinatorial OPs: permutation swap and scramble mutation, which we use for tuning. The respective mutation probability is tuned in range $[0..1]$.
-
-\paragraph{jMetalPy simulated annealing.} In this meta-heuristic authors defined the solution neighborhood by means of the same mutation operators, mentioned above. Thus, we use them and the same mutation probability range for tuning the SA. Unfortunately, the authors did not provide other but exponential cooling schedule and did not expose parameters temperature or alpha. This is the reason of such tiny parameter space for this MH.
-
-\paragraph{jMetal evolution strategy.} The set of exposed hyper-parameters is almost the same, as we described for the Python-based MH implementation. The only difference that the mutation is represented only by one type, therefore we exclude it from the parameter space, but leaving the mutation probability. All the other parameter ranges are the same as for the defined above ES.
-
-
-\subsubsection{Parameter tuning results.} 
-The results of parameter tuning and the default values for the parameters are presented in a separate table for each meta-heuristic.
-
-\begin{table}[h!]
-	\centering
-	\begin{tabular}{r||c|c}
-		\textbf{Hyper-parameter} & \textbf{Default value} & \textbf{Tuned value} \\
-		\hline
-		\hline
-		\rowcolor{gray!10}
-		\multicolumn{3}{c}{jMetalPy evolution strategy} \\
-		\hline
-		$\mu$ & 500 & 5 \\
-		$\lambda$ & 500 & 22 \\
-		\emph{elitist} & False & True \\
-		\emph{mutation type} & Permutation swap & Permutation swap \\
-		\emph{mutation probability} & 0.5 & 0.99 \\
-		\hline
-		\rowcolor{gray!10}
-		\multicolumn{3}{c}{jMetalPy simulated annealing} \\
-		\hline
-		\emph{mutation type} & Permutation swap & Permutation swap \\
-		\emph{mutation probability} & 0.5 & 0.89 \\
-		\hline
-		\rowcolor{gray!10}
-		\multicolumn{3}{c}{jMetal evolution strategy} \\
-		\hline
-		$\mu$ & 500 & 5 \\
-		$\lambda$ & 500 & 605 \\
-		\emph{elitist} & False & True \\
-		\emph{mutation probability} & 0.5 & 0.99 \\
-	\end{tabular}
-	
-	\caption{Static hyper-parameters of low-level meta-heuristics.}
-	\label{eval: params jmetalpy es}
-\end{table}
 
 
 
