@@ -134,11 +134,11 @@ When the requirements, specified for the search space and the prediction process
 	
 	\item The \textbf{parameter control} case is possible, if one builds a search space of the single LLH, its hyper-parameters, and enables the solution transfer between the iterations. 
 	
-	\item The \textbf{off-line selective hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and disables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters.
+	\item The \textbf{off-line selection hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and disables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters.
 	
-	\item The \textbf{on-line selective hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and enables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters as well but seed with the solutions.
+	\item The \textbf{on-line selection hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and enables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters as well but seed with the solutions.
 	
-	\item The \textbf{on-line selective hyper-heuristic with parameter control} is possible by building the search space of multiple LLHs, their hyper-parameters and enabling the solution transfer between iterations.
+	\item The \textbf{on-line selection hyper-heuristic with parameter control} is possible by building the search space of multiple LLHs, their hyper-parameters and enabling the solution transfer between iterations.
 \end{enumerate}
 
 Note, that the off-line cases estimate the solution quality directly, while the on-line cases use the relative solution quality improvement.

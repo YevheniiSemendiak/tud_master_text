@@ -351,7 +351,7 @@ From the other side, we also observe the only one algorithm domination among the
 
 %\newpage
 \subsubsection{Generic Parameter Control}
-As we discussed in \cref{bg: parameter control}, the goal of parameter tuning lays in adaptive changing of underlying algorithm parameters with to optimize some performance measurement. In our case, we apply the proposed in \cref{Concept description} approach to set the parameters of anytime algorithms. Here is a brief reminder: at each RL step HLH is analyzing the performance of solver with previous configurations to choose the parameters values, which hopefully lead to the higher solution quality improvements. Afterwards, we run the solver with sampled parameters for a predefined time (15 seconds) to get new evidences. 
+As we discussed in \cref{bg: parameter control}, the goal of parameter tuning lays in adaptive changing of underlying algorithm parameters with to optimize some performance measurement. In our case, we apply the proposed in \cref{concept: conclution} methodology to set the parameters of anytime algorithms in a runtime. Here is a brief reminder: at each RL step HLH is analyzing the performance of solver with previous configurations to choose the parameters values, which hopefully lead to the higher solution quality improvements. Afterwards, we run the solver with sampled parameters for a predefined time (15 seconds) to get new evidences. 
 
 Here we compare the performance of algorithms with statically defined default and tuned hyper-parameters to dynamically changing parameter values by means of RL control. As previously, we perform the comparison for each problem instance separately.
 
@@ -448,11 +448,9 @@ Taking into account the results with random parameter allocation we conclude tha
 
 
 \subsubsection{Selection Hyper-Heuristic with Static LLH Parameters}
-The second mode of developed approach and at the same time a main goal of the thesis is a process of dynamic algorithm selection. It is implemented in form of described in \cref{Concept description} reinforcement learning-based on-line selection hyper-heuristic. In this part of evaluation we combine three available meta-heuristics with static parameter (default and tuned) into a single selection hyper-heuristic. Three approaches to select the LLH were investigated, in combination to two possible parameters settings it results in 6 combinations for each problem instance.
+The second mode of developed approach and at the same time a main goal of the thesis is a process of dynamic algorithm selection. It is implemented in form of described in \cref{concept: conclution} reinforcement learning-based on-line selection hyper-heuristic. In this part of evaluation we combine three available meta-heuristics with static parameter (default and tuned) into a single selection hyper-heuristic. Three approaches to select the LLH were investigated, in combination to two possible parameters settings it results in 6 combinations for each problem instance.
 
 We present the process of problem solving in two forms. Firstly, we present the process of problem solving, distinguishing selected at each iteration LLH and the results, which it gave. For doing it, we selected only the first repetition (out of 9 available), since presenting all repetitions will not be possible to understand. Nevertheless, we present the final results of all runs in form of box-plots, comparing them to the underlying LLH performance. LLHs solely and combined into the selection hyper-heuristics are configured to use a static hyper-parameter values (HH-SP). On the left side we present final performance with the default parameter values, while on the right site — the tuned beforehand values.
-
-
 
 \newpage
 \paragraph{kroA100 TSP instance.}
@@ -465,15 +463,13 @@ We present the process of problem solving in two forms. Firstly, we present the 
 	\vspace{-10pt}
 	\label{eval:pict:hh-sp:kroA100 intermediate}
 \end{figure}
-The intermediate results with random LLH allocation show as, as expected, unbiased uniform selection of LLH (codes 1.1 and 1.2). We also observe the same behavior with all HH-SP approaches, while we utilize tuned parameter values (codes 1.2, 2.2, 3.2). It is motivated by an equal performance of all LLHs on this problem instance (see baseline evaluation in \cref{eval: concept baseline}). Therefore, a point of interest here are default parameter values(codes 2.1, 3.1. in \cref{eval:pict:hh-sp:kroA100 intermediate}). When we change the HLH to FRAMAB, a bias appears towards jMetal evolution strategy (j.ES) and jMetalPy simulated annealing (py.SA) LLHs. In case of BRR usage, the bias dominates in j.ES however, in both experiments j.ES does not provide dominating results. Our guess of this behavior explanation is the overall instance solving process: after a couple of first py.SA allocations, the solving process gets stuck in a local optimum (see \cref{eval: concept baseline}). Therefore, HH-SP increases exploration and usage of other LLHs, which we observe.
-
-According to presented in \cref{eval:pict:hh-sp:kroA100 final} final results statistics for this problem instance, given at least one dominating LLH (default parameters values case), even random selection HH-SP could utilize it enough times to obtain a good results.
+The intermediate results with random LLH allocation show us, as expected, unbiased uniform selection of LLH (codes 1.1, 1.2). We observe the same behavior with all HH-SP approaches, while they utilize LLHs with tuned parameter values (codes 1.2, 2.2, 3.2), which is motivated by an equal performance of all LLHs on this TSP instance. Thus, the point of interest here are LLHs with default parameter values (codes 2.1, 3.1 in \cref{eval:pict:hh-sp:kroA100 intermediate}). When FRAMAB is used as HLH, a preference in j.ES and py.SA appears. We observe a repetitive pattern in LLH allocation, when FRAMAB reaches a local optimum (code 2.1). It is caused by a deterministic essence of the algorithm. Being in a local optimum, FRAMAB's exploration mechanism fully guides a selection. Due to the usage of a similar time-based LLH termination, all workers are starting the next round in bunches. Thus, when a new round starts, FRAMAB operates on static information and allocates all next configurations with the same LLH. From the other perspective, when the process reaches a point, where the advantage changes towards another LLH, FRAMAB behaves inertly. One may argue this will cause a struggle in a performance, which is rather a logical conclusion. It requires a further investigation, which we are forced to postpone for the future work. In case of BRR usage, the bias dominates in j.ES however. According to presented in \cref{eval:pict:hh-sp:kroA100 final} final results statistics for this problem instance, given at least one dominating LLH (default parameters values case), even a random LLH selection could utilize to obtain a good final results.
 
 \begin{figure}[b]
 	\centering
 	\vspace{-20pt}
 	\includesvg[width=\textwidth]{kroA100 HH-SP final boxplot}
-	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on kroA100 (statistics of 9 experiment results).}
+	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on kroA100 (statistic of 9 runs).}
 	\vspace{-5pt}
 	\label{eval:pict:hh-sp:kroA100 final}
 \end{figure}
@@ -490,7 +486,7 @@ According to presented in \cref{eval:pict:hh-sp:kroA100 final} final results sta
 \end{figure}
 Evaluating the 439 cities instance solving process, we observe a similar behavior while using tuned hyper-parameters therefore, we do not draw our attention here: every LLH reach a local optimum in a couple of first iterations and no dominant LLH may be distinguished.
 
-On contrary, when using the default parameter values a bias towards py.SA should occur, since it showed the best results improvement during the baseline evaluation. However, in our observations the FRAMAB-based HH-SP (code 2.1) frequently allocates two heuristics: py.SA and j.ES, while BRR-based (code 3.1) performs as expected allocating mostly py.SA (\cref{eval:pict:hh-sp:pr439 intermediate}). Comparing to the previous problem instance, BRR dramatically changed its behavior to utilize in the most cases the best performing py.SA. Thus, we can conclude the BRR HLH provides more exploitation capabilities, when compared to FRAMAB HLH.
+On contrary, when using the default parameter values a bias towards py.SA occurs, since it showed the best results improvement during the baseline evaluation. After reaching a local optima, FRAMAB-based HH-SP (code 2.1) frequently allocates two heuristics: py.SA and j.ES, while BRR-based (code 3.1) continues to allocate mostly py.SA (\cref{eval:pict:hh-sp:pr439 intermediate}). Comparing to the previous problem instance, BRR dramatically changed its behavior to utilize in the most cases the best performing py.SA. Thus, we can conclude the BRR HLH provides more exploitation capabilities, when compared to FRAMAB HLH.
 
 The final result quality of all HH-SP on this problem instance are roughly similar to provided by the best performing py.SA with default parameters. Once again, all tuned LLHs separately provide a similar final result quality therefore, their combination in HH-SP leads to the same final quality (\cref{eval:pict:hh-sp:pr439 final}).
 
@@ -498,7 +494,7 @@ The final result quality of all HH-SP on this problem instance are roughly simil
 	\centering
 	\vspace{-20pt}
 	\includesvg[width=\textwidth]{pr439 HH-SP final boxplot}
-	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on pr439 (statistics of 9 experiment results).}
+	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on pr439 (statistic of 9 runs).}
 	\vspace{-5pt}
 	\label{eval:pict:hh-sp:pr439 final}
 \end{figure}
@@ -523,7 +519,7 @@ The final result quality of all model-based HP-SP are at least as good, as the s
 	\centering
 	\vspace{-20pt}
 	\includesvg[width=\textwidth]{rat783 HH-SP final boxplot}
-	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on rat783 (statistics of 9 experiment results).}
+	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on rat783 (statistic of 9 runs).}
 	\vspace{-5pt}
 	\label{eval:pict:hh-sp:rat783 final}
 \end{figure}
@@ -545,7 +541,7 @@ Finally, the largest TSP instance tackled in this thesis. Our observations diffe
 	\centering
 	\vspace{-20pt}
 	\includesvg[width=\textwidth]{pla7397 HH-SP final boxplot}
-	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on pla7397 (statistics of 9 experiment results).}
+	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on pla7397 (statistic of 9 runs).}
 	\vspace{-5pt}
 	\label{eval:pict:hh-sp:pla7397 final}
 \end{figure}
@@ -555,15 +551,129 @@ The displayed chronic of LLHs allocation in \cref{eval:pict:hh-sp:pla7397 interm
 As for the case with tuned LLHs, all selection approaches produced comparable to the best available LLHs final results. However, due to frequent usage of j.ES by FRAMAB and BRR, their final result quality slightly outperform random-based selection.
 
 
-\paragraph{Discussion.} According to our observations of the developed selection hyper-heuristic performance we conclude that a proposed concept may be used in such way. It naturally requires not only a thorough investigation of previously seeing issues (pla7397 code 1.1, 3.1), but also a generic approach to handle a potential performance issues in LLH that may cause struggling of overall HH-SP execution. The implemented system should be evaluated by means of HLH configuration influence on the performance. Also, a further investigation of adding several new LLHs should be evaluated by means of required computation effort to find good LLHs vs pure performance of these LLHs.
+\paragraph{Discussion.} According to our observations of the developed selection hyper-heuristic performance we conclude that a proposed concept implementation performs as expected. Two utilized LLH selection approaches are performing differently when reach a local optimum. We claim the FRAMAB is a more perspective HLH, since after reaching local optima it starts to balance between previously seeing good performing LLH. In a contrary, BRR continues to select only the best performing heuristic. In case when the advantage of one LLH changes to another, BRR may require more time to learn this. Nevertheless, it is only our guesses, which need the evaluation proves.
+
+Generally speaking, observed issues require not only a thorough investigation (pla7397 code 1.1, 3.1), but also a generic approach to handle a potential flaws in LLH performance that may cause struggling of overall HH-SP execution. The implemented system should be evaluated by means of HLH configuration influence on the performance. Also, a further investigation of adding several new LLHs should be evaluated by means of required computation effort to find good LLHs vs pure performance of these LLHs.
 
 
 \subsubsection{Selection Hyper-Heuristic with Parameter Control}
+The final evaluation is dedicated to performance analysis of the suggested approach of merging selection hyper-heuristic with generic parameter control in LLHs. A minimal goal of both (1) HH-SP and (2) MH-PC merge is to obtain the best algorithm (1) with tuned hyper-parameters (2) performance. In this evaluation set we follow a similar to previously used approach of intermediate results review distinguishing allocated LLH types at each iteration and comparing the final results quality with a baseline. Once again, for the intermediate results we outline only a single repetition, while the final results are compared by means of all 9 repetitions. As specified in the evaluation plan (\cref{eval: concept plan}), for the LLH selection we use three approaches: random, FRAMAB and BRR sampling, while for setting the LLH parameters we use the same random and BRR sampling, but apply TPE instead of FRAMAB.
 
-\paragraph{Results Description and Explanation}
+\newpage
+\paragraph{kroA100 TSP instance.}
+\svgpath{{graphics/Eval/hhpc}}
+\begin{figure}[t]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{kroA100 HH-PC progress}
+	\caption{Intermediate performance of HH-PC on kroA100 (single experiment).}
+	\vspace{-10pt}
+	\label{eval:pict:hh-pc:kroA100 intermediate}
+\end{figure}
+During the solving process a similar to HH-SP patterns of algorithm allocation may be observed for both FRAMAB-based (codes 2.4, 2.5) and BRR (codes 3.4, 3.5) HLHs. However, in this case the intermediate results are differing, since the parameter control has started to search for good LLHs settings (\cref{eval:pict:hh-pc:kroA100 intermediate}). For instance, consider the appeared `noise' in the results of both evolution strategies heuristics. It is caused by a boolean parameter \emph{elitist}, which defines the selection strategy. If the values is \texttt{false}, the outcome of heuristic run may be a dramatic decrease in solution quality (a more detailed description could be found in \cref{BG: MH Examples}). We may observe a case, when py.ES using a \texttt{elitist=true} parameter setting made an improvement in solution quality, see \cref{eval:pict:hh-pc:kroA100 intermediate}, code 3.4, around 50n iteration. TPE model (used to tune parameters in code 3.4) learned it and did not use an \texttt{elitist=false} parameter combination for this MH later in this experiment: only a j.ES-based noise appearing afterwards. Simultaneously, BRR model (used to select LLH in code 3.4) learned the improvement done by py.ES and selected it more frequently.
 
+Since kroA100 is a relatively small TSP instance, the final performance of all approaches, including random LLH and parameter selection approach (code 1.3) are roughly the same (\cref{eval:pict:hh-pc:kroA100 final}). Nevertheless, all of them outperform a baseline, even with the tuned parameters (4.\{1,2,3\}.1 for default and 4.\{1,2,3\}.2 for tuned py.ES, py.SA, j.ES respectively in \cref{eval:pict:hh-pc:kroA100 final}).
 
+\begin{figure}[b]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{kroA100 HH-PC final boxplot}
+	\caption{Final results of HH-PC compared with MH on kroA100 (statistic of 9 runs).}
+	\vspace{-5pt}
+	\label{eval:pict:hh-pc:kroA100 final}
+\end{figure}
 
+\newpage
+\paragraph{pr439 TSP instance.}
+\svgpath{{graphics/Eval/hhpc}}
+\begin{figure}[t]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{pr439 HH-PC progress}
+	\caption{Intermediate performance of HH-PC on pr439 (single experiment).}
+	\vspace{-10pt}
+	\label{eval:pict:hh-pc:pr439 intermediate}
+\end{figure}
+With this TSP instance the learning process quickly converged in a local optima without a making an improvement moves. Because of this, the LLH allocation schedule, performed by FRAMAB (codes 2.4 and 2.5) is similar to one observed in HH-SP: two solvers were repeatedly executed, one is j.ES and the another is py.SA (\cref{eval:pict:hh-pc:pr439 intermediate}). In a contrary, BRR LLH selector did not manage to find an outperforming solver, therefore, was executing them uniformly (codes 3.4, 3.5), similarly to a pure random approach (code 1.3). Talking about the same distinguishable \emph{elitist} parameter, TPE-based parameter control algorithm in both cases (codes 2.4, 3.4) found out that it rarely provide a good solution quality, therefore was setting it to \texttt{elitist=false} less frequently. 
+
+Comparing the final results quality of baseline with implemented HH-PC on this problem instance, we observe a similar to tuned MHs (codes 4.\{1,2,3\}.2) performance in all cases (\cref{eval:pict:hh-pc:pr439 final}). Once again, the purely randomized selection of both LLHs and their parameters gave a good performance (code 1.3), which may be explained by a random allocation of py.SA, which is less sensitive to parameter settings. During these calls, the algorithm managed to produce the most valuable improvements to the solution quality (see the beginning of solving process in \cref{eval:pict:hh-pc:pr439 intermediate} code 1.3).
+
+\begin{figure}[b]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{pr439 HH-PC final boxplot}
+	\caption{Final results of HH-PC compared with MH on pr439 (statistic of 9 runs).}
+	\vspace{-5pt}
+	\label{eval:pict:hh-pc:pr439 final}
+\end{figure}
+
+\newpage
+\paragraph{rat783 TSP instance.}
+\svgpath{{graphics/Eval/hhpc}}
+\begin{figure}[t]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{rat783 HH-PC progress}
+	\caption{Intermediate performance of HH-PC on rat783 (single experiment).}
+	\vspace{-10pt}
+	\label{eval:pict:hh-pc:rat783 intermediate}
+\end{figure}
+With the third problem instance namely the solving process is becoming more demonstrative.
+Let us firstly draw attention towards HH-PC with FRAMAB for LLH and TPE for parameter sampling. At the beginning of solving process, j.ES was performing extremely well, for this reason FRAMAB was sampling it the most frequently (see beginning of experiment encoded by code 2.4 in \cref{eval:pict:hh-pc:rat783 intermediate}). When a solving process in j.ES reached its local optima, FRAMAB started to use other heuristics by means of exploration. From an absence of noise its may be seeing, that TPE has set the most perspective parameters to LLHs (codes 2.4 and 3.4), but they have reached their local optima. In such case, the parameter search should be biased towards exploitation. To do so, we may need to introduce new and different progress evidences, such as stagnation detection (which is used in EA parameter control~\cite{karafotias2014generic}). Unfortunately, due to a lack of time, we postpone this enhancement for a future work.
+
+The final performance evidences of the proposed concept implementation, unfortunately, do not reach the desired level. More concretely, in \cref{eval:pict:hh-pc:rat783 final} we clearly see the dominating j.ES MH with tuned parameters (code 4.3.2). As we claimed in the beginning of HH-PC performance review, the expected minimal final solution quality of HH-PC should be as good as tuned j.ES. But we observe an averaged performance among all available tuned LLHs (codes 4.1.2, 4.2.2, 4.3.2 for tuned MHs vs codes 1.3, 2.4, 2.5, 3.4, 3.5).
+
+\begin{figure}[b]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{rat783 HH-PC final boxplot}
+	\caption{Final results of HH-PC compared with MH on rat783 (statistic of 9 runs).}
+	\vspace{-5pt}
+	\label{eval:pict:hh-pc:rat783 final}
+\end{figure}
+
+\newpage
+\paragraph{pla7397 TSP instance.}
+\svgpath{{graphics/Eval/hhpc}}
+\begin{figure}[t]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{pla7397 HH-PC progress}
+	\caption{Intermediate performance of HH-PC on pla7397 (single experiment).}
+	\vspace{-10pt}
+	\label{eval:pict:hh-pc:pla7397 intermediate}
+\end{figure}
+
+The final and largest problem instance, which should relieve the proposed and implemented concept applicability fully.
+
+As we observed in previous experiments, py.ES with non-tuned parameters may cause a struggling in hyper-heuristic performance (see \cref{eval:pict:bl:pla7397 intermediate} and the discussion below \cref{eval:pict:pc:pla7397 intermediate}). Thus, during these benchmarks py.ES made a crucial change in the overall number of iterations where it was used many times (codes 1.3, 3.4, 3.4 in \cref{eval:pict:hh-pc:pla7397 intermediate}). While the case of fully randomized HH-PC (code 1.3) is clear, a BRR LLH selection did use this LLH frequently, since it produced a good results as a result of parameter control behavior. In a contrary, FRAMAB LLH selection in combination with TPE parameter tuning (code 2.4) managed to find good parameters for py.SA, therefore, allocated frequently. When py.SA reached its local optimum, FRAMAB triggered other LLHs usage and as a result, switched to j.ES's usage, which gave dramatic result improvements. The FRAMAB LLH selection with BRR parameter control (code 2.5) at the beginning of run was using the mixture of mainly two j.ES and py.SA, but later switched to py.SA-only mode. As we observe, this gave a fast coarse-grained solution improvement in the beginning, and stable, but rather slow improvement in a later stage.
+
+\begin{figure}[b]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{pla7397 HH-PC final boxplot}
+	\caption{Final results of HH-PC compared with MH on pla7397 (statistic of 9 runs).}
+	\vspace{-5pt}
+	\label{eval:pict:hh-pc:pla7397 final}
+\end{figure}
+
+On the final results quality charts (\cref{eval:pict:hh-pc:pla7397 final}) we observe a dominance of FRAMAB-based LLH selection (codes 2.4, 2.5) and TPE-based parameter control (codes 2.4 and 3.4) usage. However, the results obtained with BRR-based parameter control approach (codes 2.5 and 3.5) are more stable than TPE-based (codes 2.4 and 3.4). Once again, the final results did not reach a desired performance of the best performing tuned j.ES (code 4.3.2). However, since the optimization process did not settle in a local optima, we can not doubt that HH-PC will not outperform j.ES. given more time. 
+
+For a better intuition, let us draw the reader attention to \cref{eval:pict:hh-pc vs jES on pla7397 process}. Note how HH-PC with BRR LLH selection and TPE parameter tuning is approaching j.ES. If not the issue with a number of iterations, it would outperform the j.ES. However, in the current implementation given 15 minutes for all solvers j.ES managed to make more iterations and moved further. We postpone this discussion to the second main part of this chapter, dedicated to a coarse-grained HH-PC parameter settings influence evaluation.
+
+\begin{figure}[t]
+	\centering
+	\vspace{-20pt}
+	\includesvg[width=\textwidth]{pla7397 HH-PC vs jES progress}
+	\caption{HH-PC and tuned jMetal ES solving process comparison on pla7397 (statistic of 9 runs).}
+	\vspace{-5pt}
+	\label{eval:pict:hh-pc vs jES on pla7397 process}
+\end{figure}
+
+\subsection{Conclusion on Concept Evaluation}\label{eval: concept eval conclusion}
+In previously performed analysis the suggested generic parameter control (MH-PC) proved its concept, while implemented dynamic selection of heuristics with static parameters (HH-SP) performed according to our expectations. As discussed during the literature review in \cref{bg: parameter tuning,bg: hh}, each approach has a lack of another's advantageous features. Selecting good MH parameters, MH-PC will not outperform a better heuristic, while selected good algorithm with a poor parameter setting will not be able to compete with properly tuned one. Therefore, in proposed approach to merge both algorithm selection and parameter control in HH-PC we expected to observe 
+
+We preform a comparison of HH-PC with MH-PC and HH-SP afterwards.
 
 
 \section{Hyper-Heuristic with Parameter Control Settings Evaluation}\label{eval: hh-pc}
