@@ -1,0 +1,114 @@
+\chapter{Evaluation plots}
+\section{Concept Evaluation}
+
+\subsection{Baseline}\label{app:eval:bl plots}
+\svgpath{{graphics/Eval/baseline}}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{kroA100 baseline progress}
+	\caption{Intermediate results of meta-heuristics with static parameters on kroA100.}
+	\label{app:eval:1:bl:kroA100 intermediate}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{pr439 baseline progress}
+	\caption{Intermediate results of meta-heuristics with static parameters on pr439.}
+	\label{app:eval:1:bl:pr439 intermediate}
+\end{figure}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\includesvg[width=\textwidth]{kroA100 baseline final boxplot}
+		\caption{kroA100 TSP instance.}
+		\label{app:eval:1:bl:kroA100 final}
+	\end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+		\includesvg[width=\linewidth]{pr439 baseline final boxplot}
+		\caption{pr439 TSP instance.}
+		\label{app:eval:1:bl:pr439 final}
+	\end{subfigure}
+	\caption{Final results of meta-heuristics with static parameters.}
+	
+\end{figure}
+
+
+\subsection{Parameter Control}\label{app:eval:pc plots}
+\svgpath{{graphics/Eval/control}}
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{pr439 PC progress}
+	\caption{Intermediate results of meta-heuristics with parameter control on pr439.}
+	\label{app:eval:1:pc:pr439 intermediate}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{pr439 PC final boxplot}
+	\caption{Final results of meta-heuristics with parameter control on pr439.}
+	\label{app:eval:1:pc:pr439 final}
+\end{figure}
+
+
+\subsection{Selection Hyper-Heuristic with Static LLH Parameters}\label{app:eval:hh-sp}
+\svgpath{{graphics/Eval/selection}}
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{kroA100 HH-SP progress}
+	\caption{Intermediate performance of on-line selection hyper-heuristic with static hyper-parameters on kroA100 (single experiment).}
+	\label{app:eval:1:hh-sp:kroA100 intermediate}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{kroA100 HH-SP final boxplot}
+	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on kroA100 (statistic of 9 runs).}
+	\label{app:eval:1:hh-sp:kroA100 final}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{pr439 HH-SP progress}
+	\caption{Intermediate performance of on-line selection hyper-heuristic with static hyper-parameters on pr439 (single experiment).}
+	\label{app:eval:1:hh-sp:pr439 intermediate}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[width=\textwidth]{pr439 HH-SP final boxplot}
+	\caption{Final results of on-line selection hyper-heuristic with static hyper-parameters on pr439 (statistic of 9 runs).}
+	\label{app:eval:1:hh-sp:pr439 final}
+\end{figure}
+
+\subsection{Selection Hyper-Heuristic with Parameter Control}\label{app:eval:hh-pc}
+\svgpath{{graphics/Eval/hhpc}}
+\begin{figure}[t]
+	\centering
+	\includesvg[width=\textwidth]{kroA100 HH-PC progress}
+	\caption{Intermediate performance of HH-PC on kroA100 (single experiment).}
+	\label{app:eval:1:hh-pc:kroA100 intermediate}
+\end{figure}
+
+\begin{figure}[b]
+	\centering
+	\includesvg[width=\textwidth]{kroA100 HH-PC final boxplot}
+	\caption{Final results of HH-PC compared with MH on kroA100 (statistic of 9 runs).}
+	\label{app:eval:1:hh-pc:kroA100 final}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\includesvg[width=\textwidth]{pr439 HH-PC progress}
+	\caption{Intermediate performance of HH-PC on pr439 (single experiment).}
+	\label{app:eval:1:hh-pc:pr439 intermediate}
+\end{figure}
+
+\begin{figure}[b]
+	\centering
+	\includesvg[width=\textwidth]{pr439 HH-PC final boxplot}
+	\caption{Final results of HH-PC compared with MH on pr439 (statistic of 9 runs).}
+	\label{app:eval:1:hh-pc:pr439 final}
+\end{figure}
