@@ -1,54 +1,42 @@
 \chapter{Introduction}\label{intro}
-\paragraph{Intent and content of chapter.} This chapter is an self-descriptive, shorten version of thesis.
-
-
 
 \section{Motivation}
-% goal-problem-solution style: definition and motivation of the goal as following paragraphs
-Structure:
-\begin{itemize}
-	\item optimization problem(OP) $\rightarrow$ exact or approximate (+description to both) $\rightarrow$ motivation to use \textbf{approximate solvers} $\rightarrow$
-	\item impact of parameters, their tuning on solvers $\rightarrow$ motivation of \textbf{parameter control} (for on-line solver) $\rightarrow$
-	\item but what if we want to solve a class of problems (CoP) $\rightarrow$ algorithms performance is different $\rightarrow$ 
-	\item user could not determine it \cite{kerschke2019automated} $\rightarrow$ exploration-exploitation balance
-	\item no-free-lunch (NFL) theorem \cite{wolpert1997no} $\rightarrow$ motivation of the thesis
-\end{itemize}
+Traditionally, optimization problem (OP) in general and combinatorial OP in particular may be tackled by a number of different approaches. Besides an exhaustive brute-force search (comparison of all possible solutions) a more convenient methodologies do exist. Most of the frequently used approaches can be grouped into three large families~\cite{junger2003combinatorial,biegler2004retrospective,festa2014brief}: \emph{exact solvers}, \emph{approximate solvers} and \emph{heuristics}. The first two among them are build on mathematical proofs and provide a guarantee on the solution quality, while the later is often based on the usage of domain knowledge and stochastic processes to guide the search. 
 
-\paragraph{thesis motivation} The most related research field is Hyper-heuristics optimizations \cite{burke2003hyper}, that are designed to intelligently choose the right low lewel heuristics (LLH) while solving the problem.
-But the weak side of hyper-heuristics is the luck of parameter tuning of those LLHs [links].
-In the other hand, meta-heuristics often utilize parameter control approaches [links], but they do not select among underlying LLHs.
-The goal of this thesis is to get the best of both worlds - algorithm selection from the hyper-heuristics and parameter control from the meta-heuristics.
+Both families have their pros and cons, which are crucial when the methodology selection arise. For instance, the exact or approximate solver creation is often an expensive and complicated process, which in most cases is firstly arises in field of theoretical computer science and only afterwards, after reviewing and accepting by the research community may be widely implemented in form of software~\cite{woeginger2003exact,roubivcek2011relaxation}. The drawback of expensive algorithm creation and hardness in application is payed-off by a provided solution quality. On a contrary, the third family, namely, the heuristic solver can be viewed as an approach for some practical method utilization that does not provide any guarantees on the solution quality. However, the advantages of this family is the simplicity of application and scalability to larger problem sizes~\cite{festa2014brief}. Taking into account strengths and drawbacks of aforementioned optimizer families we consider the usage of heuristic algorithm in this thesis.
+
+With respect to implied domain knowledge dependencies and availability of generic search guidance mechanisms for heuristics could be divided into three types: \emph{simple-}, \emph{meta-} and \emph{hyper-heuristics}. Scientists in this field distinguish two crucial characteristics of performed by heuristics actions: \emph{exploration} and \emph{exploitation}. The former could be explained as an investigation process in unforeseen search space zones in order to find a new and hopefully better solution, while the later characterizes a previously obtained information usage for currently available solution improvement. Since the provided budget for the optimization is often strictly limited, the exploration vs exploitation (EvE) dilemma arises. For finding solutions with a good quality and as a consequence, to be broadly applicable, the heuristic solver should supply a sufficient EvE balance, which depends on the underlying OP.
+
+The EvE balance is controlled on a several levels. Firstly, the majority of algorithms is configurable by means of exposed parameters, which are also often called \emph{hyper-parameters}. The proper selection of algorithm parameters itself is an OP and named \emph{parameter settings problem} (PSP). Resolution of this problem often requires a considerable effort and has a great influence on the algorithm performance~\cite{lavesson2006quantifying}. With respect to tackling time, PSP resolution may be performed \emph{before} running the algorithm (design time), or \emph{while} it solves the OP (runtime). The former approach is often called \emph{parameter tuning}, where numerous systems was already created to solve the problem on a generic level~\cite{hutter2009paramils,hutter2011sequential,lopez2016irace,falkner2018bohb,brise2spl}. On a contrary, the later approach, namely, \emph{parameter control} was introduced by the research community of evolutionary algorithms~\cite{karafotias2014parameter}.
+
+Nevertheless, even a proper parameter settings does not lead to the algorithm instantiation, which is the best among available. This issue was formalized in the \emph{no free lunch theorem for optimization} (NFLT)~\cite{wolpert1997no}, which roughly states that ``all search algorithms have the same performance, when their results are averaged over all possible optimization problems''. However, the second approach, which resolves the consequence of NFLT and affects the aforementioned EvE balance is the algorithm selection itself. Naturally, some algorithms are better suited for one OP type, while the other are designed for another OPs. The algorithm selection problem (ASP), similarly to PSP, may be resolved at design-time, or at runtime. One of the most common approach for ASP solving is the usage of hyper-heuristics, which, depending on the learning-time, may be on-line and off-line~\cite{burke2019classification}. 
+
+Up until now, we discussed the PSP and ASP problems separately, however, the research does not stand still and nowadays the attempts to merge the two problems are actively making. Concretely, in the field of \emph{automatic machine learning}, such problem was formalized as \emph{combined algorithm selection and parameter setting} (CASH) problem in~\cite{thornton2013auto}. Several ML-related frameworks were created to resolve it~\cite{thornton2013auto,feurer2015efficient,olson2019tpot}, however, (1) they are purely related to ML field and (2) they mostly rely on the off-line learning time.
 
 
 \section{Research objective}
-\todoy{Rename: Problem definition?}
-% goal-problem-solution style: problem clarification, research questions
-The following steps should be completed in order to reach the desired goal:
+At this point, we would like to define the \emph{goal of this thesis}. Basing on the existing software for parameter tuning, we extend it with the (existing in hyper-heuristics) approach of tackling ASP in runtime and merge with generic way to resolve PSP. In other words, to propose an \emph{on-line} approach for solving \emph{both} PSP and ASP problems for heuristic solvers.
 
-\paragraph{Analysis of existing studies of algorithm selection.} \textit{(find a problem definition, maybe this will do \cite{kerschke2019automated})}
-
-\paragraph{Analysis of existing studies in field of parameter control and algorithm configuration problems} \textit{(find a problem definition)} \cite{lavesson2006quantifying}
-
-\paragraph{Formulation and development of combined approach for LLH selection and parameter control.}
-
-\paragraph{Evaluation of the developed approach with \todoy{family of problems??? since it is a HH, maybe we should think about it...}.}
-
-\paragraph{Research Questions} At this point we define a Research Questions (RQ) of the Master thesis.
-% https://writingcenter.fas.harvard.edu/pages/beginning-academic-essay - "Focus the Essay" part.
-
+In order to fulfill the defined above goal, the following \textbf{research questions} should be answered:
 \begin{itemize}
-	\item \textbf{RQ 1} Is it possible to select an algorithm and it hyper-parameters while solving an optimization problem \textit{on-line}?
-
-	\item \textbf{RQ 2} What is the gain of selecting and tuning algorithm while solving an optimization problem?
-
-	\item \textbf{RQ 3?} How to solve the problem of algorithm selection and configuration simultaneously?
+	\item \textbf{RQ 1} Is it possible to perform the algorithm configuration at runtime on a generic level?
 	
+	\item \textbf{RQ 2} Is it possible to simultaneously perform algorithm selection and parameters adaptation while solving an optimization problem?
+	
+	\item \textbf{RQ 3} What is the effect of selecting and tuning algorithm while solving an optimization problem?
 \end{itemize}
 
 
 \section{Solution overview}
-% goal-problem-solution style: here goes a solution description
-\todoy{Rename: Problem solution?}
+In this thesis we propose the unification of both ASP and PSP problems into a single search problem. 
+
+
+
+
+
+
+One among commonly used approaches for on-line selection hyper-heuristic implementation is the usage of reinforcement learning (RL) approaches~\cite{moriarty1999evolutionary,mcclymont2011markov}. 
+
 
 \begin{itemize}
 	\item described problems solved by HH, highlight problems of existing HHs(off-line, solving a set of homogeneous problems in parallel)
