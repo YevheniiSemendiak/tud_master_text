@@ -11,10 +11,10 @@ The EvE balance is controlled on a several levels. Firstly, the majority of algo
 
 Nevertheless, even a proper parameter settings does not lead to the algorithm instantiation, which is the best among available. This issue was formalized in the \emph{no free lunch theorem for optimization} (NFLT)~\cite{wolpert1997no}, which roughly states that ``all search algorithms have the same performance, when their results are averaged over all possible optimization problems''. However, the second approach, which resolves the consequence of NFLT and affects the aforementioned EvE balance is the algorithm selection itself. Naturally, some algorithms are better suited for one OP type, while the other are designed for another OPs. The algorithm selection problem (ASP), similarly to PSP, may be resolved at design-time, or at runtime. One of the most common approach for ASP solving is the usage of hyper-heuristics, which, depending on the learning-time, may be on-line and off-line~\cite{burke2019classification}. 
 
-Up until now, we discussed the PSP and ASP problems separately, however, the research does not stand still and nowadays the attempts to merge the two problems are actively making. Concretely, in the field of \emph{automatic machine learning}, such problem was formalized as \emph{combined algorithm selection and parameter setting} (CASH) problem in~\cite{thornton2013auto}. Several ML-related frameworks were created to resolve it~\cite{thornton2013auto,feurer2015efficient,olson2019tpot}, however, (1) they are purely related to ML field and (2) they mostly rely on the off-line learning time.
+Up until now, we discussed the PSP and ASP problems separately, however, the research does not stand still and nowadays the attempts to merge the two problems are actively making. Concretely, in the \emph{automatic machine learning} field, such problem was formalized as \emph{combined algorithm selection and parameter setting} (CASH) problem in~\cite{thornton2013auto}. Several ML-related frameworks were created to resolve it~\cite{thornton2013auto,feurer2015efficient,olson2019tpot}, however, (1) they are purely related to ML field and (2) they hardly rely on the off-line learning approaches.
 
 
-\section{Research objective}
+\section{Research objective}\label{intro: research objective}
 At this point, we would like to define the \emph{goal of this thesis}. Basing on the existing software for parameter tuning, we extend it with the (existing in hyper-heuristics) approach of tackling ASP in runtime and merge with generic way to resolve PSP. In other words, to propose an \emph{on-line} approach for solving \emph{both} PSP and ASP problems for heuristic solvers.
 
 In order to fulfill the defined above goal, the following \textbf{research questions} should be answered:
@@ -23,29 +23,15 @@ In order to fulfill the defined above goal, the following \textbf{research quest
 	
 	\item \textbf{RQ 2} Is it possible to simultaneously perform algorithm selection and parameters adaptation while solving an optimization problem?
 	
-	\item \textbf{RQ 3} What is the effect of selecting and tuning algorithm while solving an optimization problem?
+	\item \textbf{RQ 3} What is the effect of selecting and adapting algorithm while solving an optimization problem?
 \end{itemize}
 
 
 \section{Solution overview}
-In this thesis we propose the unification of both ASP and PSP problems into a single search problem. 
+In this thesis we propose the unification of both ASP and PSP problems into a single search problem. For doing so, we propose joining the search spaces of separate PSPs into one APSP including also an algorithm type. Important characteristic of such space appears that prohibits treating it as a \emph{flat} structure:  configurations, are formed from all underlying parameters from all algorithms. However, since one solver type requires its specific parameters, but prohibits parameters of other algorithms, the resulting configuration will happen to be sparse. Later, to perform a search of promising settings, scientists utilize knowledge from configurations to construct surrogate models. Such surrogates are crucially required, since the evaluation of each potential configuration is a costly task. In the reviewed systems aforementioned dependencies are treated properly and surrogate models are able, with help of some tricks, learn such dependencies. But, the proposed methodology for sampling parameter values will straggle in an extremely sparse search spaces by means of configuration quality and sampling performance.
 
+To overcome the sparseness issue we propose a complex solution, which is spread in both search space structure and prediction process. For the search space representation we propose the usage of data structure, similar to feature trees from software product lines field. Doing so we treat solver type and its hyper-parameters uniformly as a regular parameter. The dependencies between parameters in such search space are explicitly handled in form of parent-child relationship. As a result, the search space could be viewed as a layered structure, where on the first level remain algorithm type parameter, and on the level(s) below a respective hyper-parameters. The prediction process in such search space is made level-by-level. Thus, in the united APSP, firstly, we build a surrogate models for the algorithm type prediction. Afterwards, when the algorithm type is selected, we filter available information to remain only relevant to the selected algorithm type data. Using this filtered data we build surrogate for the second level and predict the parameters for selected algorithm type. The dependencies among parameters are also treated in form of parent-child relationship, therefore, this level-wise prediction process proceeds, until we obtain a completed configuration.
 
+One among commonly used approaches for on-line selection hyper-heuristic is the usage of reinforcement learning (RL) approaches~\cite{moriarty1999evolutionary,mcclymont2011markov}. In our work we utilize such RL technique and perform the problem solving iteratively, on each step selecting among underlying any-time meta-heuristics (portfolio of algorithms) and setting its hyper-parameters according to available performance evidences for current optimization session.
 
-
-
-
-One among commonly used approaches for on-line selection hyper-heuristic implementation is the usage of reinforcement learning (RL) approaches~\cite{moriarty1999evolutionary,mcclymont2011markov}. 
-
-
-\begin{itemize}
-	\item described problems solved by HH, highlight problems of existing HHs(off-line, solving a set of homogeneous problems in parallel)
-	\item create / find portfolio of MHs (Low level Heuristics)
-	\item define a search space as combination of LLH and their hyper-parameters (highlight as a contribution)
-	\item solve a problem on-line selecting LLH and tuning hyper-parameters on the fly. (highlight as a contribution? need to analyze it.)
-\end{itemize}
-
-% i guess, it will be changed, no need to re-write it all the time :D
-\paragraph{Thesis structure}
-The description of this thesis is organized as follows. First, in chapter \ref{bg} we refresh readers background knowledge in the field of problem solving and heuristics. In this chapter we also define the scope of thesis. Afterwards, in chapter \ref{bg} we describe the related work and existing systems in defined scope. In Chapter 4 one will find the concept description of dynamic heuristics selection. Chapter 5 contains more detailed information about approach implementation and  embedding it to BRISE. The evaluation results and analysis could be found in Chapter 6. Finally, Chapter 7 concludes the thesis and Chapter 8 describe the future work.
-
+The structure of this thesis is organized as follows. Firstly, in \cref{bg} we refresh the reader background knowledge in the field of optimization problems, solver types focusing on heuristics. We also review the parameter setting and the available solutions for this problem. In \cref{Concept description} one will find the detailed conceptual description of the proposed approach for unification ASP and PSP problems. The structural and functional requirements for the search space representation sampling process are located there. \cref{impl} is dedicated to an implementation details review, among which a code basis selection, aforementioned requirements realization and a work-flow representation. The evaluation results and their discussion could be found in \cref{eval}. \cref{conclusion} concludes the thesis and \cref{future work} describes the future work.

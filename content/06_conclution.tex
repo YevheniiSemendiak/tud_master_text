@@ -1,16 +1,24 @@
-\chapter{Conclusion}
-\todor{answer research questions}
-comparison to HITO~\cite{guizzo2015hyper}
+\chapter{Conclusion}\label{conclusion}
+Before making a general conclusion, let us briefly remind our objective.
+The task of this thesis was to extend the existing parameter tuning software product line with an approach of algorithm selection. We made a step further and extended this goal with simultaneous parameter control in the selected algorithms.
 
-%TODO: need to add a review of available techniques for making a predictions within conditional search spaces
-% https://arxiv.org/pdf/1909.13404.pdf - omg, 30.09.2019 -_-, smth really similar to proposed here approach..
+During our research the complex objective was split into several compound tasks, which were formulated in three research questions (\cref{intro: research objective}). Therefore, to conclude our work we answer to these questions.
 
-\paragraph{Hyper-Heuristics with parameter tuning (or better say, control?), Constrainted Parameter Tuning and Architecture search problems all are the same?}
-All these problems are seems to talk about the same thing, and trying to solve it in the same ways, while calling it differently. In one hand, it could be the result of relatively young research direction (in all cases). In other hand we could make such an assumption because knowledge lack $\smile$.
+\paragraph{RQ 1} \emph{Is it possible to perform the algorithm configuration at runtime on a generic level?}
+	
+Performing the review of conducted research related to algorithm configuration problems, we found that most of the generic approaches are related to parameter tuning, in other words, to searching a proper configuration at design time. The idea of adapting algorithm parameters arose in field of evolutionary algorithms and spread into other meta-heuristics, however, in algorithm-dependent manner. 
+	
+In this thesis we proposed a generic approach to control the parameters, which relies on two aspects. Firstly, it should be possible to evaluate the performance of system under control with specified configuration at any time. Ideally, if it is possible to run the system with specified beforehand budget (number of iterations, or wall-clock time). Secondly, it should be possible to change the target algorithm configuration and proceed an execution with obtained results. If both requirements are hold, the reinforcement learning methodologies are used to traverse the parameter space, evaluating configurations performance iteratively, while algorithm is running. The proposed concept of generic parameter control was evaluated in \cref{eval:1:PC} on three algorithms: Python-based simulated annealing and evolution strategy and Java-based evolution strategy implementations. Approach revealed its applicability by reaching, and in some cases even outperforming the results of tuned in off-line algorithm configurations. A limitation of the proposed concept lays in its applicability to those algorithms, which execution time is much larger than parameter control routines.
+	
 
-Hyper-Heuristics and Automatic Machine Learning are the same.
+\paragraph{RQ 2} \emph{Is it possible to simultaneously perform algorithm selection and parameters adaptation while solving an optimization problem?}
+	
+The problem of concurrent algorithm type and its configuration selection is not new and the examples was found in ongoing research of \emph{automated machine learning} field. Researchers combined the two problems into one search problem, however, most of the approaches rely on off-line learning. 
+	
+Our idea of merging those two problems lays in treating the algorithm type as a regular categorical parameter in search space, utilizing parent-child relationships to define dependent parameters in such search space and performing the selection by means of (1) sampling the independent parameters first while children are hidden, (2) fixing the selected for parent value and exposing the \emph{activated} children parameters to proceed with prediction. The proposed step-wise configuration construction process provides a possibility to utilize a wide range of surrogate models to learn the dependencies among parameter values. The requirements and imitations of the proposed approach remain the same, as for defined above generic parameter control technique.
+	
+\paragraph{RQ 3} \emph{What is the effect of selecting and adapting algorithm while solving an optimization problem?}
 
-\paragraph{Other worth-to-try approaches}
-Selecting LLH and parameters according to Markov Decision Process: use discretization of parameters and predict reward using MCMC.
+According to our expectations, the proposed approach should expose the performance, comparable to the best among available for selection algorithms with tuned parameters. The performed in \cref{eval:1:hh-pc} evaluation and analysis of simultaneous on-line algorithm selection and parameter control revealed its applicability for relatively small optimization problem instances. More concretely, given the same wall-clock time and environment setup, HH-PC was able to produce better results than the best underlying tuned meta-heuristics for kroA100 TSP instance. For slightly larger (pr439) example, the results were comparable with the tuned meta-heuristics. With rat783 HH-PC only in some cases reached the best solver used solely, while experiments with pla7397 TSP instance shown a considerable degradation in HH-PC performance. However, analyzing the results we found several implementation issues not only in the implemented concept, but also in one of underlying algorithms. Therefore, our conclusion on a positive results of merging the on-line algorithm selection and parameter control problems can not be assured yet.
 
-% highlight that such MHs as Simulated Annealing are now "restarting". It measn, that is in SA case, the Temperature parameter change drops to initial state. Thus here we obtain Iterative Simulated Annealing
+Nevertheless, we consider the thesis task to be accomplished and the proposed reinforcement learning-based generic parameter control and algorithm selection approaches (yet separately) to be useful while solving the optimization problems with help of meta-heuristics.
