@@ -21,4 +21,12 @@ Our idea of merging those two problems lays in treating the algorithm type as a 
 
 According to our expectations, the proposed approach should expose the performance, comparable to the best among available for selection algorithms with tuned parameters. The performed in \cref{eval:1:hh-pc} evaluation and analysis of simultaneous on-line algorithm selection and parameter control revealed its applicability for relatively small optimization problem instances. More concretely, given the same wall-clock time and environment setup, HH-PC was able to produce better results than the best underlying tuned meta-heuristics for kroA100 TSP instance. For slightly larger (pr439) example, the results were comparable with the tuned meta-heuristics. With rat783 HH-PC only in some cases reached the best solver used solely, while experiments with pla7397 TSP instance shown a considerable degradation in HH-PC performance. However, analyzing the results we found several implementation issues not only in the implemented concept, but also in one of underlying algorithms. Therefore, our conclusion on a positive results of merging the on-line algorithm selection and parameter control problems can not be assured yet.
 
-Nevertheless, we consider the thesis task to be accomplished and the proposed reinforcement learning-based generic parameter control and algorithm selection approaches (yet separately) to be useful while solving the optimization problems with help of meta-heuristics.
+\paragraph{}
+An explicit list of this thesis contributions is following:
+\begin{enumerate}
+	\item Proposed the concept of reinforcement learning-based generic parameter control in meta-heuristics. Empirical evaluation of three meta-heuristic implementation proved its ability to reach the performance of tuned in off-line parameters.
+	\item Proposed the concept of reinforcement learning-based on-line selection hyper-heursitic with parameter control in low-level meta-heuristics. The experiments demonstrated its applicability, however, the concept requires more thorough evaluation.
+	\item The usability of an existing software product line for parameter tuning BRISEv2 was extended with aforementioned cases without losing the flexibility of usage a wide range of learning models. Also, the concept of data preprocessing was encapsulated for variability reasons.
+\end{enumerate}
+
+We consider the thesis task to be accomplished and the proposed reinforcement learning-based generic parameter control and algorithm selection approaches (yet separately) to be useful for solving the optimization problems with help of meta-heuristics.
