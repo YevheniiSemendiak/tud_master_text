@@ -633,26 +633,28 @@ The field of automated machine learning is one of trending research directions, 
 In this chapter we have presented the review of optimization problems, their concrete instances and existing solver types.
 There exist several levels of generality in heuristic solvers: simple heuristics, meta-heuristics and hyper-heuristics.
 
-The applicability of each algorithm is problem-dependent and derived from exploration-exploitation balance and strength, revealed in particular case.
-It is hard to guess beforehand, which algorithm will outperform the others in an unforeseen use-case.
+The applicability of each algorithm is problem-dependent and derived from the exploration-exploitation balance and strength, revealed in a particular case.
+It is hard to guess beforehand, which heuristic will outperform the others in an unforeseen use-case.
 With respect to this, hyper-heuristics seems to be the most perspective and universal solvers, since they do not tackle the problem directly, but rather select and apply the best suited among controlled algorithms.
 
-From the other perspective, the solver performance is also dependent on values of its parameters, often called the \textit{hyper-parameters}.
+From the other perspective, the solver performance is also dependent on the values of its parameters, often called the \textit{hyper-parameters}.
 It turns out, that the parameter setting is also an optimization problem.
-There exist several ways to solve it: (1) set the values manually, based on experience and intuition, (2) utilize the parameter tuning systems, which find the best values automatically and later use those found parameters, or (3) exploit the parameter control mechanisms, which are often embedded into solvers themselves. 
-Among all strategies, parameter control seems like the golden middle, since tuning requires lots of expensive algorithm runs to produce a good parameter settings, while manually choosing hyper-parameters is an error-prone process, that requires experienced guidance.
+There exist several ways to solve it: (1) set the values manually, based on experience and intuition, (2) utilize the parameter tuning systems, which find the best values automatically and later use those found parameters, or (3) exploit the parameter control mechanisms.
+Among all strategies, the last seems like the golden middle, since tuning requires lots of expensive algorithm executions to produce a good parameter settings, while manually choosing hyper-parameters is an error-prone process, that requires experienced guidance. An analysis of the parameter control approaches showed that the existing techniques are heuristic-dependent, therefore, our first research question defined as follows \textbf{RQ 1:} \emph{Is it possible to perform the algorithm configuration at runtime on a generic level?}
 
-The outcome of no-free-lunch theorem cannot be ignored, according to which no single algorithm can tolerate a broad range of problems equally outperforming other solvers. That is why we can not set aside hyper-heuristics, which are designed to select the best suited, in particular case, problem solving algorithm.
+The outcome of no-free-lunch theorem cannot be ignored, according to which no single algorithm can tolerate a broad range of problems equally outperforming other solvers. That is why we can not set aside hyper-heuristics, which are designed to find the best solving algorithm suited for a particular optimization problem case.
 
 The research in automatic machine learning made a step further and tends to combine both algorithm selection and parameter tuning problems into a single CASH problem, formalized in~\cite{thornton2013auto}. The search space in CASH problem is formed of algorithm variants and their respective hyper-parameters. However, one solver cannot use the parameters of another, thus the resulting search space happen to be `sparse'. In general, the structure of CASH problem is almost the same as regular parameter tuning case. That is why the commonly used solvers for CASH problems are the parameter tuning systems: SMAC in Auto-sklearn and Auto-Weka, Hyperopt in Hyperopt-Sklearn and so forth.
 Not many surrogate models are able to handle the sparse search spaces: random forest machine learning model and Bayesian optimization approaches with exotic kernel density estimators~\cite{levesque2017bayesian}. Even fewer optimizers are able to perform well in such sparse spaces.
 %However, none of reviewed parameter tuning systems uses optimizer that is able to perform an efficient search in such `sparse' spaces.
 The other drawback, is that the CASH problem definition is limited to searching the algorithm and its parameters in the off-line manner.
 
-\paragraph{A scope of the thesis is defined.}
+We believe, that the solutions of both algorithm selection and parameter settings problems is highly dependent on a problem at hand.
+That is why, a search for the best tool (solver) and its setting (parameters) should be performed in on-line manner, in other words, while solving the optimization problem. Since the generic parameter control concept was not proposed yet, naturally, we were not able to find the techniques to merge and solve both the algorithm selection and parameter control problems in runtime. Therefore, we defined our second research question \textbf{RQ 2:} \emph{Is it possible to simultaneously perform algorithm selection and parameters adaptation while solving an optimization problem?}
 
-We believe, that the results of both problems, namely algorithm selection and parameter settings have a reverse dependency on a problem at hand.
-That is why, a search for the best tool (solver) and its setting (parameters) should be performed in on-line manner, in other words, while solving the optimization problem.
+As CASH merges algorithm selection and parameter tuning techniques to get the outstanding performance, we found a merge of on-line algorithm selection and parameter control an intriguing and worth-to-try idea. However, the amount of resources spent for simultaneous search of both the algorithm type and it's parameter values may be unreasonably large. To explicitly evaluate this, we define the final research question as \textbf{RQ 3:} \emph{What is the effect of selecting and adapting algorithm while solving an optimization problem?}
 
-As CASH merges algorithm selection and parameter tuning techniques to get the outstanding performance, we found a merge of on-line algorithm selection and parameter control an intriguing and worth-to-try idea. 
-Thus, in this thesis we are trying to achieve the best of both worlds. The resulting approach should be able to solve an optimization problem, applying \emph{the best suited low-level-heuristic} and \emph{setting its parameters} at \emph{runtime}. With this idea in mind, we investigate a possibility of turning existing parameter tuning system into an \textbf{on-line selection hyper-heuristic with parameter control in low level heuristics}.
+\paragraph{}
+\textbf{Research objective defined.}
+
+In this thesis we are trying to achieve the best of both worlds. The resulting approach should be able to solve an optimization problem, applying \emph{the best suited low-level-heuristic} and \emph{setting its parameters} at \emph{runtime}. With this idea in mind, we investigate a possibility of turning existing parameter tuning system into an \textbf{on-line selection hyper-heuristic with parameter control in low level heuristics}.

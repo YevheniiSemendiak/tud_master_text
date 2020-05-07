@@ -110,13 +110,9 @@
   \includepdf{static/thesis_title.pdf}
   
   \includepdf{static/taskDescription.pdf}
-
-  \tableofcontents
-
-  \listoffigures
-  \listoftables
   
   \input{content/00_abstract.tex}
+  \tableofcontents
   \input{content/01_intro.tex}
   \input{content/02_background_and_rel_work.tex}
   \input{content/03_concept.tex}
@@ -126,6 +122,9 @@
   \input{content/07_future_work.tex}
   
   \printbibliography[heading=bibintoc]\label{sec:bibliography}
+  
+  \listoffigures
+  \listoftables
 
   \appendix
   \input{content/08_appendix.tex}
