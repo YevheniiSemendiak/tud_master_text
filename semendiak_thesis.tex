@@ -1,9 +1,6 @@
 \documentclass[ms,english]{stthesis}
-
-% --- Load packages START
 \usepackage[T1]{fontenc}
 \usepackage{libertinus}
-
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{isodate}
@@ -12,13 +9,11 @@
 \usepackage[
     style=numeric-comp,
     backend=biber,
-    url=false,
+    %url=false,
     doi=false,
     isbn=false,
     hyperref,
 ]{biblatex}
-
-\addbibresource{content/bibliography.bib}
 
 \usepackage{hyperref} % makes all links clickable but hides ugly boxes
 \usepackage[capitalise,nameinlink,noabbrev]{cleveref} % automatically inserts Fig. X in the text with \cref{..}
@@ -26,6 +21,7 @@
 \usepackage{pdfpages} % to insert pdf pages
 \usepackage{xcolor}
 \usepackage{csquotes}
+\usepackage{indentfirst} % indent at the beginning of chapter, section, paragraph
 
 % insert python code snipets
 \usepackage{listings}
@@ -84,27 +80,26 @@
 \usepackage{tabularx}
 \usepackage{tabulary}
 \usepackage{tabu}
-% \usepackage{longtable} % tables for the number of pages
-%\usepackage{quoting}
 \usepackage[babel]{microtype}
 \usepackage{xfrac}
 \usepackage{enumitem}
-\usepackage[perpage]{footmisc} % reset footnote counter on each page
+\usepackage[perpage,bottom]{footmisc} % reset footnote counter on each page
 \usepackage{epigraph}
 
 \usepackage{ellipsis}
 \let\ellipsispunctuation\relax
 
 \usepackage{svg}
-% --- Load packages END
+\pdfsuppresswarningpagegroup=1
 
 \newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
 \newcommand{\todoy}[1]{\todo[color=yellow,inline,size=\small]{Yevhenii: #1}}
 
 % usefull links
 % https://writingcenter.fas.harvard.edu/pages/developing-thesis
-% https://writingcenter.fas.harvard.edu/pages/beginning-academic-essay 
-% by defining a scope we narrow a topic. need to define it carefully, I think, the one we had in pre-defence will be slightly changed
+% https://writingcenter.fas.harvard.edu/pages/beginning-academic-essay
+
+\addbibresource{content/bibliography.bib}
 
 \begin{document}
   \includepdf{static/thesis_title.pdf}
@@ -128,19 +123,5 @@
 
   \appendix
   \input{content/08_appendix.tex}
-
-  %\newpage
-  %\pagestyle{empty}
-  %\section*{Confirmation}
-  %	I confirm that I independently prepared the thesis and that I used only the references and auxiliary means indicated in the
-  %	thesis.
-  %	\\
-  %	\\
-  %	\\
-  %	\\
-  %	\\
-  %	\\
-  %	\\
-  %	Dresden, 11th May 2020
   
 \end{document}

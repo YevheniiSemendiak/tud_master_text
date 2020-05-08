@@ -1,41 +1,38 @@
 \chapter{On-line Selection Hyper-Heuristic with Generic Parameter Control}\label{Concept description}
 While there exist no universal approach to control the algorithms parameters (\cref{bg: parameter setting conclution}), our conclusion on the literature analysis was the absence of existing approaches to combine both on-line techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
 
-In this Chapter we propose the methodology to resolve this problem, excluding the implementation details.
-
-In \cref{concept:parameter control}, we introduce the generic parameter control technique and expand it with the use-case of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of on-line algorithm selection and parameter settings, and we resolve it on two levels: firstly in the search space structure and secondly in the prediction process. In \cref{concept:search space} we present the joint search space of both algorithm selection and parameter control problems. We outline the functional requirements for such space. Next, we describe the related prediction process in \cref{concept:prediction}. While decoupling the learning models from the search space structure, we provide the certain level of flexibility in the usage of different learning models.
-% TODO: check if needed in this chapter
-Finally, in \cref{concept: llh} we direct our attention to the low level heuristics (LLH) — a working horses of the desired hyper-heuristic. We highlight the requirements to LLH that are crucial in our case.
+In this Chapter we propose the approach to resolve this problem, excluding the implementation details. In \cref{concept:parameter control}, we introduce a generic parameter control technique and expand it with the process of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of on-line algorithm selection and parameter settings, and we resolve it on two levels: 1) in the search space structure and 2) in the prediction process. In \cref{concept:search space} we present a joint search space of both algorithm selection and parameter control problems. We outline functional requirements for a such space. Next, we describe a related prediction process in \cref{concept:prediction}. We decouple the learning models from the search space structure and provide a certain level of flexibility in the usage of different learning models.
+Finally, in \cref{concept: llh} we direct our attention to the low level heuristics (LLH) — working horses of our approach. We highlight the requirements to LLH that are crucial in our case.
 
 
 \section{Combined Parameter Control and Algorithm Selection Problem}\label{concept:parameter control}
-The base idea of the parameter control approaches lays in the solver behavior adaptation as the response to changes in the solving process (\cref{bg: parameter control}). As we mentioned during the heuristics review (\cref{bg: section heuristics}), the algorithm performance is highly dependent on the provided exploration-exploitation balance, which in turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to find the later, which provide the best performance.
+The basic idea of parameter control approaches lays in the solver behavior adaptation as the response to changes in the solving process (\cref{bg: parameter control}). As we mentioned during the heuristics review (\cref{bg: section heuristics}), the algorithm performance is highly dependent on the provided exploration-exploitation balance, which in turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to find those parameters, which provide the best performance.
 
 In our work, we solve the parameter control problem utilizing a similar to proposed in~\cite{karafotias2014generic} reinforcement learning (RL) approach for evolutionary algorithms.
-The underlying idea of RL could be described as a process of performing actions in some environment in order to maximize the reward, obtained after each performed action. To apply this technique onto the parameter control problem, we must define what are those \emph{actions} and how to estimate the \emph{reward}. Thus, for making the parameter control applicable to broad range of algorithms, we analyze not the solver state itself but the optimization process (in~\cite{karafotias2014generic}, the authors use both algorithm-dependent and generic metrics). To realize the MAPE-K control loop, we must interrupt the solver, analyze the intermediate results, learn the current trend among parameters, configure the solver with the most promising parameter values and continue solving. The number of MAPE-K loop iterations $i$ define the granularity of learning, where one should balance between \emph{time to control} (TTC) the parameters vs \emph{time to solve} (TTS) the problem. Naturally, the limitation of proposed approach is the use-cases, where $TTS >> TTC$.
+The underlying idea of RL could be described as a process of performing actions in some environment in order to maximize the reward, obtained after each performed action. To apply this technique onto the parameter control problem, we must define what are those \emph{actions} and how to estimate the \emph{reward}. Thus, for making the parameter control applicable to a broad range of algorithms, we analyze not the solver state itself but the optimization process (in~\cite{karafotias2014generic}, the authors use both algorithm-dependent and generic metrics). To realize the MAPE-K control loop, we must interrupt the solver, analyze the intermediate results, learn the current trend among parameters, configure the solver with the most promising parameter values and continue solving. The number of MAPE-K loop iterations $i$ define the granularity of learning, where one should balance between \emph{time to control} (TTC) the parameters vs \emph{time to solve} (TTS) the problem. Naturally, the limitation of proposed approach is $TTS \gg TTC$, therefore, we restrict to use-cases with large TTS w.r.t. TTC.
 
-\todoy{Should I highlight the limitation(s) here or in conclusion and refer from here?}
-
-To evaluate the gained in iteration $i$ reward, instead of using straight solution quality value, we calculate the quality improvement, obtained with the provided configuration $C_i$. When the search process converges towards the global optimum, the improvement value tends to decrease, since the amount of significantly better solutions drops. Using the improvement values directly or could confuse the learning models and therefore, cause the prediction quality to struggle. To resolve this issue, the relative improvement (RI) of solution quality is calculated using \cref{concept: RI formula}, where $S_{i-1}$ and $S_i$ are the solution qualities before and after $i^{th})$ iteration respectively.
-
-The evaluated $C_i \rightarrow RI$ pairs in previous iterations are then used to predict the configuration for next iteration $C_{i+1}$. At this point, we made two decisions in the sampling process: (1) hide the search space shape and (2) use the surrogate models for finding configurations that lead to the highest reward.
+To evaluate the gained in iteration $i$ reward, instead of using the solution quality straightforwardly, we calculate the \emph{quality improvement}, obtained with the configuration $C_i$. When the search process converges towards the global optimum, the improvement value tends to decrease, since the amount of significantly better solutions drops. Using the improvement values directly could confuse the learning models and, therefore, cause the prediction quality to struggle. To resolve this issue, the relative improvement (RI) of solution quality is calculated: 
 
 \begin{equation}
 RI = \frac{S_{i-1} - S_{i}}{S_{i-1}}
 \label{concept: RI formula}
 \end{equation}
 
-After sampling the $C_{i+1}$ configuration, we set it as the solver parameters. To proceed with the solving process, we seed the solver with the solutions from $i-1$ iteration as well.
+In \cref{concept: RI formula} $S_{i-1}$ and $S_i$ are the solution qualities before and after $i^{th}$ iteration respectively.
 
-When it comes to the algorithm selection problem (discussed in \cref{bg: hh}), we treat the solver type itself as the subject of parameter control and use the proposed RL approach to estimate the best performing algorithm. However, when we add the solver type as a parameter, the resulting search space become sparse and requires special treatment. Two commonly used approaches for tacking this problem exist. The first requires special type of learning models, while the second suggests the problem transformation in a way of excluding the undesired characteristics.
+The evaluated $C_i \rightarrow RI$ pairs in previous iterations are then used to predict a configuration for the next iteration $C_{i+1}$. Please note, here we utilize the notion of \emph{sliding learning window} to follow a possibly changing trends of optimization process, therefore, we use only N (pcs., or \%) of the latest available $C_i \rightarrow RI$ pairs. Also, we made two other decisions for the sampling process: (1) hide the search space shape and (2) use the surrogate models for finding configurations that lead to the highest RI.
 
-During the review of model-based parameter tuning approaches (\cref{bg: parameter tuning}), we made a conclusion that all reviewed systems follow strictly the first idea. For instance, as the surrogate models, BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} use the Bayesian probability density models. Those surrogates could naturally fit to the described search space shape, but the proposed approaches are not able to make the predictions effectively, since the most of predicted configurations will violate the dependencies. As the illustration, imagine after $i^{th}$ iteration, the surrogate models learn about two superior parameters: one indicates a well-performing heuristic type (the Genetic Algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for the Simulated Annealing). In this case, the reviewed systems sampling methods will tend to predict the invalid configurations with those two parameter values.
+After sampling the $C_{i+1}$ configuration, we set it as the solver's parameters. To proceed with the solving process, we initiate the solver with the solutions obtained at $i-1$ iteration as well.
 
-In this thesis we follow the second approach namely, the problem transformation in order to sample the valid configurations only. The following Section depicts a required preparation step, made in the search space, while the later is dedicated to the prediction process.
+When it comes to the algorithm selection problem (discussed in \cref{bg: hh}), we treat the solver type itself as a subject of parameter control and use the proposed RL approach to estimate the best performing algorithm. However, when we add the solver type as a parameter, the resulting search space becomes sparse and requires a special treatment. Two commonly used approaches for tackling this problem exist. The first~\cite{hutter2011sequential,falkner2018bohb,brise2spl} requires special type of learning models, while the second~\cite{lopez2016irace} suggests the problem transformation in a way of excluding the undesired characteristics.
+
+During the review of model-based parameter tuning approaches (\cref{bg: parameter tuning}), we made a conclusion that most of the reviewed systems follow strictly the first idea. For instance, the surrogate models in BOHB~\cite{falkner2018bohb} and BRISE~\cite{brise2spl} use the Bayesian probability density models. Those surrogates could naturally fit to the sparse search spaces (described in the following section), but the proposed approaches are not able to make the predictions effectively, since the most of predicted configurations will violate the dependencies. As an example, imagine after $i^{th}$ iteration, the surrogate models learn about two superior parameters: one indicates a well-performing heuristic type (genetic algorithm), the other — an effective configuration for another algorithm type (an exponential cooling rate for simulated annealing). In this case, the reviewed systems sampling methods will tend to predict invalid configurations with those two parameter values.
+
+In this thesis we adapt the second approach of problem transformation used in~\cite{lopez2016irace} for sampling the valid configurations only. The following section depicts a required preparation step, made in the search space, while \cref{concept:prediction} is dedicated to the prediction process.
 
 
 \section{Search Space Structure}\label{concept:search space}
-When the time comes to selecting not only the solver parameters but also the solver itself, the united search space no longer could be presented as `flat' set of parameters since it tends to appearance vast amount of invalid parameter combinations. Let us estimate the number of all possible configurations vs the amount of meaningful ones. Suppose, we have the $N_s$ number solver types, each exposing the $N_{s,p}$ number of hyper-parameters with the $N_{s,p,v}$ number possible values. The aggregated quantity of configurations $N_c$ in the disjoint search spaces is calculated as the number of possible combinations using \cref{c: disjoint search space size}.
+When the time comes to selecting not only the solver parameters but also the solver itself, the united search space can no longer be presented as a `flat' set of parameters since it tends to produce a vast amount of invalid parameter combinations. Let us estimate the number of all possible configurations in comparison to the amount of meaningful ones. Suppose, we have the $N_s$ number solvers, each exposing the $N_{s,p}$ number of hyper-parameters with the $N_{s,p,v}$ number possible values. The aggregated quantity of configurations $N_c$ in the disjoint search spaces is calculated as a number of possible combinations using \cref{c: disjoint search space size}.
 
 \begin{equation}
 N_c = N_s \cdot \prod_{1}^{N_{s,p}} N_{s,p,v}
@@ -49,28 +46,28 @@ N_c = \prod_{1}^{N_{s}} \prod_{1}^{N_{s,p}} N_{s,p,v}
 \label{c: joint search space size}
 \end{equation}
 
-For the better intuition, lets try some numbers. By setting all $N_s = N_{s,p} = N_{s,p,v} = 3$ (the rather small example), the amount of configurations estimated separately for each solver equals to $N_c = 81$ (\cref{c: disjoint search space size}). However, if we join the solver parameter spaces, \cref{c: joint search space size} shows the significant growth in the search space size: $N_c = 19683$. Note, the number of \emph{really unique} configurations remains the same thus, in the joint space it is only $\approx 0.4\%$. By setting the $N_s = N_{s,p} = N_{s,p,v} = 4$, this number drops to $\approx 9 \cdot 10^{-8}\%$. It could decrease even further if the dependencies among hyper-parameters exist. In such case, the predictive abilities of models may straggle.
+For the better intuition, lets try some numbers. By setting all $N_s = N_{s,p} = N_{s,p,v} = 3$ (a rather small example), the number of configurations estimated separately for each solver equals to $N_c = 81$ (\cref{c: disjoint search space size}). However, if we join the parameter spaces of all three solvers, \cref{c: joint search space size} shows a significant growth in the search space size: $N_c = 19683$. Note, the number of \emph{unique and valid} configurations remains the same; thus, in the joint space it is only $\approx 0.4\%$. By setting the $N_s = N_{s,p} = N_{s,p,v} = 4$, this number drops to $\approx 9 \cdot 10^{-8}\%$. It could decrease even further if the dependencies among hyper-parameters exist. In such case, the predictive abilities of models may straggle.
 
-To overcome this, we utilize similar to the utilized in IRACE~\cite{lopez2016irace} framework idea: \emph{explicitly indicate the dependencies as a parent-child relationship among the search space entities $p$, firstly predict the parent parameter, afterwards — the children.} This give us an opportunity to threat the algorithm type as the regular categorical parameter, makes the search space structure uniform and simplifies the prediction process.
+To overcome this, we utilize a similar to used in IRACE~\cite{lopez2016irace} framework idea: \emph{explicitly indicate the dependencies as parent-child relationships among the search space entities, firstly predicting the parent parameter, and the children afterwards.} This gives us an opportunity to treat the algorithm type as a regular categorical parameter, making the search space structure uniform and simplifying the prediction process.
 
 This decision sets the following search space \emph{structural requirements}:
 \begin{enumerate}
-	\item[S.R.1] The \textbf{parent-child relationship} must describe the dependencies between different parameter types.
+	\item[S.R.1] The \textbf{parent-child relationship} must describe dependencies between different parameter types.
 
-	\item[S.R.2] The \textbf{uniform parameter types} simplifies the structure and hides the domain-specific intent of each parameter thus, algorithm type and its hyper-parameters are treated in the same way.
+	\item[S.R.2] The \textbf{uniform parameter type} simplifies the structure and hides the domain-specific intent of each parameter; therefore, algorithm type and its hyper-parameters are treated in the same way.
 
-	\item[S.R.3] The \textbf{value-specific dependencies} describe a concrete parent value(s), when the child should be exposed. For instance, the parameter \textit{algorithm type} has a number of possible values, each of them requires own set of hyper-parameters, which should remain hidden for the other solver types.
+	\item[S.R.3] The \textbf{value-specific dependencies} describe a concrete parent value(s), when the child should be exposed. For instance, the parameter \textit{algorithm type} has a number of possible values, each requiring an own set of hyper-parameters, which should remain hidden for the other solver types.
 \end{enumerate}
 
+\cref{concept:pict:Search Space Representation} shows an example of such a search space with $s$ algorithm types, each having $p$ parameters with $v$ possible values. The entities with triangles $\bigtriangledown$, namely, the concrete values of parameters, form the joint-points to which the other parameters could be linked. 
+
 \svgpath{{graphics/Concept/}}
-\begin{figure}
+\begin{figure}[b]
 	\centering
 	\includesvg[width=1.0\textwidth]{feature tree}
 	\caption{Search space representation.}
 	\label{concept:pict:Search Space Representation}
 \end{figure}
-
-\cref{concept:pict:Search Space Representation} shows an example of such search space with $s$ algorithm types, each having $p$ parameters with $v$ possible values. The entities with triangles $\bigtriangledown$, namely the concrete values of parameters, form the joint-points to which the other parameters could be linked. 
 
 
 \section{Parameter Prediction Process}\label{concept:prediction}
@@ -78,18 +75,18 @@ After formalizing the search space structural requirements, let us switch to the
 
 The idea of this decoupling lays in resolving the value-specific dependencies among the parameters in a step-wise prediction approach. To do so, we firstly predict the parent value, which in case of the hyper-heuristic is a low-level heuristic type (Level 0 in \cref{concept:pict:Level-wise prediction process}). Afterwards, the search space must expose the parameters of this solver only, ignoring the others (Level 1 in \cref{concept:pict:Level-wise prediction process}). The dependencies among exposed parameters, are then handled in the same way (Level 2 and further in \cref{concept:pict:Level-wise prediction process}).
 
-The prediction on each level is performed in three main steps: (1) filtering the required for this level information, (2) building the surrogate model and (3) finding the best performing parameters on this level.
-
-While building the surrogates and making the predictions, we ignore the information from levels above and below with the motivation to simplify the overall process and hide the search space structure. Also, when we predict on the parent level, it will not change on the descendant levels thus, we do not need to operate useless static information. While the backward ignorance is clear, the forward data omission puts a restriction on the surrogate models. Cutting off the parameter values from the deeper levels, we may get the data points with the same current level parameters values (also called as \emph{features} in machine learning) but different results (\emph{labels}). Thus, only those surrogate models should be used on such level(s), which will not be confused by the multi-valued dependencies in data (when the same input result in different outputs). During the implementation description in \cref{impl: prediction models} we clarify, which models are the better choice in such cases and implement one of the promising.
-
-Certainly, during the problem solving, the quality trends among parameter values may change. For instance, at later stages the domination of one solver could be declined in comparison to other. Or, the previously best-performing parameter values are not as good and should be replaced by the other. These changes may be caused by the various reasons, which we are not tackling. Instead, the old trends should be left out by some forgetting mechanism.
-
-\begin{figure}
+\begin{figure}[hbt]
 	\centering
 	\includesvg[width=1.0\textwidth]{feature tree pred}
 	\caption{Level-wise prediction process.}
 	\label{concept:pict:Level-wise prediction process}
 \end{figure}
+
+The prediction on each level is performed in three main steps: (1) filtering the required for this level information, (2) building the surrogate model and (3) finding the best performing parameters on this level.
+
+While building the surrogates and making the predictions, we ignore the information from levels above and below with the motivation to simplify the overall process and hide the search space structure. Also, when we predict on the parent level, it will not change on the descendant levels thus, we do not need to operate useless static information. While the backward ignorance is clear, the forward data omission puts a restriction on the surrogate models. Cutting off the parameter values from the deeper levels, we may get the data points with the same current level parameters values (also called as \emph{features} in machine learning) but different results (\emph{labels}). Thus, only those surrogate models should be used on such level(s), which will not be confused by the multi-valued dependencies in data (when the same input result in different outputs). During the implementation description in \cref{impl: prediction models} we clarify, which models are the better choice in such cases and implement one of the promising.
+
+Certainly, during the problem solving, the quality trends among parameter values may change. For instance, at later stages the domination of one solver could be declined in comparison to other. Or, the previously best-performing parameter values are not as good and should be replaced by the other. These changes may be caused by the various reasons, which we are not tackling. Instead, the old trends should be left out by some forgetting mechanism.
 
 At this point, let us summarize the functional requirements.
 \begin{itemize}
@@ -97,7 +94,7 @@ At this point, let us summarize the functional requirements.
 	\begin{enumerate}
 		\item[S.F.R.1] The \textbf{data filtering mechanism}, which will be used to find out only those feature-label pairs, which can be utilized to learn the dependencies on current level.
 		
-		\item[S.F.R.2] The \textbf{sampling propagation mechanism}, which will be used to randomly sample the parameter values for  the next level taking into account currently available parameter values, which is required to expose the parameters after predicting on current level.
+		\item[S.F.R.2] The \textbf{sampling propagation mechanism}, which will be used to randomly sample the parameter values for the next level taking into account currently available parameter values, which is required to expose the parameters after predicting on current level.
 		
 		\item[S.F.R.3] The \textbf{parameter description mechanism}, which will provide the information about a type and possible values for the given parameters. This knowledge will later be used by the models for making the parameters values prediction.
 		
@@ -115,7 +112,7 @@ At this point, let us summarize the functional requirements.
 \end{itemize}
 
 \section{Low Level Heuristics}\label{concept: llh}
-As we discussed during the hyper-heuristics review in \cref{bg: hh}, they are built of two main components — the high level heuristic (HLH) and the low level heuristic (LLH). Note the used \emph{solver type} term in this Chapter is nothing else but the LLH in hyper-heuristic. The previous two sections were dedicated to the search space and prediction models description, which form the logical components of the HLH. No hyper-heuristic could work without LLH therefore, in this section we discuss the requirements for the low-level heuristics.
+As we discussed during the hyper-heuristics review in \cref{bg: hh}, they are built of two main components — the high level heuristic (HLH) and the low level heuristic (LLH). Note the used \emph{solver type} term in this Chapter is nothing else but the LLH in hyper-heuristic. The previous two sections were dedicated to the search space and prediction models description, which form the logical components of the HLH. No hyper-heuristic could work without LLH, therefore, in this section we discuss the requirements for the low-level heuristics.
 
 The proposed idea of the MAPE-K reinforcement learning application, implies the usage of anytime algorithms (see classification of solvers in \cref{BG: subsection OP Solvers}).
 They may be implemented in various frameworks or even programming languages, the only requirement is to expose a common interface. 
@@ -124,7 +121,7 @@ Firstly, we want these algorithms to continue their solving process from the pre
 
 Secondly, after the algorithm execution, the solution quality should be estimated and reported to the HLH to proceed with the RL.
 
-Both actions should be performed in the implementation independent way therefore, following a predefined shared interface, described above. We discuss it in \cref{impl: LLH}, dedicated to LLH implementation.
+Both actions should be performed in the implementation independent way, therefore, following a predefined shared interface, described above. We discuss it in \cref{impl: LLH}, dedicated to LLH implementation.
 
 
 \section{Conclusion of concept}\label{concept: conclution}
@@ -141,6 +138,6 @@ When the requirements, specified for the search space and the prediction process
 	\item The \textbf{on-line selection hyper-heuristic with parameter control} is possible by building the search space of multiple LLHs, their hyper-parameters and enabling the solution transfer between iterations.
 \end{enumerate}
 
-Note, that the off-line cases estimate the solution quality directly, while the on-line cases use the relative solution quality improvement.
+Please note that the off-line cases estimate the solution quality directly, while the on-line cases use the relative solution quality improvement.
 
 It is worth to mention that the proposed structure of search space representation is similar to the \emph{feature model}, used to describe the software product lines (SPL)~\cite{schroeter2012multi}. In \cref{concept:pict:Search Space Representation} and \cref{concept:pict:Level-wise prediction process} we used the notions from SPL feature models to denote an \emph{alternative} parameter values. The process of configuration construction within a search space can be referred as the \emph{staged configuration} in SPL.

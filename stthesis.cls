@@ -179,7 +179,7 @@
     \\
     \\
     \\
-    Dresden, \if@germanLang den \fi \@date
+    Dresden, \if@germanLang den \fi \date{11.05.2020}
 }
 
 % Strings to be used for the type of thesis
