@@ -196,7 +196,7 @@ We collected the best performing configurations of each meta-heuristic and prese
 To evaluate the performance of developed approach we firstly need to define the base line. In most cases it is the single meta-heuristics, which are solving the OP using static hyper-parameters. However, to evaluate the parameter control feature we must make a closer look on the performance of each separate heuristic with static and dynamic hyper-parameters. For selection hyper-heuristic analysis we compare the performances of all underlying MHs running separately and together within a hyper-heuristic. Note, in this case the hyper-parameters are statically defined. And last, but not least, to evaluate a selection hyper-heuristic with enabled parameter control we compare it to separately running underlying meta-heuristics with parameter control and to selection hyper-heuristic.
 
 In order to organize the evaluation plan, we distinguish two stages.
-At the first stage the LLH selection occurs, while at the second one we chose hyper-parameters for the selected LLH. At each stage we may use different prediction approaches, which description could be found in \cref{impl: prediction models}. To select the LLH, apart from random and static selection we also use FRAMAB (see \cref{impl: FRAMAB}) and Bayesian ridge regression model implementation from Scikit-learn framework (see \cref{impl: sklearn wrapper}). Note, for the Bayesian ridge regression model we use a default parameters, which could be found in the framework documentation~\footnote{~\url{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html}}. To select the hyper-parameters for LLHs, apart from static default and tuned variants we also use random selection, available in BRISEv2 TPE and the mentioned above Bayesian ridge. The set of used techniques is presented in the \cref{eval: concept settings table}.
+At the first stage the LLH selection occurs, while at the second one we chose hyper-parameters for the selected LLH. At each stage we may use different prediction approaches, which description could be found in \cref{impl: prediction models}. To select the LLH, apart from random and static selection we also use FRAMAB (see \cref{impl: FRAMAB}) and Bayesian ridge regression model implementation from Scikit-learn framework (see \cref{impl: sklearn wrapper}). Note, for the Bayesian ridge regression model we use a default parameters, which could be found in the framework documentation~\footnote{\href{https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html}{scikit-learn.org}}. To select the hyper-parameters for LLHs, apart from static default and tuned variants we also use random selection, available in BRISEv2 TPE and the mentioned above Bayesian ridge. The set of used techniques is presented in the \cref{eval: concept settings table}.
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{l||l}
@@ -287,7 +287,7 @@ The only worth to mention observation is a worse SA results with tuned parameter
 \end{wrapfigure}
 This is an average size problem among reviewed in the thesis. In contrast to previous instances, a behavior of solvers in this case changes slightly. For instance, ES from jMetal framework (j.ES) with default parameters is performing extremely slowly on a problem, however, while using an optimized hyper-parameters it quickly reaches a local optima (after ~50 iterations) with the best produced results among other heuristics (\cref{eval:pict:bl:rat783 intermediate}). Analyzing performance evidences of Python-based solvers, we may conclude that they almost reached a local optima in a given 15 minutes, therefore, their final results are slightly worse than the produced by j.ES (\cref{eval:pict:bl:rat783 final}).
 
-\textbf{Please note}, the perturbation of trends in the end of tuned py.ES run is caused by the difference in number of iterations among all runs (left figure in \cref{eval:pict:bl:rat783 intermediate}, tuned parameters). The software~\footnote{Python Seaborn framework~\url{https://seaborn.pydata.org/}}, used in this thesis for results presentation estimates an average and the result deviation at each iteration. Thus, if one (or several) experiment execution(s) managed to perform more iterations than the majority of others, the average among and their deviation will be changed respectively. The number of such external iterations varies, since as a termination criterion we used the wall-clock time. Unfortunately, this perturbation appear in most of the \emph{progress charts}, therefore the comparison of final results is done by means of presented separately box-plots.
+\textbf{Please note}, the perturbation of trends in the end of tuned py.ES run is caused by the difference in number of iterations among all runs (left figure in \cref{eval:pict:bl:rat783 intermediate}, tuned parameters). The software~\footnote{Python Seaborn data visualization framework web page:~\href{https://seaborn.pydata.org/}{seaborn.pydata.org}}, used in this thesis for results presentation estimates an average and the result deviation at each iteration. Thus, if one (or several) experiment execution(s) managed to perform more iterations than the majority of others, the average among and their deviation will be changed respectively. The number of such external iterations varies, since as a termination criterion we used the wall-clock time. Unfortunately, this perturbation appear in most of the \emph{progress charts}, therefore the comparison of final results is done by means of presented separately box-plots.
 
 
 The bold lines in \cref{eval:pict:bl:rat783 intermediate} is a statistical mean of all 9 experiment runs with default parameter values (blue line) and tuned parameter values (orange line). A shadow around these lines is a confidence interval. One may observe how differently the parameter setting affects MHs: in evolution strategies the changes in performance is dramatic, while simulated annealing is almost not affected (\cref{eval:pict:bl:rat783 final}). We also observe a decreased stability of tuned jMetalPy ES meta-heuristic (py.ES). It is reflected in a large confidence interval not only of the intermediate results, but also in a statistic of final solution quality.
@@ -658,9 +658,9 @@ As you remember from FRAMAB description, presented in \cref{impl: FRAMAB}, the r
 The results of performed benchmarks with possibly different C values are presented in \cref{eval:2:pict:framab c}. More concretely, in \cref{eval:2:pict:framab c statistic} we compare statistic of all repetitions with different parameter value. Here we may conclude, the proposed parameter-less (STD-based) FRAMAB performs slightly worse in comparison to other algorithms. Glancing on the sequence of LLH allocation, presented in \cref{eval:2:pict:framab c one run}, we conclude that parameter reflects its intent, especially, comparing $C=0.1$ and $C=0.001$. When C is large, the exploration-related part of FRAMAB's UCB value is increased, therefore, more different algorithms are used for optimization. However, when the C value is decreased, only few switches may be observed. An intriguing idea arises to introduce the technique for FRAMAB parameter control, according to which, the entire LLH portfolio utilized at the beginning with high C value, while approaching the end C is increased, to more concentrate with the best-performing LLH.
 
 \paragraph{TPE split size.}
-\begin{figure}[h]
+\begin{figure}[b]
 	\centering
-	\vspace{-20pt}
+	\vspace{-10pt}
 	\includesvg[width=\textwidth]{TPE split size plots}
 	\caption{Influence of HH-PC (code 2.4) TPE split size on pla7397 TSP instance solving process.}
 	\vspace{-5pt}
@@ -673,7 +673,7 @@ With small split size, only elite parameter values form distribution, therefore,
 \paragraph{Random search size.}
 \begin{figure}[h]
 	\centering
-	\vspace{-20pt}
+	\vspace{-10pt}
 	\includesvg[width=\textwidth]{Random search size}
 	\caption{Influence of HH-PC (code 2.4) random search size for surrogate optimization on pla7397 TSP instance solving process.}
 	\vspace{-5pt}
@@ -688,7 +688,7 @@ After evaluating two additional to default sizes of 50 and 200 samples respectiv
 	\centering
 	\vspace{-10pt}
 	\includesvg[width=\textwidth]{warming-up solutions plots}
-	\caption{Influence of HH-PC (code 2.4) workers number on pla7397 TSP instance solving process.}
+	\caption{Influence of HH-PC (code 2.4) warming-up solution number on pla7397 TSP instance solving process.}
 	\vspace{-5pt}
 	\label{eval:2:pict:warming-up solutions}
 \end{figure}

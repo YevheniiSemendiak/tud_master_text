@@ -154,7 +154,8 @@ The described above process is controlled by S.F.R.4, implemented as method \emp
 \begin{lstlisting}[language=Python, caption=S.F.R.4 implementation., label=impl: S.F.R.4 listing]
 class Hyperparameter:
 	...
-	def validate(self, values: MutableMapping, recursive: bool) -> bool: pass
+	def validate(self, values: MutableMapping, recursive: bool) -> bool: 
+		pass
 	...
 \end{lstlisting}
 
@@ -179,14 +180,14 @@ The next question is a decoupling of prediction models from the search space str
 \begin{code}[language=Python, caption=P.F.R.1 + P.F.R.3 implementation pseudo-code., label=impl: P.F.R.1 + P.F.R.3 implementation pseudocode]
 class Predictor:
 	def predict(measured_configurations):
-		# P.F.R.3
+		# Filter data according to sliding learning window
 		level_configurations = trim_in_window(measured_configurations)
 		prediction = Mapping()
 		
-		# Deep validation
+		# Continue prediction until get a valid configuration (Deep validation)
 		while not search_space.validate(prediction, recursive=True):
 		
-			# Filtering the data
+			# Filtering the data for current level
 			level_configurations = filter(search_space.are_siblings(prediction, x), level_configurations)
 			
 			# Propagate the prediction
@@ -196,12 +197,12 @@ class Predictor:
 			full_description = search_space.describe(randomly_generated)
 			level_description = trim_previous_levels(description, prediction)
 			
-			# Cut-off data and build models
+			# Cut-off data and build model
 			data = trim_accodring_to_description(level_configurations, level_description)
 			model = get_current_level_model()
 			model.build(data, level_description)
 			
-			# Level prediction and flat validation
+			# Predict current level and validate prediction (flat validation)
 			if model.is_built():
 				level_prediction = model.predict()
 				if not search_space.validate(level_prediction, recursive=False):
@@ -244,19 +245,19 @@ To reuse the available in framework surrogate models we create the wrapper as an
 
 During the model creation, we firstly instantiate features and labels preprocessors, and transform the input data (lines 4-6). The underlying process of model building includes also a verification step, which is performed by means of cross-validation: splitting the set of data to \textit{k} disjoint folds, training \textit{k} model each time excluding one fold for accuracy verification (line 9). If the potential model accuracy is less than predefined threshold — the model is considered to be not accurate enough therefore, we reject it (line 15), forcing the predictor to use the random parameter values. However, if the model is able to perform well, we train it on an entire dataset and store for further usage (lines 12-13).
 
-Later, for making the prediction (if the model was built successfully) we firstly sample features values from this level uniformly at random (line 20). Afterwards, we transform them using the same preprocessing steps, as we applied during the train creation (line 21). Then, using the regression model, we make a prediction for sampled features and transform those predictions back into original labels (lines 23-24). Finally, we select the best feature by means of predicted labels, transform it and return to \emph{Predictor} (lines 26-27).
+Later, for making the prediction (if the model was built successfully) we firstly sample features values from this level uniformly at random (line 20). Afterwards, we transform them using the same preprocessing steps, as we applied during the train creation (line 21). Then, using the regression model, we make a prediction for sampled features and transform those predictions back into original labels (lines 23-24). Finally, we select the best feature by means of predicted labels, transform it and return to \emph{Predictor} (lines 27-28).
 
 \begin{code}[language=Python, caption=Scikit-learn linear model wrapper pseudo-code., label=impl: sklearn model wrapper pseudo-code]
 class SklearnModelWrapper(Model):
 	def build_model(features, labels, features_description):
-		# Data preprocessing
+		# Execute data preprocessing
 		features_preprocessors, labels_preprocessors = build_preprocessors()
 		transformed_features = features_preprocessors.transform(features)
 	 	transformed_labels = labels_preprocessors.transform(labels)
 	 	
-	 	# Model accuracy validation
-	 	score = cross_validation(model, transformed_features, transformed_labels)
-	 	if score > threshold:
+	 	# Build model and check its accuracy
+	 	accuracy = cross_validation(model, transformed_features, transformed_labels)
+	 	if accuracy > threshold:
 	 		# Training on all available data
 	 		model.fit(transformed_features, transformed_labels)
 	 		model_is_built = True
@@ -265,16 +266,16 @@ class SklearnModelWrapper(Model):
 	 	return model_is_built
 	 
 	 def predict():
-	 	# Solving a reduced optimization problem with help of surrogates
+	 	# Solving surrogates optimization problem by means of random search
 	 	features = random_sample(features_description)
 	 	features_transformed = features_preprocessors.transform(features)
 	 	
 	 	labels_predicted_transfored = model.predict(features_transformed)
 	 	labels_predicted = labels_preprocessors.inverse_transform(labels_predicted_transfored)
 	 	
+	 	# Select those parameter values, which maximize RI
 	 	prediction_transformed = select_by_labels(features_transformed, labels_predicted)
 	 	prediction = features_preprocessors.inverse_transform(features_transformed_chosen)
-	 	
 		return prediction
 \end{code}
 
@@ -366,15 +367,15 @@ class JMetalPyWrapper(ILLHWrapper):
 	def run_and_report() -> Mapping:
 		pass
 
-	# Helper methods
-	@lru_cache(maxsize=10, typed=True)
-	def _get_problem(problem_name: str, init_params: HashableMapping) -> Problem:
+	# jMetalPy framework introspection helper methods
+	@lru_cache()
+	def _get_problem(problem_name, init_params):
 		pass
-	@lru_cache(maxsize=10, typed=True)
-	def _get_algorithm_class(mh_name: str) -> jmetal.core.algorithm.Algorithm.__class__:
+	@lru_cache()
+	def _get_algorithm_class(mh_name):
 		pass
-	@lru_cache(maxsize=10, typed=True)
-	def _get_class_from_module(name: str, module: object) -> Type:
+	@lru_cache()
+	def _get_class_from_module(name, module):
 		pass
 \end{code}
 

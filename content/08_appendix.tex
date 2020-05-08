@@ -1,5 +1,5 @@
-\chapter{Evaluation plots}
-\section{Concept Evaluation}
+\chapter{Evaluation Results}
+\section{Results in Figures}
 
 \subsection{Baseline}\label{app:eval:bl plots}
 \svgpath{{graphics/Eval/baseline}}
@@ -116,3 +116,192 @@
 	\caption{Final results of HH-PC compared with MH on pr439 (statistic of 9 runs).}
 	\label{app:eval:1:hh-pc:pr439 final}
 \end{figure}
+
+\section{Results in numbers}
+\begin{table}[!htbp]
+	%\centering
+	\begin{tabular}{cc|ccc}
+		\hline
+		\rowcolor{gray!20}
+		\multicolumn{2}{c|}{\textbf{Solver}} & \multicolumn{3}{c}{\textbf{Results}} \\
+		\rowcolor{gray!20}
+		\textbf{Group} & \textbf{Code} & \textbf{Best found} & \textbf{Average} & \textbf{STD} \\
+		\hline
+		\multirow{6}{*}{Baseline} 
+		& 4.1.1 & 131075 & 133596 & 1249 \\
+		& 4.1.2 & \textbf{33809} & 39572 & 3738 \\
+		& 4.2.1 & 36368 & \textbf{39560} & 3191 \\
+		& 4.2.2 & 38216 & 42819 & 3149 \\
+		& 4.3.1 & 131453 & 134141 & 1634 \\
+		& 4.3.2 & 36522 & 39905 & 2242 \\
+		\hline
+		\multirow{9}{*}{MH-PC} 
+		& 4.1.3 & 33160 & 35219 & 1760 \\
+		& 4.1.4 & 27563 & 35265 & 4836 \\
+		& 4.1.5 & 31223 & 34790 & 2727 \\
+		& 4.2.3 & 34902 & 37986 & 2548 \\
+		& 4.2.4 & 32264 & 37145 & 3008 \\
+		& 4.2.5 & 31481 & 36497 & 3575 \\
+		& 4.3.3 & 24415 & 29768 & 5202 \\
+		& 4.3.4 & \textbf{23855} & \textbf{\underline{27178}} & 1851 \\
+		& 4.3.5 & 24567 & 28793 & 3209 \\
+		\hline
+		\multirow{6}{*}{HH-SP} 
+		& 1.1 & 35853 & 40057 & 2585 \\
+		& 1.2 & \textbf{33692} & 39261 & 3431 \\
+		& 2.1 & 33868 & 39135 & 3132 \\
+		& 2.2 & 35312 & 38920 & 2711 \\
+		& 3.1 & 33704 & \textbf{38019} & 2237 \\
+		& 3.2 & 36818 & 40461 & 2565 \\
+		\hline
+		\multirow{5}{*}{HH-PC} 
+		& 1.3 & 27741 & 32404 & 4133 \\
+		& 2.4 & 24019 & 30652 & 3958 \\
+		& 2.5 & 25160 & 30764 & 2869 \\
+		& 3.4 & 23132 & \textbf{30396} & 5407 \\
+		& 3.5 & \textbf{\underline{22345}} & 30564 & 5826 \\
+		\hline
+	\end{tabular}
+	\caption{Found paths distances for kroA100 TSP instance (optimal path length is 21282). The best result in experiment group is highlighted in bold, while the best result found for problem instance is also underscored.}
+\end{table}
+
+\begin{table}[!htbp]
+	%\centering
+	\begin{tabular}{ccccc}
+		\hline
+		\rowcolor{gray!20}
+		\multicolumn{2}{c}{\textbf{Solver}} & \multicolumn{3}{c}{\textbf{Results}} \\
+		\rowcolor{gray!20}
+		\textbf{Group} & \textbf{Code} & \textbf{Best found} & \textbf{Average} & \textbf{STD}\\
+		\hline
+		\multirow{6}{*}{Baseline} 
+		& 4.1.1 & 1625689 & 1663522 & 22427 \\
+		& 4.1.2 & \textbf{278214} & \textbf{319803} & 18705 \\
+		& 4.2.1 & 316973 & 340823 & 12546 \\
+		& 4.2.2 & 285220 & 325721 & 23970 \\
+		& 4.3.1 & 1685919 & 1713684 & 14766 \\
+		& 4.3.2 & 301964 & 338969 & 22113 \\
+		\hline
+		\multirow{9}{*}{MH-PC} 
+		& 4.1.3 & 423043 & 450570 & 20626 \\
+		& 4.1.4 & 327995 & 354661 & 18535 \\
+		& 4.1.5 & 425453 & 445088 & 20507 \\
+		& 4.2.3 & 316908 & 337100 & 15007 \\
+		& 4.2.4 & 308850 & 351326 & 55555 \\
+		& 4.2.5 & 324957 & 343358 & 12607 \\
+		& 4.3.3 & \textbf{\underline{264713}} & 316496 & 27886 \\
+		& 4.3.4 & 289704 & 317360 & 15600 \\
+		& 4.3.5 & 273744 & \textbf{\underline{311078}} & 19442 \\
+		\hline
+		\multirow{6}{*}{HH-SP} 
+		& 1.1 & 332095 & 351533 & 13784 \\
+		& 1.2 & 308913 & 332514 & 24001 \\
+		& 2.1 & 331487 & 360533 & 25971 \\
+		& 2.2 & \textbf{288830} & \textbf{313859} & 19735 \\
+		& 3.1 & 311906 & 342915 & 19211 \\
+		& 3.2 & 306461 & 334998 & 15175 \\
+		\hline
+		\multirow{5}{*}{HH-PC} 
+		& 1.3 & 309552 & 334987 & 18995 \\
+		& 2.4 & 295015 & 324616 & 21519 \\
+		& 2.5 & \textbf{291299} & \textbf{315932} & 18866 \\
+		& 3.4 & 299884 & 333992 & 17465 \\
+		& 3.5 & 293607 & 325887 & 21150 \\
+		\hline
+	\end{tabular}
+	\caption{Found paths distances for pr439 TSP instance (optimal path length is 107217). The best result in experiment group is highlighted in bold, while the best result found for problem instance is also underscored.}
+\end{table}
+
+\begin{table}[!htbp]
+	%\centering
+	\begin{tabular}{cc|ccc}
+		\hline
+		\rowcolor{gray!20}
+		\multicolumn{2}{c|}{\textbf{Solver}} & \multicolumn{3}{c}{\textbf{Results}} \\
+		\rowcolor{gray!20}
+		\textbf{Group} & \textbf{Code} & \textbf{Best found} & \textbf{Average} & \textbf{STD} \\
+		\hline
+		\multirow{6}{*}{Baseline} 
+		& 4.1.1 & 150799 & 156314 & 4157 \\
+		& 4.1.2 & 30350 & 39203 & 12357 \\
+		& 4.2.1 & 31873 & 35157 & 2825 \\
+		& 4.2.2 & 27215 & 30094 & 1393 \\
+		& 4.3.1 & 164349 & 165617 & 644 \\
+		& 4.3.2 & \textbf{23015} & \textbf{\underline{23964}} & 724 \\
+		\hline
+		\multirow{9}{*}{MH-PC} 
+		& 4.1.3 & 57003 & 94429 & 49422 \\
+		& 4.1.4 & 38223 & 78434 & 59507 \\
+		& 4.1.5 & 62964 & 96369 & 48767 \\
+		& 4.2.3 & 32459 & 34229 & 1305 \\
+		& 4.2.4 & 30335 & 31545 & 749 \\
+		& 4.2.5 & 31475 & 33691 & 1784 \\
+		& 4.3.3 & \textbf{23607} & 26183 & 1353 \\
+		& 4.3.4 & 24517 & \textbf{25916} & 952 \\
+		& 4.3.5 & 25202 & 26450 & 796 \\
+		\hline
+		\multirow{6}{*}{HH-SP} 
+		& 1.1 & 34490 & 36637 & 1132 \\
+		& 1.2 & 23341 & 24233 & 741 \\
+		& 2.1 & 33029 & 34794 & 1444 \\
+		& 2.2 & \textbf{\underline{22816}} & 24324 & 1007 \\
+		& 3.1 & 32006 & 34693 & 1507 \\
+		& 3.2 & 22927 & \textbf{24149} & 797 \\
+		\hline
+		\multirow{5}{*}{HH-PC} 
+		& 1.3 & \textbf{23292} & 26921 & 2430 \\
+		& 2.4 & 23512 & \textbf{25500} & 1334 \\
+		& 2.5 & 25388 & 26721 & 908 \\
+		& 3.4 & 23488 & 26129 & 1801 \\
+		& 3.5 & 25105 & 27114 & 1233 \\
+		\hline
+	\end{tabular}
+	\caption{Found paths distances for rat783 TSP instance (optimal path length is 8806). The best result in experiment group is highlighted in bold, while the best result found for problem instance is also underscored.}
+\end{table}
+
+\begin{table}[!htbp]
+	%\centering
+	\begin{tabular}{cc|ccc}
+		\hline
+		\rowcolor{gray!20}
+		\multicolumn{2}{c|}{\textbf{Solver}} & \multicolumn{3}{c}{\textbf{Results}} \\
+		\rowcolor{gray!20}
+		\textbf{Group} & \textbf{Code} & \textbf{Best found} & \textbf{Average} & \textbf{STD} \\
+		\hline		
+		\multirow{6}{*}{Baseline} 
+		& 4.1.1 & 2730074917 & 2737831472 & 4225616 \\
+		& 4.1.2 & 2421486544 & 2432905011 & 7405688 \\
+		& 4.2.1 & 1360505168 & 1380256720 & 13657387 \\
+		& 4.2.2 & 1162583357 & 1171728906 & 5239671 \\
+		& 4.3.1 & 2633785765 & 2648540705 & 8181262 \\
+		& 4.3.2 & \textbf{761509264} & \textbf{775957737} & 10846169 \\
+		\hline
+		\multirow{9}{*}{MH-PC} 
+		& 4.1.3 & 2729415229 & 2738113236 & 7383459 \\
+		& 4.1.4 & 2712114799 & 2734298124 & 9381522 \\
+		& 4.1.5 & 2723433962 & 2732529772 & 5694368 \\
+		& 4.2.3 & 1354022277 & 1369131424 & 11698311 \\
+		& 4.2.4 & 1186230750 & 1407196180 & 292371422 \\
+		& 4.2.5 & 1255612025 & 1271166341 & 14802252 \\
+		& 4.3.3 & 933923318 & 1109347363 & 85835240 \\
+		& 4.3.4 & \textbf{\underline{663489188}} & \textbf{\underline{764140101}} & 108747262 \\
+		& 4.3.5 & 903993065 & 1048196489 & 109819327 \\
+		\hline
+		\multirow{6}{*}{HH-SP} 
+		& 1.1 & 1777658580 & 2203819260 & 437999367 \\
+		& 1.2 & 794461798 & 832754319 & 22848007 \\
+		& 2.1 & 1569150086 & 1728591281 & 364476875 \\
+		& 2.2 & \textbf{775887027} & 794478412 & 13501812 \\
+		& 3.1 & 1475527859 & 1934187052 & 449660041 \\
+		& 3.2 & 777931654 & \textbf{791768317} & 14578963 \\
+		\hline
+		\multirow{5}{*}{HH-PC} 
+		& 1.3 & 1687855495 & 1815721794 & 87307521 \\
+		& 2.4 & \textbf{912264049} & \textbf{1199738016} & 205533985 \\
+		& 2.5 & 1354196166 & 1460681037 & 57770764 \\
+		& 3.4 & 1026880309 & 1579805637 & 375451837 \\
+		& 3.5 & 1629147332 & 1736442893 & 89413787 \\
+		\hline		
+	\end{tabular}
+	\caption{Found paths distances for pla7397 TSP instance (optimal path length is 23260728). The best result in experiment group is highlighted in bold, while the best result found for problem instance is also underscored.}
+\end{table}
