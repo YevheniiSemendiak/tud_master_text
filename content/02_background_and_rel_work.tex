@@ -66,13 +66,13 @@ Next, let us highlight the target system characteristics. In works~\cite{biegler
 Most optimization problem types could be obtained by combining different types of each characteristic listed above.
 
 In this thesis we tackle practical combinatorial problems, where the most prominent examples are \emph{bin packing}~\cite{martello1990bin}, \emph{job-shop scheduling}~\cite{blazewicz1996job} or \emph{vehicle routing}~\cite{toth2002vehicle} optimization problems.
-All combinatorial problems are \emph{NP-Complete} meaning they are in both \emph{NP} and \emph{NP-Hard} complexity classes\cite{garey1979computers}. NP complexity implies that the solution is verifiable in the polynomial time, while in the NP-Hard case, the problem can be transformed to other NP-Complete problem in polynomial time, allowing to use a different solving algorithm.
+All combinatorial problems are \emph{NP-Complete} meaning they are in both \emph{NP} and \emph{NP-Hard} complexity classes~\cite{garey1979computers}. NP complexity implies that the solution is verifiable in the polynomial time, while in the NP-Hard case, the problem can be transformed to other NP-Complete problem in polynomial time, allowing to use a different solving algorithm.
 
 As an example, let us grasp these characteristics for \emph{traveling salesman problem} (TSP)~\cite{applegate2006traveling} — an instance of the vehicle routing problem~\cite{laporte1992vehicle} and one of the most frequently studied a combinatorial OP (here we consider deterministic and symmetric TSP).
 The informal definition of TSP is as follows: ``Given a set of $N$ cities and the distances between each of them, what is the shortest path that visits each city once and returns to the origin city?''
 With respect to our previous definition of the optimization problem, the target system here is a function that evaluates the length of proposed path. The TSP distance (or cost) matrix is used in this function for the evaluation and it is clear that this TS exposes all internal knowledge therefore, it is a white box.
 The input $X_n$ is a vector of city indexes as a result, the type of input data is non-negative integers. There are two constraints for the path: it should contain only unique indexes (visit each city only once) and it should start and end from the same city:~$[2 \rightarrow 1 \rightarrow ... \rightarrow 2]$.
-Since the cost matrix is fixed and not changing during the solving process, the TS is considered to be deterministic and costs of two identical paths are always the same. Nevertheless, there exist Dynamic TSP where the cost matrix changes at runtime to reflect a more realistic real-time traffic updates\cite{cheong2011dynamic}.
+Since the cost matrix is fixed and not changing during the solving process, the TS is considered to be deterministic and costs of two identical paths are always the same. Nevertheless, there exist Dynamic TSP where the cost matrix changes at runtime to reflect a more realistic real-time traffic updates~\cite{cheong2011dynamic}.
 It is cheap to compute a cost for a given path using the cost matrix therefore, overall solution evaluation in this OP is cheap, and $n = N!$ is the overall number of solutions. Since we are optimizing only the route distance, this is a single-objective OP.
 
 
@@ -482,7 +482,7 @@ Among reviewed systems, we could distinguish those, which were created directly 
 A specific optimizer will be usable for searching the parameters, if it exposes several features. Firstly, it must consider an optimization function evaluation to be expensive and tackle this problem explicitly. For instance, using surrogate models or the other TS approximations. Secondly, a potential tuner should be able to tackle dependencies and conditions among parameters.
 
 \subsubsection{SMAC}\label{bg: smac}
-Sequential Model-based Algorithm Configuration (SMAC~\footnote{SMACv3 GitHub repository~\url{https://github.com/automl/SMAC3/}})~\cite{hutter2011sequential} is a system for parameters tuning, developed by the AutoML research group (here we review the $3^{rd}$ version of SMAC). 
+Sequential Model-based Algorithm Configuration (SMAC\footnote{SMACv3 GitHub repository~\url{https://github.com/automl/SMAC3/}})~\cite{hutter2011sequential} is a system for parameters tuning, developed by the AutoML research group (here we review the $3^{rd}$ version of SMAC). 
 
 In their research, scientists generalized the process of parameter tuning under the  \emph{Sequential Model-Based Optimization} (SMBO) term as the iterations between (1) fitting models and (2) using them to choose the next configurations for evaluation. 
 This term naturally formalizes most of the existing (except MBMO, but we do not tackle multi-objectiveness in this thesis) parameter tuning approaches and may be used as a distinguishing characteristic of optimization algorithms, since they naturally could be applied not only to the parameter tuning problems.
@@ -497,7 +497,7 @@ The evaluation (3) here is carried out by the original ROAR mechanism, where the
 
 
 \subsubsection{IRACE}\label{bg: irace}
-IRACE~\footnote{IRACE GitHub repository~\url{https://github.com/MLopez-Ibanez/irace}} is a hyper-parameter tuning package~\cite{lopez2016irace} as the implementation of \emph{iterated racing algorithm}~\cite{birattari2010f}.
+IRACE\footnote{IRACE GitHub repository~\url{https://github.com/MLopez-Ibanez/irace}} is a hyper-parameter tuning package~\cite{lopez2016irace} as the implementation of \emph{iterated racing algorithm}~\cite{birattari2010f}.
 
 The underlying methodology is somewhat similar to the one implemented in SMACv3 and comprise three main steps: (1) sampling new configurations using a prior knowledge, (2) empirically finding the best ones among the sampled using the racing algorithm and (3) updating the prior knowledge to bias future samples towards better configurations. The prior knowledge here is represented as a probability distribution of values for each parameter independently (truncated normal and discrete distributions for numeric and categorical parameter types respectively). During step (3), the probability distributions are build using the best found in step (2) configurations, increasing a promising values sampling chance.
 
@@ -507,7 +507,7 @@ IRACE supports various data types, such as numerical or categorical and the poss
 
 
 \subsubsection{HpBandSter}\label{bg: bohb}
-A distributed Hyperband implementation on Steroids (HpBandSter~\footnote{HpBandSter GitHub repository: \url{https://github.com/automl/HpBandSter}}) is a realization of BOHB algorithm~\cite{falkner2018bohb} in the software framework.
+A distributed Hyperband implementation on Steroids (HpBandSter\footnote{HpBandSter GitHub repository: \url{https://github.com/automl/HpBandSter}}) is a realization of BOHB algorithm~\cite{falkner2018bohb} in the software framework.
 While SMAC outperforms and partially reuses the decisions made in ParamILS~\cite{hutter2009paramils}, BOHB (Bayesian optimization combined with Hyperband) is the parameter tuning tool that outperforms SMAC and was created by the same AutoML research group.
 
 As it stated in the framework name, the SMBO routines are carried out with mainly two algorithms: learning and configurations sampling is performed by the Bayesian optimization (BO) technique \emph{tree parzen estimator} (TPE), while evaluation of sampled configurations and their comparison are carried out by the Hyperband (HB) algorithm.
