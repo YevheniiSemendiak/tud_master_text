@@ -11,23 +11,23 @@ To begin with the analysis of frameworks, let us firstly outline important chara
 
 The first two crucial criteria are \emph{variability} and \emph{extensibility} of framework. Since we are planning to use a possibly (but not obligatory) different models for the LLH selection and parameters control, the code basis should be variable in terms of models usage for each prediction level (see \cref{concept:pict:Level-wise prediction process}). The desired HH and specifically HLH should be easily extensible in terms of not only the surrogate models, but also other features such as termination criteria, information filtering, data preprocessing and so forth.
 
-The next criteria is the support for \emph{on-line optimization}. It is a slightly complex system characteristic, which we are willing to distinguish. As it turns out, many parameter tuning systems require full evaluation of target system, other expose early termination mechanisms, but all of them are forcing TS to start solving of the problem at hand each time from scratch. In case of our hyper-heuristic, we treat the LLH configuration evaluation as a trial to improve the problem solution results. It implies an important LLH ability to tackle the (OP) using reinforcement learning approaches (\cref{concept:parameter control}).
+The next criteria is the support for \emph{online optimization}. It is a slightly complex system characteristic, which we are willing to distinguish. As it turns out, many parameter tuning systems require full evaluation of target system, other expose early termination mechanisms, but all of them are forcing TS to start solving of the problem at hand each time from scratch. In case of our hyper-heuristic, we treat the LLH configuration evaluation as a trial to improve the problem solution results. It implies an important LLH ability to tackle the (OP) using reinforcement learning approaches (\cref{concept:parameter control}).
 
 The final characteristic is the \emph{conditional parameters} support. This complex feature influence on not only the search space representation mechanisms, but also the prediction process. Therefore, we pay a close attention to both of them from the conditional parameters support perspective.
 
 \subsection{Parameter Tuning Frameworks Analysis}\label{impl: Parameter Tuning Frameworks Analysis}
 \paragraph{SMACv3}
-We begin our review with the implementation of Sequential Model-based Algorithm Configuration framework, distributed under the BSD-3 license. The idea of SMACv3 lays in an enhancement of the ROAR mechanism with a model-based sampling algorithm. ROAR is a derivative from the FocusedILS algorithm (solver in the parameter tuning framework ParamILS~\cite{hutter2009paramils}), where each evaluation of a new solution candidate on a problem instance was performed sequentially and in isolation. Therefore, since the ROAR evaluation strategy is also used in SMACv3, we found it to require a considerable effort for synchronization the progress between different runs, which enables the on-line problem solving.
+We begin our review with the implementation of Sequential Model-based Algorithm Configuration framework, distributed under the BSD-3 license. The idea of SMACv3 lays in an enhancement of the ROAR mechanism with a model-based sampling algorithm. ROAR is a derivative from the FocusedILS algorithm (solver in the parameter tuning framework ParamILS~\cite{hutter2009paramils}), where each evaluation of a new solution candidate on a problem instance was performed sequentially and in isolation. Therefore, since the ROAR evaluation strategy is also used in SMACv3, we found it to require a considerable effort for synchronization the progress between different runs, which enables the online problem solving.
 
 As we mention in \cref{bg: smac}, the underlying surrogate model in SMACv3 is selected statically among random forest or Gaussian process kernel density estimator. Both models could fit to complex dependencies among parameters. In the next configuration sampling process the \emph{one-exchange} neighborhood of the best found so far configuration is traversed using the created surrogate model and the expected improvement estimations. An ability of both surrogates to fit a sparse search space is promising, and the usage of expected improvement guarantees to converge the search process to the global optimum given enough time. However, the major drawback in this system is a lack of abilities to include the conditional dependencies between parameters into the sampling process. Since, to the best of our knowledge, the one-exchange neighborhood is unaware of the dependencies, it violates them while sampling and results in illegal parameter values combinations. Those cases are naturally controlled and rejected by the search space representation framework ConfigSpace~\cite{configspace}, but we believe in case of sparse search spaces it could lead to ineffective sampling and system predictive abilities struggling. Unfortunately, we did not find any officially published empirical studies of such cases and could only make guesses based on own intuition, but SMACv3 developers advises for such use-cases\footnote{Visit SMACv3 repository~\url{https://github.com/automl/SMAC3/issues/403}} may serve as an evidence to our assumptions correctness. One of the possible solutions here can be the implementation from scratch of a conditional-aware one-exchange neighborhood definition and for sampling process, which requires much implementation effort.
 
 \paragraph{IRACE} This framework implements the iterated racing algorithm to evaluate a set of configurations during the parameter tuning session (\cref{bg: irace}). The software is distributed under the GNU General Public License with an opened source code.
 
-The framework uses a \emph{Friedman test}~\cite{conover1980practical}, or as an alternative \emph{paired t-test} for statistical analysis of racing in parallel configurations. As the surrogate models, IRACE uses the probability distributions of those parameter values, which are proved to be good during the racing step. The configuration prediction process is defined as the step-wise sampling on previously constructed distributions. It elegantly handles the conditions among parameters and illuminates a possibility of invalid configuration appearance. Unfortunately this solution is static in terms of variability and extensibility on the learning mechanisms.
+The framework uses a \emph{Friedman test}~\cite{conover1980practical}, or as an alternative \emph{paired t-test} for statistical analysis of racing in parallel configurations. As the surrogate models, IRACE uses the probability distributions of those parameter values, which are proved to be good during the racing step. The configuration prediction process is defined as the step-wise sampling on previously constructed distributions. It elegantly handles the conditions among parameters and illuminates a possibility of invalid configuration appearance. Unfortunately, this solution is static in terms of variability and extensibility on the learning mechanisms.
 
 From the perspective of parallel evaluations, the framework utilizes all available resources at the beginning of each racing step, but as the process continues, fewer evaluations are executed simultaneously, therefore, part of available resources is idling and not utilized completely at all stages of IRACE execution.
 
-For the on-line problem solving support, let us discuss the racing algorithm. As mentioned in \cref{bg: irace}, this step is executed on (1) a set of TS configurations sampled for evaluation and (2) a benchmark set of optimization problems. Multiple instances of TS are initializing with the provided configurations and starting to solve the problem set, while the racing algorithm terminates the worst-performing settings. In case of hyper-heuristic, it is possible to define the benchmark set as a single problem instance divided into parts of TS running time. At each pause we may perform the synchronization of current solutions to proceed with the best found results. Doing so, we adapt the system to on-line problem solving cases, however, the granularity of parameter control will be reduced. The reason for such reduction is the amount of information obtained after each race: only the best configurations are reported leaving the performance evidences of others behind, but we believe this information may be used to create a more precise surrogate models.
+For the online problem solving support, let us discuss the racing algorithm. As mentioned in \cref{bg: irace}, this step is executed on (1) a set of TS configurations sampled for evaluation and (2) a benchmark set of optimization problems. Multiple instances of TS are initializing with the provided configurations and starting to solve the problem set, while the racing algorithm terminates the worst-performing settings. In case of hyper-heuristic, it is possible to define the benchmark set as a single problem instance divided into parts of TS running time. At each pause we may perform the synchronization of current solutions to proceed with the best found results. Doing so, we adapt the system to online problem solving cases, however, the granularity of parameter control will be reduced. The reason for such reduction is the amount of information obtained after each race: only the best configurations are reported leaving the performance evidences of others behind, but we believe this information may be used to create a more precise surrogate models.
 
 \paragraph{HpBandSter} As we discussed in \cref{bg: bohb}, HpBandSter is an implementation of BOHB algorithm, which turns to be a hybridization of Hyperband and Bayesian optimization approaches.
 
@@ -42,7 +42,7 @@ The advantage of BRISEv2 over other systems comes from its \emph{main-node} modu
 
 Ridge is the linear regression model with regularization~\cite{hoerl1970ridge}, often used in machine learning field. Being a linear model, its abilities to fit sparse search spaces is poor and, therefore, a machine learning community suggested treating such cases with \emph{conditional linear regression models}~\cite{DBLP:journals/corr/abs-1806-02326}. The underlying idea is to split the search space into sub-spaces and to build separate regression models in each of them. Unfortunately, this approach was not built-in into the ridge regression model used in BRISEv2.
 
-As for the on-line problem solving support, the routine of an optimization process implemented in BRISEv2 is very similar to reinforcement learning. After each new obtained evidence (configuration), a new surrogate model is built to react on the learning process by predicting the next configuration. This facilitates the implementation of problem solving with runtime system adaptations, presented in \cref{concept:parameter control}.
+As for the online problem solving support, the routine of an optimization process implemented in BRISEv2 is very similar to reinforcement learning. After each new obtained evidence (configuration), a new surrogate model is built to react on the learning process by predicting the next configuration. This facilitates the implementation of problem solving with runtime system adaptations, presented in \cref{concept:parameter control}.
 
 \subsection{Conclusion on Code Base}\label{impl:hlh code basis conclusion}
 Most among the reviewed parameter tuning systems share the same SMBO approach for problem solving. They utilize a rather similar techniques for the surrogate models creation and predictions making, however, the different system architectures are implemented. To sum um our review, we utilize the term \emph{quality} to aggregate both (1) provided out-of-the-box the desired characteristic support and (2) the required effort to adapt it, if necessary. For the visual representation, we collect the reviewed characteristic qualities of each software framework into \cref{iml: table code basis selection} and quantize them into three ordinal values:
@@ -54,15 +54,17 @@ Most among the reviewed parameter tuning systems share the same SMBO approach fo
 
 \begin{table}[h!]
 	\centering
-	\begin{tabular}{l||cccc}
-		\textbf{Characteristic} & \textbf{SMACv3}& \textbf{IRACE} & \textbf{HpBandSter} & \textbf{BRISEv2} \\
+	\begin{tabular}{l|cccc}
 		\hline
+		\rowcolor{gray!10}
+		\textbf{Characteristic} & \textbf{SMACv3}& \textbf{IRACE} & \textbf{HpBandSter} & \textbf{BRISEv2} \\
 		\hline
 		Variability \& extensibility & \cellcolor{yellow!25}Average & \cellcolor{red!25}Poor & \cellcolor{yellow!25}Average & \cellcolor{green!25}Good \\
 	
-		On-line optimization & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{green!25}Good \\
+		Online optimization & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{yellow!25}Average & \cellcolor{green!25}Good \\
 	
 		Conditional parameters & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor \\
+		\hline
 	\end{tabular}
 	\caption{Code basis candidate systems analysis.}
 	\label{iml: table code basis selection}
@@ -307,9 +309,10 @@ We distinguish the following frameworks as the LLH code basis candidates: Solid\
 
 \begin{table}[h!]
 	\centering
-	\begin{tabular}{l||cccccc}
-		\textbf{Characteristic} & \textbf{Solid} & \textbf{mlrose} & \textbf{pyTSP} & \textbf{LocalSolver} & \textbf{jMetalPy} & \textbf{jMetal} \\
+	\begin{tabular}{l|cccccc}
 		\hline
+		\rowcolor{gray!10}
+		\textbf{Characteristic} & \textbf{Solid} & \textbf{mlrose} & \textbf{pyTSP} & \textbf{LocalSolver} & \textbf{jMetalPy} & \textbf{jMetal} \\
 		\hline
 		Set of heuristics & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & N/A & \cellcolor{yellow!25}Average & \cellcolor{green!25}Good \\
 		
@@ -320,6 +323,7 @@ We distinguish the following frameworks as the LLH code basis candidates: Solid\
 		Warm-startup support & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{yellow!25}Average \\
 		
 		Termination criteria & \cellcolor{yellow!25}Average & \cellcolor{red!25}Poor & \cellcolor{red!25}Poor & \cellcolor{green!25}Good & \cellcolor{green!25}Good & \cellcolor{yellow!25}Average \\
+		\hline
 	\end{tabular}
 	\caption{Meta-heuristic frameworks characteristics.}
 	\label{iml: table llh selection}

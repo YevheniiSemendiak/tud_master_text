@@ -1,7 +1,7 @@
-\chapter{On-line Selection Hyper-Heuristic with Generic Parameter Control}\label{Concept description}
-While there exist no universal approach to control the parameters of the algorithm (\cref{bg: parameter setting conclution}), our conclusion was that there exist no approach to combine both on-line techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
+\chapter{Online Selection Hyper-Heuristic with Generic Parameter Control}\label{Concept description}
+While there exist no universal approach to control the parameters of the algorithm (\cref{bg: parameter setting conclution}), our conclusion was that there exist no approach to combine both online techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
 
-In this Chapter we propose the approach to solve this problem, excluding the implementation details. In \cref{concept:parameter control}, we introduce a generic parameter control technique and expand it with the process of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of on-line algorithm selection and parameter settings, and we solve it on two levels: 1) in the search space structure and 2) in the prediction process. In \cref{concept:search space} we present a joint search space of both algorithm selection and parameter control problems. We outline functional requirements for such search space. Next, we describe a related prediction process in \cref{concept:prediction}. We decouple the learning models from the search space structure and provide a certain level of flexibility in the usage of different learning models.
+In this Chapter we propose the approach to solve this problem, excluding the implementation details. In \cref{concept:parameter control}, we introduce a generic parameter control technique and expand it with the process of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of online algorithm selection and parameter settings, and we solve it on two levels: 1) in the search space structure and 2) in the prediction process. In \cref{concept:search space} we present a joint search space of both algorithm selection and parameter control problems. We outline functional requirements for such search space. Next, we describe a related prediction process in \cref{concept:prediction}. We decouple the learning models from the search space structure and provide a certain level of flexibility in the usage of different learning models.
 Finally, in \cref{concept: llh} we direct our attention to the low level heuristics (LLH) — workhorses of our approach. We highlight the requirements to LLH that are crucial within the scope of this thesis.
 
 
@@ -127,13 +127,13 @@ When the requirements, specified for the search space and the prediction process
 	
 	\item The \textbf{parameter control} case is possible, if one builds a search space of the single LLH, its hyper-parameters, and enables the solution transfer between the iterations. 
 	
-	\item The \textbf{off-line selection hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and disables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters.
+	\item The \textbf{offline selection hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and disables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters.
 	
-	\item The \textbf{on-line selection hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and enables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters as well, but initialized with the obtained in previous external iteration solutions.
+	\item The \textbf{online selection hyper-heuristic} is possible, if one builds a search space of the multiple LLHs, and enables the solution transfer between iterations. In this case, the LLHs will be used with the static hyper-parameters as well, but initialized with the obtained in previous external iteration solutions.
 	
-	\item The \textbf{on-line selection hyper-heuristic with parameter control} is possible by building the search space of multiple LLHs, their hyper-parameters and enabling the solution transfer between iterations.
+	\item The \textbf{online selection hyper-heuristic with parameter control} is possible by building the search space of multiple LLHs, their hyper-parameters and enabling the solution transfer between iterations.
 \end{enumerate}
 
-Please note that the off-line cases estimate the solution quality directly, while the on-line cases use the relative solution quality improvement.
+Please note that the offline cases estimate the solution quality directly, while the online cases use the relative solution quality improvement.
 
 It is worth mentioning that the proposed structure of search space representation is similar to the \emph{feature model}, used to describe the software product lines (SPL)~\cite{schroeter2012multi}. In \cref{concept:pict:Search Space Representation} and \cref{concept:pict:Level-wise prediction process} we used the notions from SPL feature models to denote \emph{alternative} parameter values. The process of configuration construction within a search space can be referred as the \emph{staged configuration} in SPL.
