@@ -1,7 +1,7 @@
 \chapter{On-line Selection Hyper-Heuristic with Generic Parameter Control}\label{Concept description}
 While there exist no universal approach to control the parameters of the algorithm (\cref{bg: parameter setting conclution}), our conclusion was that there exist no approach to combine both on-line techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
 
-In this Chapter we propose the approach to solve this problem, excluding the implementation details. In \cref{concept:parameter control}, we introduce a generic parameter control technique and expand it with the process of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of on-line algorithm selection and parameter settings, and we solve it on two levels: 1) in the search space structure and 2) in the prediction process. In \cref{concept:search space} we present a joint search space of both algorithm selection and parameter control problems. We outline functional requirements for such space. Next, we describe a related prediction process in \cref{concept:prediction}. We decouple the learning models from the search space structure and provide a certain level of flexibility in the usage of different learning models.
+In this Chapter we propose the approach to solve this problem, excluding the implementation details. In \cref{concept:parameter control}, we introduce a generic parameter control technique and expand it with the process of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of on-line algorithm selection and parameter settings, and we solve it on two levels: 1) in the search space structure and 2) in the prediction process. In \cref{concept:search space} we present a joint search space of both algorithm selection and parameter control problems. We outline functional requirements for such search space. Next, we describe a related prediction process in \cref{concept:prediction}. We decouple the learning models from the search space structure and provide a certain level of flexibility in the usage of different learning models.
 Finally, in \cref{concept: llh} we direct our attention to the low level heuristics (LLH) — workhorses of our approach. We highlight the requirements to LLH that are crucial within the scope of this thesis.
 
 
@@ -45,7 +45,7 @@ For the better intuition, let us try some numbers. By setting all $N_s = N_{s,p}
 
 To overcome this problem, we utilize a certain idea, similar to the one used in IRACE~\cite{lopez2016irace}: \emph{explicitly indicate the dependencies as parent-child relationships among the search space entities, firstly predicting the parent parameter, and the children parameter afterwards.} This gives us an opportunity to treat the algorithm type as a regular categorical parameter, making the search space structure uniform and simplifying the prediction process.
 
-This decision sets the following search space \emph{structural requirements}:
+This decision sets the following search space \emph{structural requirements} (S.R.):
 \begin{enumerate}
 	\item[S.R.1] The \textbf{parent-child relationship} must describe dependencies between different parameter types.
 
@@ -79,11 +79,11 @@ The idea of this decoupling lays in resolving the value-specific dependencies am
 
 The prediction on each level is performed in three main steps: (1) filtering the required for this level information, (2) building the surrogate model and (3) finding the best performing parameters on this level.
 
-While building the surrogates and making the predictions, we ignore the information from levels above and below with the motivation to simplify the overall process and hide the search space structure. In addition, when we predict on the parent level, it will not change on the descendant levels thus, we do not need to operate useless static information. While the backward ignorance is clear, the forward data omission puts a restriction on the surrogate models. Cutting off the parameter values from the deeper levels, we may get the data points with the same current level parameters values (also named \emph{features} in machine learning) but different results (\emph{labels}). Thus, only those surrogate models should be used on such level(s), which will not be confused by the multi-valued dependencies in data (when the same input results in different outputs). In the implementation description in \cref{impl: prediction models} we clarify, which models are the better choice in such cases and implement one of the promising.
+While building the surrogates and making the predictions, we ignore the information from levels above and below with the motivation to simplify the overall process and hide the search space structure. In addition, when we predict on the parent level, it will not change on the descendant levels, therefore, we do not need to operate useless static information. While the backward ignorance is clear, the forward data omission puts a restriction on the surrogate models. Cutting off the parameter values from the deeper levels, we may get the data points with the same current level parameters values (also named \emph{features} in machine learning) but different results (\emph{labels}). Thus, only those surrogate models should be used on such level(s), which will not be confused by the multi-valued dependencies in data (when the same input results in different outputs). In the implementation description in \cref{impl: prediction models} we clarify, which models are the better choice in such cases and implement one of the promising.
 
 Certainly, while solving the problem, the quality trends among parameter values may change. For instance, at later stages the domination of one solver could be declined in comparison to other. Or else, the previously best-performing parameter values are not good enough and should be replaced by the other. These changes may be caused by the variety of reasons, which we are not tackling. Instead, the old trends should be left out by some forgetting mechanism.
 
-At this point, let us summarize the functional requirements.
+At this point, let us summarize the functional requirements for search space (S.F.R) and prediction process (P.F.R).
 \begin{itemize}
 	\item[$\bullet$] \textbf{In the search space we need:}
 	\begin{enumerate}
@@ -105,6 +105,7 @@ At this point, let us summarize the functional requirements.
 		\item[P.F.R.3] The \textbf{information forgetting mechanism}, which is required to follow only the recent trends among the parameter values dependencies.
 	\end{enumerate}
 \end{itemize}
+\todoy{check listing fit into single page}
 
 \section{Low Level Heuristics}\label{concept: llh}
 As we stated in \cref{bg: hh}, hyper-heuristics are built of two main components — the high level heuristic (HLH) and the low level heuristic (LLH). Please note, the used \emph{solver type} term in this chapter is nothing else but the LLH in hyper-heuristic. The previous two sections were dedicated to the search space and prediction models description, which form the logical components of the HLH. No hyper-heuristic could work without LLH, therefore, in this section we discuss the requirements for the low-level heuristics.
