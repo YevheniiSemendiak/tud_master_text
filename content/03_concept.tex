@@ -1,12 +1,12 @@
 \chapter{Online Selection Hyper-Heuristic with Generic Parameter Control}\label{Concept description}
-While there exist no universal approach to control the parameters of the algorithm (\cref{bg: parameter setting conclution}), our conclusion was that there exist no approach to combine both online techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
+While there exists no universal approach to control the parameters of the algorithm (\cref{bg: parameter setting conclution}), our conclusion was that there exists no approach to combine both online techniques for the algorithm selection and the parameter settings (\cref{bg: conclusion}). 
 
 In this Chapter we propose the approach to solve this problem, excluding the implementation details. In \cref{concept:parameter control}, we introduce a generic parameter control technique and expand it with the process of algorithm selection. As concluded in \cref{bg: conclusion}, the main weakness of the reviewed approaches to tackle CASH problems lays in the inability of learning mechanisms to fit and predict in sparse search spaces. The same issue arises in case of online algorithm selection and parameter settings, and we solve it on two levels: 1) in the search space structure and 2) in the prediction process. In \cref{concept:search space} we present a joint search space of both algorithm selection and parameter control problems. We outline functional requirements for such search space. Next, we describe a related prediction process in \cref{concept:prediction}. We decouple the learning models from the search space structure and provide a certain level of flexibility in the usage of different learning models.
-Finally, in \cref{concept: llh} we direct our attention to the low level heuristics (LLH) — workhorses of our approach. We highlight the requirements to LLH that are crucial within the scope of this thesis.
+Finally, in \cref{concept: llh} we direct our attention to the low-level heuristics (LLH) — workhorses of our approach. We highlight the requirements to LLH that are crucial within the scope of this thesis.
 
 
 \section{Combined Parameter Control and Algorithm Selection Problem}\label{concept:parameter control}
-The basic idea of parameter control approaches lays in the solver behavior adaptation as the response to changes in the solving process (\cref{bg: parameter control}). As we mentioned in the heuristics review (\cref{bg: section heuristics}), the algorithm performance is highly dependent on the provided exploration-exploitation balance, which in its turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to find such parameters, which provide the best performance.
+The basic idea of parameter control approaches lays in the solver behavior adaptation as the response to changes in the solving process (\cref{bg: parameter control}). As we mentioned in the heuristics review (\cref{bg: section heuristics}), the algorithm performance is highly dependent on the provided exploration-exploitation balance, which in turn, depends on (1) the algorithm itself and (2) its configuration. The task of parameter control is to find such parameters, which provide the best performance.
 
 In our work, we solve the parameter control problem by utilizing an approach for evolutionary algorithms similar to the one proposed in~\cite{karafotias2014generic} reinforcement learning (RL). The underlying idea of RL could be described as a process of performing actions in some environment in order to maximize the reward obtained after each performed action. To apply this technique to the parameter control problem, we should define what those \emph{actions} are and how to estimate the \emph{reward}. Therefore, in order to make the parameter control applicable to a broad range of algorithms, we analyze not the solver state itself but the optimization process (in~\cite{karafotias2014generic}, the authors use both algorithm-dependent and generic metrics). To realize the MAPE-K control loop, we should interrupt the solver, analyze the intermediate results, learn the current trend among parameters, configure the solver with the most promising parameter values and continue solving. The number of MAPE-K loop iterations $i$ define the granularity of learning, where one should balance between \emph{time to control} (TTC) the parameters vs \emph{time to solve} (TTS) the problem. Naturally, the limitation of proposed approach is $TTS \gg TTC$, therefore, we are restricted to use-cases with large TTS w.r.t. TTC.
 
@@ -84,6 +84,7 @@ While building the surrogates and making the predictions, we ignore the informat
 Certainly, while solving the problem, the quality trends among parameter values may change. For instance, at later stages the domination of one solver could be declined in comparison to other. Or else, the previously best-performing parameter values are not good enough and should be replaced by the other. These changes may be caused by the variety of reasons, which we are not tackling. Instead, the old trends should be left out by some forgetting mechanism.
 
 At this point, let us summarize the functional requirements for search space (S.F.R) and prediction process (P.F.R).
+\begin{samepage}
 \begin{itemize}
 	\item[$\bullet$] \textbf{In the search space we need:}
 	\begin{enumerate}
@@ -105,9 +106,9 @@ At this point, let us summarize the functional requirements for search space (S.
 		\item[P.F.R.3] The \textbf{information forgetting mechanism}, which is required to follow only the recent trends among the parameter values dependencies.
 	\end{enumerate}
 \end{itemize}
-\todoy{check listing fit into single page}
+\end{samepage}
 
-\section{Low Level Heuristics}\label{concept: llh}
+\section{Low-Level Heuristics}\label{concept: llh}
 As we stated in \cref{bg: hh}, hyper-heuristics are built of two main components — the high level heuristic (HLH) and the low level heuristic (LLH). Please note, the used \emph{solver type} term in this chapter is nothing else but the LLH in hyper-heuristic. The previous two sections were dedicated to the search space and prediction models description, which form the logical components of the HLH. No hyper-heuristic could work without LLH, therefore, in this section we discuss the requirements for the low-level heuristics.
 
 The proposed idea of the MAPE-K reinforcement learning application implies the usage of anytime algorithms (see classification of solvers in \cref{BG: subsection OP Solvers}).
