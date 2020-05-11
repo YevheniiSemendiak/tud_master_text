@@ -18,9 +18,9 @@
 		.st3 {fill:#ffffff;stroke:none;stroke-linecap:butt;stroke-width:6.12}
 		.st4 {marker-end:url(#mrkr4-27);stroke:#4672c4;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5}
 		.st5 {fill:#4672c4;fill-opacity:1;stroke:#4672c4;stroke-opacity:1;stroke-width:0.37313432835821}
-		.st6 {fill:#ffffff;stroke:none;stroke-linecap:butt;stroke-width:7.2}
+		.st6 {fill:#ffffff;stroke:none;stroke-linecap:butt}
 		.st7 {fill:#3c63ac;font-family:Open Sans;font-size:1.00001em}
-		.st8 {fill:#ffffff;stroke:none;stroke-linecap:butt}
+		.st8 {fill:#ffffff;stroke:none;stroke-linecap:butt;stroke-width:7.2}
 		.st9 {stroke:#ffffff;stroke-dasharray:7,5;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
 		.st10 {fill:#ffffff;stroke:#7f7f7f;stroke-width:1}
 		.st11 {fill:#000000;stroke:none;stroke-linecap:butt;stroke-width:6.8}
@@ -183,11 +183,11 @@
 			<path d="M7.09 265.1 L7.09 300.64" class="st4"/>
 			<rect v:rectContext="textBkgnd" x="-3.51016" y="279.69" width="21.1935" height="14.4001" class="st6"/>
 			<text x="-3.51" y="290.49" class="st7" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Use</text>		</g>
-		<g id="shape84-30" v:mID="84" v:groupContext="shape" v:layerMember="1" transform="translate(65.5551,-164.993)">
+		<g id="shape84-30" v:mID="84" v:groupContext="shape" v:layerMember="1" transform="translate(78.2362,-164.993)">
 			<title>Dynamic connector.84</title>
 			<desc>Update</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="-7.08661" cy="243.307" width="60" height="22.4037"/>
+			<v:textRect cx="-7.08661" cy="243.307" width="60.01" height="22.4037"/>
 			<path d="M-6.8 265.1 L-7.27 229.55" class="st4"/>
 			<rect v:rectContext="textBkgnd" x="-27.6299" y="236.107" width="41.0864" height="14.4001" class="st6"/>
 			<text x="-27.63" y="246.91" class="st7" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Update</text>		</g>
@@ -195,7 +195,7 @@
 			<title>Dynamic connector.86</title>
 			<desc>Solve</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="7.08661" cy="283.169" width="60" height="22.4037"/>
+			<v:textRect cx="7.08661" cy="283.169" width="60.01" height="22.4037"/>
 			<path d="M7.09 265.1 L7.09 293.2" class="st4"/>
 			<rect v:rectContext="textBkgnd" x="-7.72012" y="275.969" width="29.6136" height="14.4001" class="st8"/>
 			<text x="-7.72" y="286.77" class="st7" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Solve</text>		</g>
