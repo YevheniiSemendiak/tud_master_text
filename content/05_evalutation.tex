@@ -412,7 +412,7 @@ As for j.ES, the model-based MH-PC outperform the randomized parameter values al
 Taking into account the results with random parameter allocation we are making two conclusions. Firstly, even a randomized parameters changes are able to improve a potentially bad static hyper-parameter setting (j.ES case). Secondly, the learning mechanisms should and must be improved further by means of different surrogate models usage. The proper technique for surrogate optimization should be used. Leaving the improvement steps for future work, we conclude that the developed in this thesis generic parameter control concept may be proposed as a replacement of the parameter tuning for meta-heuristics.
 
 
-\subsection{Selection Hyper-Heuristic with Static LLH Parameters}\label{eval:1:hh-sp}
+\subsection{Selection Hyper-Heuristic with Static LLH Parameters (HH-SP)}\label{eval:1:hh-sp}
 The second mode of the developed approach is the RL-based selection hyper-heuristic, which description can be found in \cref{concept: conclution}. Here we group three available LLHs (aforementioned py.ES, py.SA and j.ES) with static parameter (default and tuned) into selection hyper-heuristic (HH-SP).
 
 We present the problem solving process in two forms. Firstly, we distinguish the selected at each external iteration LLH. For doing so, we visualize only the first repetition (out of 9 available). Secondly, we present the final results of all runs in form of box-plots and compare them with the performance of underlying LLHs used executed separately (baseline). The left group of box-plots presents the final solution quality obtained with the default parameter values, while on the right site the results of tuned parameters are outlined.
@@ -469,7 +469,7 @@ Talking about the tuned LLHs usage, we observe almost equal performance of all L
 The observed issues call not only for a thorough investigation (pla7397 code 1.1, 3.1), but also for a generic approach to handle potential flaws in the LLH implementation that may cause issues in overall execution process.
 
 
-\subsection{Selection Hyper-Heuristic with Parameter Control}\label{eval:1:hh-pc}
+\subsection{Selection Hyper-Heuristic with Parameter Control (HH-PC)}\label{eval:1:hh-pc}
 The final evaluation is dedicated to the performance analysis of the suggested approach of merging the online selection hyper-heuristic with the generic parameter control technique. A minimal goal is to reach the best underlying LLH performance with tuned hyper-parameters. In this evaluation set we follow the used for HH-SP method of intermediate results visualization, distinguishing allocated LLH types at each iteration for single repetition. We compare the quality of final results over all repetitions with a baseline using box-plots.
 
 \paragraph{kroA100, pr439 and rat783 TSP instances.}
@@ -536,70 +536,72 @@ The final results quality charts (\cref{eval:pict:hh-pc:pla7397 final}) depict a
 \paragraph{Discussion.} The observed results of tackling the united APSP problem by HH-PC are encouraging. Our approach managed to reach and in some cases even outperform the results of the best underlying LLH with tuned hyper-parameters on small problem instances (kroA100, pr439, rat783). When the problem size significantly grows (pla7397), the gap between HH-PC and the best performing LLH started to increase. An explanation for this is simple: the system needs to build surrogate models not for single, but for multiple LLHs parameters and, therefore, requires more performance evidences in comparison to MH-PC or HH-SP. On the contrary, an amount of information only decreases as a consequence of an issue with py.ES. Since the parameter values are not selected to properly reflect the LLHs performance, the algorithm selection process also straggles. To overcome the problem with lack of information we (1) need to fix the aforementioned issue and (2) may execute an additional meta-learning step before the beginning of optimization session. An investigation of this rather intriguing idea is postponed for the future work.
 
 
-\subsection{Concept Evaluation Numeric Results Discussion}
+\subsection{Concept Evaluation Results Discussion}
 We aggregate the results of each implemented mode in \cref{eval:1: best final results comparison table,eval:1: avg final results comparison table}. In each of them the baseline is defined as the best results obtained by the underlying meta-heuristics used separately with static parameters. As an example, the baseline for kroA100 TSP instance is defined by jMetalPy.SA with default parameters, while tuned jMetal.ES produced the best solutions for pla7397. The results for each experiment separately are presented in \cref{app:eval:1:tables}.
 
 In \cref{eval:1: best final results comparison table} we compare the baseline with the \emph{best} results in each mode. For instance, consider MH-PC. Statistically, the best average results for kroA100 (27178) were produced by jMetal.ES with TPE control (code 4.3.4), while the baseline is 39560. Therefore, the average result of the best MH-PC equals to 0.687 of the baseline. We perform a similar aggregation for HH-SP, excluding the experiments, where LLHs were used with tuned parameters (therefore, selecting the best among 1.1, 2.1 and 3.1 codes). As for HH-PC, we pick the best averaged results in all available experiments, for instance, on kroA100 it was code 3.4 (HH-PC with FRMAB LLH selection and TPE parameter control) with 30396 average result.
 
-\begin{table}[!htbp]
-	%\centering
-	\caption{The best solution quality obtained by each mode compared with the best underlying meta-heuristic (baseline) on four TSP instances (lower is better).}
-	\label{eval:1: best final results comparison table}
-	\begin{tabular}{cccccc}
-		\hline
-		\rowcolor{gray!10}
-		\textbf{TSP Instance} & \textbf{Baseline} & \textbf{MH-PC} & \textbf{HH-SP} & \textbf{HH-PC} \\
-		\hline		
-		kroA100 & 1 & \textbf{0.687} & 0.961 & 0.768 \\
-		pr439 & 1 & \textbf{0.973} & 1.072 & 0.988 \\
-		rat783 	& 1 & 1.081 & 1.448 & \textbf{1.064} \\
-		pla7397 & 1 & \textbf{0.985} & 2.228 & 1.546 \\
-		\hline
-	\end{tabular}
-\end{table}
-
 Our conclusion on \cref{eval:1: best final results comparison table} is as follows: if one \textbf{knows} which among available meta-heuristics statistically produces better results (with properly selected parameters), the preference is to use the proposed generic parameter control (\textbf{MH-PC}) approach. 
+
+\begin{samepage}
+	\begin{table}[!htbp]
+		%\centering
+		\caption{The best solution quality obtained by each mode compared with the best underlying meta-heuristic (baseline) on four TSP instances (lower is better).}
+		\label{eval:1: best final results comparison table}
+		\begin{tabular}{cccccc}
+			\hline
+			\rowcolor{gray!10}
+			\textbf{TSP Instance} & \textbf{Baseline} & \textbf{MH-PC} & \textbf{HH-SP} & \textbf{HH-PC} \\
+			\hline		
+			kroA100 & 1 & \textbf{0.687} & 0.961 & 0.768 \\
+			pr439 & 1 & \textbf{0.973} & 1.072 & 0.988 \\
+			rat783 	& 1 & 1.081 & 1.448 & \textbf{1.064} \\
+			pla7397 & 1 & \textbf{0.985} & 2.228 & 1.546 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	
+	\begin{table}[!htbp]
+		%\centering
+		\caption{Average solution quality obtained by each mode compared with the best underlying meta-heuristic (baseline) on four TSP instances (lower is better).}
+		\label{eval:1: avg final results comparison table}
+		\begin{tabular}{cccccc}
+			\hline
+			\rowcolor{gray!10}
+			\textbf{TSP Instance} & \textbf{Baseline} & \textbf{MH-PC} & \textbf{HH-SP} & \textbf{HH-PC} \\
+			\hline		
+			kroA100 & 1 & 0.841 & 0.975 & \textbf{0.773} \\
+			pr439 & 1 & 1.106 & 1.1 & \textbf{1.017} \\
+			rat783 	& 1 & 2.034 & 1.45 & \textbf{1.1} \\
+			pla7397 & 1 & 2.139 & 2.36 & \textbf{1.93} \\
+			\hline
+		\end{tabular}
+	\end{table}
+\end{samepage}
 
 However, the situation changes dramatically if one \textbf{does not know}, which meta-heuristic is the best among available. In \cref{eval:1: avg final results comparison table} we aggregate the average results over \emph{all} experiments in each mode. It means that the results of all meta-heuristics with parameter control are taken into account to estimate averaged MH-PC gain. However, we need exclude several experiments to perform a fair comparison. For MH-PC we exclude the random-based parameter selection (4.1.3, 4.2.3, 4.3.3 codes). For both HH-SP and HH-PC modes we similarly exclude the random-based LLH and parameter selection (1.1 and 1.3 codes). Also, for HH-SP we ignore the experiments with tuned in offline meta-heuristics (1.2, 2.2, 3.2).
 
-\begin{table}[!htbp]
-	%\centering
-	\caption{Average solution quality obtained by each mode compared with the best underlying meta-heuristic (baseline) on four TSP instances (lower is better).}
-	\label{eval:1: avg final results comparison table}
-	\begin{tabular}{cccccc}
-		\hline
-		\rowcolor{gray!10}
-		\textbf{TSP Instance} & \textbf{Baseline} & \textbf{MH-PC} & \textbf{HH-SP} & \textbf{HH-PC} \\
-		\hline		
-		kroA100 & 1 & 0.841 & 0.975 & \textbf{0.773} \\
-		pr439 & 1 & 1.106 & 1.1 & \textbf{1.017} \\
-		rat783 	& 1 & 2.034 & 1.45 & \textbf{1.1} \\
-		pla7397 & 1 & 2.139 & 2.36 & \textbf{1.93} \\
-		\hline
-	\end{tabular}
-\end{table}
-
-Therefore, our conclusion on cases, when one has several meta-heuristics, but \textbf{does not know}, which is the best among them, the complex approach of simultaneous online algorithm selection and parameter tuning (\textbf{HH-PC}) should be preferred due to its strong dominance over MH-PC and HH-SP modes.
-
-\todoy{continue here}
+Therefore, our conclusion for cases, when one has several meta-heuristics, but \textbf{does not know}, which is the best among them, the complex approach of simultaneous online algorithm selection and parameter tuning (\textbf{HH-PC}) should be preferred due to its strong dominance over MH-PC and HH-SP modes.
 
 \section{Parameter Analysis of Hyper-Heuristic with Parameter Control}\label{eval:2}
-The second benchmark is dedicated to an evaluation of system settings influence on the solving process.
-Due to limited time we decided to perform the benchmarks only for the most complex system mode: online selection hyper-heuristic with parameter control in low-level heuristics (HH-PC).
+\todoy{rename?}
+The second benchmark is dedicated to the evaluation of system settings influence on the solving process.
+Due to limited time we decided to perform the parameter analysis only for the most complex system mode: online selection hyper-heuristic with parameter control in low-level heuristics (HH-PC).
 
 \subsection{Evaluation Plan}\label{eval:2:plan}
-As with the concept evaluation, this set of benchmarks we also start from the planning. For comparison basis we selected one statistically better performing HH-PC setup, in which FRAMAB was used for the algorithm selection, and TPE for parameter control respectively. Their default configuration of which was as follows. Implemented FRAMAB algorithm exposes only one parameter: the balancing coefficient \emph{C}. In \cref{impl: FRAMAB} we discussed it values and also proposed an approach to replace this static value by one, derived from the deviation of results. In all previous tests we used exactly this approach. TPE implementation exposes \emph{split size} parameter, which defines the percentage of available data, used to create a distribution of good-performing parameter values (see TPE description during HpBandSter framework review in \cref{bg: bohb}). In all our experiments we used $\sfrac{1}{3}$ of available data to construct a `good' distribution. The amount of information, which was used to construct the surrogate models was controlled by a shared parameter \emph{window size}. In our evaluations we were using 80\% of available information each time. As one may remember, since we did not implement a proper optimization algorithm over surrogates, but rather used a random sampling and afterwards selected the best parameter set by means of their results with surrogates, we used a predefined number of randomly sampled parameter values on each level (more details in \cref{impl: prediction models}). During our experiments we sampled 96 combinations of parameter values on each level (the default value in BRISEv2). Also, in our setup we used a predefined number of workers (6 ps) and static time for task execution (15 seconds). The implemented RL approach required continuing the solving process between iterations. For doing so, after accomplishing a task the workers were sending a complete bunch of obtained solutions to main node, which is then attached them to the new tasks. This difference is caused by the usage of single-solution simulated annealing and population-based evolution strategy meta-heuristics.
+Similarly to the concept evaluation, we start this set of benchmarks from the planning. For comparison basis we selected one statistically better performing HH-PC setup, in which FRAMAB was used for the algorithm selection, and TPE for parameter control respectively. Implemented FRAMAB algorithm exposes only one hyper-parameter: the balancing coefficient \emph{C}. In \cref{impl: FRAMAB} we discussed it values and also proposed an approach to replace this static value by dynamically derived from results deviation. In all previous tests we used exactly this approach. TPE implementation exposes \emph{split size} parameter, which defines the percentage of available data, used to create a distribution of good-performing parameter values (see TPE description during HpBandSter framework review in \cref{bg: bohb}). In the previous experiments we used $\sfrac{1}{3}$ of available data to construct a \emph{good} distribution. The overall amount of information, used to construct the surrogate models was controlled by a shared parameter \emph{window size}. In our evaluations we were using 80\% of available information at each point in time. As one may remember, we did not implement an  elegant algorithm for surrogates optimization, but used the random search instead to select the best parameter set by means of their results on surrogates. Thus, we used a predefined number (96, the default value in BRISEv2) of randomly sampled parameter values on each level (more details in \cref{impl: prediction models}). Also, our setup included 6 workers and task execution time was set to 15 seconds. The implemented RL approach implies the iterative solving process, therefore, the workers were sending a complete bunch of obtained solutions to main node after accomplishing a task. 
 
-All aforementioned characteristics form a three groups of experiments:
+All aforementioned characteristics form three groups of experiments:
 \begin{enumerate}
-	\item \textbf{Learning granularity} group is designed to investigate the influence of performance evidences amount and quality, obtained between external iterations. It is formed by such parameters as \emph{window size}, \emph{task time} and \emph{number of workers}.
+	\item \textbf{Learning granularity} group is designed to investigate the influence of performance evidence amount and quality to optimization process. It is formed by such parameters as \emph{window size}, \emph{task time} and \emph{number of workers}.
 	
-	\item \textbf{Learning models configuration} group of experiments are dedicated to investigate the influence of HLH parameters on the results quality and includes \emph{FRAMAB C coefficient}, \emph{TPE split size}, \emph{random search size} over the surrogates.
+	\item \textbf{Learning models configuration} group of experiments is dedicated to investigate the influence of HLH parameters on the results quality and includes \emph{FRAMAB C coefficient}, \emph{TPE split size} and \emph{random search size}.
 	
-	\item \textbf{Generic low-level heuristic configuration} group is currently formed only from one characteristic for investigation: amount of solver warming-up information, which is defined by the number of solutions, reported in the end of LLH external iteration.
+	\item \textbf{Amount of warming-up information} is a self-describing experiment, dedicated to investigate an influence of warming-up solutions numbers to initialize LLH at each external iteration.
 \end{enumerate}
 
-We aggregate the proposed parameters and define the values for evaluation in \cref{eval:2: planning table}.
+We define the estimation values for the proposed parameters in \cref{eval:2: planning table}.
 
 \begin{table}[h!]
 	\centering
@@ -614,11 +616,11 @@ We aggregate the proposed parameters and define the values for evaluation in \cr
 		Number of workers & 3, 9, 12 & 6 \\
 		\rowcolor{gray!10}
 		\multicolumn{3}{c}{\textit{Learning models configuration}} \\
-		FRAMAB C coefficient & Static 0.001, 0.01, 0.1 & STD-based \\
 		TPE split size & 10\%, 50\%, 70\% & 30\% \\
+		FRAMAB C coefficient & Static 0.001, 0.01, 0.1 & STD-based \\
 		Random search size & 50, 200 & 96 \\
 		\rowcolor{gray!10}
-		\multicolumn{3}{c}{\textit{Generic LLH configuration}} \\
+		\multicolumn{3}{c}{\textit{Amount of warming-up information}} \\
 		Warming-up solutions & one & all \\
 		\hline
 	\end{tabular}
@@ -626,15 +628,15 @@ We aggregate the proposed parameters and define the values for evaluation in \cr
 	\label{eval:2: planning table}
 \end{table}
 
-We set all other parameters as they were configured during HH-PC evaluation, in particular the experiment running time is set to 15 minutes, number of experiment repetition is 9, the search space is unchanged (3 LLHs with the same parameter ranges and default values).
+We set all other parameters as they were configured during HH-PC evaluation: the experiment running time is set to 15 minutes, the number of experiment repetitions is 9 and the search space is unchanged.
 
-The idea of performing the full factorial design was quickly abandoned since it requires 46 days of non-stop experiment running.
-Therefore, we performed a one-exchange benchmark design, which resulted in 18 experiments, which needed 40,5 hours to perform 9 repetitions.
+The idea of performing the full factorial design was quickly abandoned, since it requires 46 days of non-stop experiment running.
+Therefore, the performed one-exchange benchmark design resulted in 18 experiments, which needed 40,5 hours to perform 9 repetitions.
 
 \subsection{Learning Granularity}\label{eval:2:learning granularity}
-In this experiment we investigate the influence of RL routines configuration on learning process. The idea is as follows. Changing the \emph{window size}, \emph{task time} and \emph{number of workers}, the underlying models may learn a different picture of dependencies. For instance, if we increase a task time, a sampled configuration will be measured more thoroughly, however, given a fixed experiment running time, the overall number of iteration will be decreased. On a contrary, by increasing a number of workers for the same fixed experiment time a size of investigated \emph{parameter space} will be increased, therefore, the underlying learning models will construct a more precise surrogates.
+In this experiment we investigate the influence of RL routines configuration on learning process. The idea is as follows. Changing the \emph{window size}, \emph{task time} and \emph{number of workers}, the underlying surrogate models may learn a different dependencies picture. For instance, if we increase a task time, each sampled configuration will be measured more thoroughly, however, given the same experiment running time, the overall number of iteration will be decreased. On a contrary, by increasing a number of workers, a portion of investigated APSP space will be increased, therefore, the underlying learning models will construct more precise surrogates.
 
-\textbf{Please note}, the perturbations at the end of runs on progress charts are caused by different number of performed iterations. More detailed explanation could be found in \cref{eval:1:baseline}.
+\textbf{Please note}, the perturbations in the end of progress charts are caused by the same issue with the number of performed iterations, discussed in \cref{eval:1:baseline}.
 
 \paragraph{Window size.}
 \svgpath{{graphics/Eval/2bench}}
@@ -646,10 +648,11 @@ In this experiment we investigate the influence of RL routines configuration on 
 	\vspace{-5pt}
 	\label{eval:2:pict:window size}
 \end{figure}
-According to our expectations in \cref{concept:prediction}, this parameter is responsible for the forgetting mechanism, which is required for system adaptation to changes in optimization process and domination of one parameters over others (including LLH).
-In \cref{eval:2:pict:window size} we presented the system running results with four different window sizes. We observe that the best results were obtained, when the learning models used all available information, in other words, with disabled forgetting mechanism. On a contrary, with the smallest window size the quality of final results are the worst. A trend could be observed, according to which with a larger window size system provides a better quality of results. During the benchmarks, dedicated to the concept evaluation we used 80\% of available information, which corresponds to the middle-quality parameter value.
-Our conclusion is as following: with this problem instance and system setup, the changes in a learning process and parameter preference are mostly negligible, therefore, the forgetting mechanism should be disabled.
-In a future, it would be rather intriguing to investigate the influence of this parameter with other, potentially dynamic problem and/or instance, where the parameter preference is changing.
+According to our expectations in \cref{concept:prediction}, this parameter is responsible for the forgetting mechanism, which is required to follow a possibly changing trends in optimization process.
+
+In \cref{eval:2:pict:window size} we presented the results obtained with four different window sizes. We observe that the best results are obtained, when the learning models were used all the available information, in other words, with disabled forgetting mechanism. On a contrary, with the smallest window size the quality of final results is expectedly the worst. A trend could be observed, according to which HH-PC provides a better quality of results with larger window size. In our previous benchmarks we were using 80\% of the available information, which corresponds to the middle-quality parameter value.
+
+Our conclusion is as following: with this problem instance and system setup, changes in the learning process and parameter preference are mostly negligible, therefore, the forgetting mechanism should be disabled. In a future, it would be rather intriguing to investigate this parameter influence on other, potentially dynamic problem instances.
 
 \paragraph{Task time.}
 \begin{figure}[h]
@@ -660,7 +663,7 @@ In a future, it would be rather intriguing to investigate the influence of this 
 	\vspace{-5pt}
 	\label{eval:2:pict:task time}
 \end{figure}
-Varying the time for one task evaluation (external iteration), one will dramatically change the granularity of obtained results. For instance, in our experiments with the least amount of time (5 seconds) HH-PC managed to perform more than 600 external iterations, while with the largest budged (30 seconds) approximately 150 (\cref{eval:2:pict:task time}). However, as we mentioned previously, the more information does not necessary imply a more precise surrogate models. The used by us during the concept evaluation 15 seconds provided in the worst results. Boundary cases with 5 and 30 seconds task time gave rather unstable result (see box-plots in \cref{eval:2:pict:task time}). The former is full of too approximately evaluated parameters, while the later simply did not manage to perform enough iterations. Balancing between results stability and quality we conclude that for the current setup statistically better choice would be to set 10 seconds for a task running time. 
+Varying the time for one task evaluation (external iteration), one will dramatically change the granularity of obtained results. For instance, in our experiments with the least task time (5 seconds) HH-PC performed more than 600 external iterations, while with the largest budged (30 seconds), this number was approximately 150 (\cref{eval:2:pict:task time}). As we previously observed, more information does not necessary imply better surrogate models creation. Used during the concept evaluation 15 seconds task time provided the worst results. Boundary cases of 5 and 30 seconds task time gave rather unstable result (see box-plots in \cref{eval:2:pict:task time}). The former is full of too approximately evaluated parameters, while the later simply did not manage to perform enough iterations. Balancing between results stability and quality, we conclude that for the current setup statistically better choice would be to set a task running time equal 10 seconds. 
 
 \paragraph{Number of workers.}
 \begin{figure}[h]
@@ -671,13 +674,24 @@ Varying the time for one task evaluation (external iteration), one will dramatic
 	\vspace{-5pt}
 	\label{eval:2:pict:number of workers}
 \end{figure}
-The influence of workers number was rather surprise to us. According to our expectations, with a growing number of LLH runners, the amount of evaluated configurations increases. However, instead of getting surrogate models with a better quality and as a result, improving sampled parameters performance, we observe the opposite behavior. For increasing number of workers the results became worse and worse, see box-plots in \cref{eval:2:pict:number of workers}. Currently, we do not have a comprehensive explanation of the observed behavior, except of possible surrogate models over-fitting. It is broadly studied problem in ML, according to which the models create a too complex hypothesis, which can not generalize well to unforeseen data. Thus, in our case it is possible that being over-fit, models did not adequately predict a possible results for sampled parameters, therefore, guided prediction process in a wrong direction. In any case, this behavior requires more comprehensive investigation.
+The influence of workers number was a surprise to us. According to our expectations, with a growing number of LLH runners, the proportion of estimated parameter space increases. However, instead of getting a better quality surrogate models and, as a result, improving sampled parameters performance, we observe the opposite behavior. For increasing number of workers the results became worse and worse (see box-plots in \cref{eval:2:pict:number of workers}). Currently, we do not have a comprehensive explanation of the observed behavior, except of possible surrogate models over-fitting. It is a broadly studied problem in the ML field, according to which the model learns too complex hypothesis, which can not generalize well to unforeseen data. Thus, in our case it is possible that being over-fitted, surrogates did not adequately predict results for sampled parameters and, therefore, guided prediction process in a wrong direction. In any case, this behavior requires more comprehensive investigation in the future work.
 
 \subsection{Learning Models Configuration}\label{eval:2:learning models}
-We perform this set of experiments for getting an intuition about the influence of underlying high-level heuristic configuration on general performance. As mentioned above, in HH-PC code 2.4 we used following learning models: FRAMAB for LLH selection and TPE for parameter tuning.
+We perform this set of experiments for getting an intuition about the underlying high-level heuristic configuration influence on a general performance.
+
+\paragraph{TPE split size.}
+\begin{figure}[b]
+	\centering
+	\vspace{-10pt}
+	\includesvg[width=\textwidth]{TPE split size plots}
+	\caption{Influence of HH-PC (code 2.4) TPE split size on pla7397 TSP instance solving process.}
+	\vspace{-5pt}
+	\label{eval:2:pict:tpe split size}
+\end{figure}
+The internals of Bayesian TPE approach for parameter sampling were described in \cref{bg: bohb}. With small split size, only elite parameter values form a \emph{good} distribution, therefore, an overall sampling process happens to be more greedy or, in other words, biased towards exploitation. According to our observations, visualized in \cref{eval:2:pict:tpe split size}, the more greedy parameter allocation produces statistically better results (10\%), while usage of 70\% split showed the worst potential.
 
 \paragraph{FRAMAB C coefficient.}
-\begin{figure}[h]
+\begin{figure}[t]
 	\centering
 	\begin{subfigure}{\textwidth}
 		\vspace{-10pt}
@@ -690,29 +704,17 @@ We perform this set of experiments for getting an intuition about the influence 
 	\begin{subfigure}{\textwidth}
 		\includesvg[width=\textwidth]{FRAMAB c plots chonics}
 		\vspace{-5pt}
-		\caption{One run with distinguished LLH allocation.}
+		\caption{One run distinguishing different LLHs allocation.}
 		\label{eval:2:pict:framab c one run}
 	\end{subfigure}
 	\caption{Influence of HH-PC (code 2.4) FRAMAB C coefficient on pla7397 TSP instance solving process.}
 	\label{eval:2:pict:framab c}
 \end{figure}
 
-As you remember from FRAMAB description, presented in \cref{impl: FRAMAB}, the role of coefficient C is to give the user possibility to control the EvE balance while selecting the LLH. In our implementation we proposed the usage of result improvement standard deviation, motivated by (1) the exploration encourage, while the uncertainty in results exist and (2) possibility of FRAMAB parameter-less usage. Therefore, in first set of benchmarks we exclusively used this, STD-based FRAMAB regime.
+As the reader remember from FRAMAB description, presented in \cref{impl: FRAMAB}, the role of coefficient C is to control the EvE balance while selecting the LLH. In our implementation we proposed to replace C with the improvements standard deviation, therefore, in first set of benchmarks we exclusively used this, STD-based FRAMAB regime.
 
-The results of performed benchmarks with possibly different C values are presented in \cref{eval:2:pict:framab c}. More concretely, in \cref{eval:2:pict:framab c statistic} we compare statistic of all repetitions with different parameter value. Here we may conclude, the proposed parameter-less (STD-based) FRAMAB performs slightly worse in comparison to other algorithms. Glancing on the sequence of LLH allocation, presented in \cref{eval:2:pict:framab c one run}, we conclude that parameter reflects its intent, especially, comparing $C=0.1$ and $C=0.001$. When C is large, the exploration-related part of FRAMAB's UCB value is increased, therefore, more different algorithms are used for optimization. However, when the C value is decreased, only few switches may be observed. An intriguing idea arises to introduce the technique for FRAMAB parameter control, according to which, the entire LLH portfolio utilized at the beginning with high C value, while approaching the end C is increased, to more concentrate with the best-performing LLH.
+The results of performed benchmarks with different C values are presented in \cref{eval:2:pict:framab c}. More concretely, in \cref{eval:2:pict:framab c statistic} we compare a statistic of all repetitions with different parameter value. We conclude, the proposed parameter-less (STD-based) FRAMAB version produces similar results in comparison to other cases. When C (or STD) is large, the exploration-related component of FRAMAB's UCB value is increased, therefore, more different algorithms are used for optimization. However, when the C value is decreased, only several switches may be observed (\cref{eval:2:pict:framab c one run}). An intriguing idea arises to introduce the technique for FRAMAB parameter control, according to which, the entire LLH portfolio is utilized at the beginning with high C value, while approaching the end C is increased to concentrate on the best-performing LLH.
 
-\paragraph{TPE split size.}
-\begin{figure}[b]
-	\centering
-	\vspace{-10pt}
-	\includesvg[width=\textwidth]{TPE split size plots}
-	\caption{Influence of HH-PC (code 2.4) TPE split size on pla7397 TSP instance solving process.}
-	\vspace{-5pt}
-	\label{eval:2:pict:tpe split size}
-\end{figure}
-The internals of Bayesian TPE approach for parameter sampling were described during BOHB algorithm discussion in \cref{bg: bohb}. Evaluated in this experiment \emph{split size} parameter defines the proportion of information, used to construct the probability distributions of good parameter values. 
-
-With small split size, only elite parameter values form distribution, therefore, an overall sampling process happens to be more greedy or, in other words, more exploitation-biased. According to our observations, presented in \cref{eval:2:pict:tpe split size}, the least greedy parameter allocation produces statistically the worst results (70 \%), while usage of 10 \% split relieved the best potential. Used in previous experiments 30 \% split produced slightly worse results than 50 \%, which still could be caused by the randomized processes. Probably, this behavior should be investigated using more statistical data.
 
 \paragraph{Random search size.}
 \begin{figure}[h]
@@ -723,11 +725,9 @@ With small split size, only elite parameter values form distribution, therefore,
 	\vspace{-5pt}
 	\label{eval:2:pict: random search size}
 \end{figure}
-This HLH parameter configures the random search process, performed over the created surrogate models. With given random search size equal $N$, for selecting the parameter values of LLH on each level $N$ randomized samples are taken. Afterwards, these samples are compared with each other using surrogate models and one with the best results became level prediction. Therefore, according to our expectations, by increasing the random search size, the parameter values prediction process become more precise and as a consequence, performance increases.
+This HLH parameter configures the random search process, performed over the created surrogate models. According to our expectations, the increased random search size should result in a more precise parameter values prediction and as a consequence, to performance gain. However, evaluating random search sizes of 50 and 200 samples respectively, the obtained results happen to be not as we expected. In general, we observe a quality fluctuation, which is caused by the randomized processes. It only motivates us to implement a proper surrogate optimization technique for improving a robustness of the prediction process.
 
-After evaluating two additional to default sizes of 50 and 200 samples respectively, the obtained results happen to be not as we expected. In general, we observe a quality fluctuation, which is caused by randomized processes. When the sampling size was decreased, the quality statistics was slightly improvement, which is non-logical behavior (see intermediate and final results in \cref{eval:2:pict: random search size}). It only motivates us to implement a proper optimization technique over surrogates for improving a robustness of the prediction process.
-
-\subsection{Generic Low-Level Heuristics Configuration}\label{eval:2:llh changes}
+\subsection{Amount of Warming-up Information}\label{eval:2:llh changes}
 \begin{figure}[h]
 	\centering
 	\vspace{-10pt}
@@ -736,21 +736,24 @@ After evaluating two additional to default sizes of 50 and 200 samples respectiv
 	\vspace{-5pt}
 	\label{eval:2:pict:warming-up solutions}
 \end{figure}
-The generic LLH configuration benchmark is represented by only one experiment, which we performed to evaluate how does the \emph{number of warming-up solutions} affects the search. Our intuition during the implementation was following: we have to initialize the solver with all previously available solutions not to lose the obtained trajectory and traversal velocity. It is relevant only to the population-based algorithms, such as evolution strategy or potential genetic algorithm. The implemented py.SA simply used the best one among available population to start. When SA completes its run, it reports only a single obtained solution. If the following LLH is population-based ES, we do not copy SA-based solution, but rather allow ES to sample all the rest uniformly at random.
+Here we evaluate how the \emph{number of warming-up solutions} affects the search. Our intuition during the implementation was following: we should initialize the solver with all previously obtained solutions not to lose the derived optimization trajectory and traversal velocity. However, it is relevant only to the population-based algorithms, such as evolution strategy or potential genetic algorithm.
 
-However, after changing this behavior to the only one warming-up solution usage, we surprisingly found out that the results quality was almost not affected: please, pay attention to overlapping progress curves in a left side of \cref{eval:2:pict:warming-up solutions}. Moreover, passing only one solution between LLHs the overall number of external iterations were increased dramatically (from ~200 to ~300). It is caused by the reduced overhead for information processing and sending through network. We conclude that changing the behavior to only one warming-up solution usage provides a positive impact on the final results quality and do not affect the intermediate progress.
+After changing this behavior to only one warming-up solution usage, we surprisingly found out that the results quality was almost not affected: please, pay attention to overlapping progress curves in a left side of \cref{eval:2:pict:warming-up solutions}. Moreover, by passing only one solution between LLHs we dramatically increased the overall number of external iterations (for more than 50\%). It is caused by the reduced overhead for information processing and sending through the network. We conclude that changing the behavior to only one warming-up solution usage provides a positive impact on the final results quality and do not affect the intermediate performance of meta-heuristics.
 
 
 
 \section{Conclusion}\label{eval: conclution}
-The evaluation of proposed concept was presented in this chapter and performed in two stages. At the first stage an analysis of the implemented concept was performed. We compared it with a baseline, defined by the executed in isolation underlying meta-heuristics with static hyper-parameters. Our conclusions on the concept applicability are following:
+The evaluation of proposed concept was presented in this Chapter and performed in two stages. At the first stage an analysis of the implemented concept applicability was performed. We compared it with a baseline, defined by the executed in isolation underlying meta-heuristics with static hyper-parameters. Our conclusions on the concept applicability are following:
 \begin{itemize}
-	\item Firstly, the proposed reinforcement learning-based generic parameter control approach (MH-PC) is able to significantly improve the performance of meta-heuristic's static hyper-parameters and in some cases even outperform the results of tuned beforehand parameters. From the implementation perspective, the system has lack of mechanism for bad-performing external iteration termination. On the generic level, it may be implemented in form of tasks termination mechanism, carried out by BRISEv2.
+	\item Firstly, the proposed reinforcement learning-based generic parameter control approach (MH-PC) is able to significantly improve the performance of meta-heuristic's static hyper-parameters and in some cases even outperform the quality of tuned at the design time parameters.
 	
 	\item Secondly, the developed heuristic selection technique (HH-SP) is able to reach a quality of the best performing underling low-level heuristic. 
 	
-	\item Finally, the approach for simultaneous algorithm selection and parameter tuning (HH-PC) in runtime outperforms the best underlying algorithm with tuned parameters on rather small problem instances (kroA100, pr439). With growing complexity, the aforementioned issue of LLH struggling results in a gap between the desired performance of the best tuned algorithm and our approach. But, the guided by RL and surrogate models HH-PC considerably outperforms randomized selection of both LLH and parameter, which is the only approach available in runtime. A more confident conclusion for larger problem instances should be done after thorough investigation, where low-level heuristics are given more time to converge in local optimum and aforementioned issues are resolved.
+	\item Finally, the approach for simultaneous online algorithm selection and parameter tuning (HH-PC) outperforms the best underlying algorithm with tuned parameters on rather small problem instances (kroA100, pr439). With growing complexity, HH-PC only approaches the quality of the best available algorithm with tuned parameters.
 \end{itemize}
 
-In the second evaluation part we investigated an influence of the proposed united approach (HH-PC) configuration setting on its performance. The influence of some among evaluated parameters was not as we expected, which only motivates the importance of proper parameter values search and usage. More concretely, an insertion of relatively `light' \emph{forgetting mechanism} instead of improving an optimization process made the results statistically sightly worse. The increased number of workers only decreased the surrogate models accuracy. The decision of all available solutions usage for LLH initialization introduced a redundant overhead, but did not improve final results quality, therefore, it should be reconsidered. Nevertheless, a set of experiments from the second evaluation stage should also be performed over the other system operating modes (MH-PC and HH-SP) for making a confident conclusion. Up until now, it reviled the system adaptation ability with help of exposed parameters.
+Or conclusions on the implemented concept usage are following: when the dominance among meta-heuristics is known beforehand, one should consider the MH-PC usage with this MH; if the dominance is not known, but the parameters of meta-heuristics are already tuned (which may be rare use-case), one should consider HH-SP usage; but if the dominance of MHs is not known and proper parameter values are unknown as well, one should naturally utilize the proposed HH-PC concept to tackle the optimization problem at hand.
+
+
+In the second part of evaluation we investigated the HH-PC configuration influence on its performance. The impact of some among evaluated parameters was not as we expected, which only motivates the importance of a proper parameter values search and usage. More concretely, an insertion of the relatively light \emph{forgetting mechanism} instead of improving only made the results statistically sightly worse. The increased number of workers only decreased the surrogate models accuracy. The decision on all available solutions usage for LLH initialization introduced a redundant overhead, but did not improve final results quality, therefore, it should be reconsidered. Nevertheless, a set of experiments from the second evaluation stage should also be performed over the other system operating modes (MH-PC and HH-SP) and problem instances. By doing so, we will be able to make a confident conclusion about the stability and impact of different parameter values. Up until now, it revealed the system adaptation ability with help of exposed parameters and helped us find several incorrect decisions.
 \todoy{add evaluation of 2.4 on a largest problem instance will all reviewed fixes?}
